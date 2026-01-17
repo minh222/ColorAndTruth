@@ -3,7 +3,7 @@ package com.minh.rule;
 import java.util.List;
 
 public class Rule {
-    public static List<TextRule> rules = List.of(
+    public static List<TextRule> textRules = List.of(
 
             // replace toxic
             new TextRule("thằng", "bạn", "thằng", "ko tôn trọng cá nhân"),
@@ -62,7 +62,7 @@ public class Rule {
             new TextRule("nhaaaaaaaa", "", "nhaaaaaaaa", "nhaaaaaaaa (cute voice) "),
             new TextRule("dthw", "dễ thương", "dthw", "dthw (khen) "),
             new TextRule("yêu", "yêu", "yêu", "yêu (khen) "),
-//            new TextRule("iu", "iu", "iu", "iu (khen) "),
+            new TextRule("iu", "iu", "iu", "iu (khen) "),
 
             //oke
             new TextRule("oke luôn", "được", "oke luôn", "rất được"),

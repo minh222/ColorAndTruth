@@ -19,7 +19,7 @@ public class TextRule {
         this.attitude = attitude;
     }
 
-    public boolean match(String input) {
+    public boolean inside(String input) {
         return input != null && input.contains(target);
     }
 
