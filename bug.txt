@@ -1,0 +1,4 @@
+- replace trùng ko work done - 
+- fix modify original
+- phân loại emotion
+
