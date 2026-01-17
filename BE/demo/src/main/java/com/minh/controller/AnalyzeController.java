@@ -1,8 +1,9 @@
 package com.minh.controller;
 
-import com.minh.apply.ApplyRule;
 import com.minh.apply.Output;
 import org.springframework.web.bind.annotation.*;
+
+import static com.minh.apply.ApplyRule.apply;
 
 
 @RestController
@@ -11,7 +12,6 @@ public class AnalyzeController {
 
     @PostMapping("/analyze")
     public Output analyze(@RequestParam String original) {
-        ApplyRule applyRule = new ApplyRule();
-        return applyRule.apply(original);
+        return apply(original);
     }
 }

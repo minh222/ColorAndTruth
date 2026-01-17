@@ -1,31 +1,33 @@
 package com.minh.apply;
 
+import com.minh.StringUlity.MutableString;
 import com.minh.rule.TextRule;
 
+import javax.naming.Context;
 import java.util.*;
 
 import static com.minh.rule.Rule.rules;
 
 public class ApplyRule {
-    public Output apply(String input) {
+    public static Output apply(String claim) {
         Set<String> emotions = new HashSet<>();
         Set<String> attitudes = new HashSet<>();
 
         for (TextRule rule : rules) {
-            if (rule.match(input)) {
-                rule.apply(input, emotions, attitudes);
+            if (rule.match(claim)) {
+                claim = rule.apply(claim, emotions, attitudes);
             }
         }
 
         return new Output(
-                input,
-                normalize(input),
+                claim,
+                normalize(claim),
                 new ArrayList<>(emotions),
                 String.join(", ", attitudes)
         );
     }
 
-    private String normalize(String s) {
+    private static String normalize(String s) {
         return s.replaceAll("\\s+", " ").trim();
     }
 }

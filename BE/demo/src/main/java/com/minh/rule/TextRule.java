@@ -23,12 +23,13 @@ public class TextRule {
         return input != null && input.contains(target);
     }
 
-    public void apply(String claim, Set<String> emotions, Set<String> attitudes) {
-        while (claim.contains(target)) {
+    public String apply(String claim, Set<String> emotions, Set<String> attitudes) {
+        if (!target.equals(replacement) && claim.contains(target)) {
             claim = claim.replace(target, replacement);
         }
 
         emotions.add(emotion);
         attitudes.add(attitude);
+        return claim;
     }
 }

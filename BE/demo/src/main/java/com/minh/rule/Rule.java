@@ -61,7 +61,7 @@ public class Rule {
             new TextRule("cuti quá", "đáng yêu quá", "cuti quá", "cuti quá"),
             new TextRule("nhaaaaaaaa", "", "nhaaaaaaaa", "nhaaaaaaaa (cute voice) "),
             new TextRule("dthw", "dễ thương", "dthw", "dthw (khen) "),
-            new TextRule("yêu", "iu", "yêu", "yêu (khen) "),
+            new TextRule("yêu", "yêu", "yêu", "yêu (khen) "),
 //            new TextRule("iu", "iu", "iu", "iu (khen) "),
 
             //oke
