@@ -1,0 +1,40 @@
+1 CÀI JAVA
+
+Cài JDK 17 (Eclipse Temurin):
+https://adoptium.net/
+Set biến môi trường:
+JAVA_HOME = C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot
+Path += %JAVA_HOME%\bin
+
+->test:
+java -version
+
+
+2 BUILD PROJECT (MAVEN WRAPPER)
+mvnw clean package
+target/color-truth-0.0.1-SNAPSHOT.war
+-> target/color-truth-0.0.1-SNAPSHOT.war
+
+
+3. TEST CHẠY LOCAL
+java -jar target\color-truth-0.0.1-SNAPSHOT.war
+
+-> Tomcat started on port 8080 with context path '/'
+Browser: Whitelabel
+
+4. CÀI DOCKER (WINDOWS 11)
+https://www.docker.com/products/docker-desktop/
+Restart máy
+Update WSL
+
+-> wsl --status: Default Version: 2
+
+5. TẠO Dockerfile
+6. BUILD DOCKER IMAGE
+docker build -t color-truth .
+
+7.RUN CONTAINER (BACKGROUND)
+docker run -d -p 8080:8080 --name color-truth-app color-truth
+-> docker ps
+
+8. Build = github render
