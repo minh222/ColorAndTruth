@@ -14,7 +14,7 @@ public class ApplyRule {
 
         for (TextRule textRule : textRules) {
             if (textRule.inside(original)) {
-                claim = textRule.apply(original, emotions, attitudes);
+                claim = textRule.apply(claim, emotions, attitudes);
             }
         }
 
