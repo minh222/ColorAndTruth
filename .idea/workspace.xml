@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e8398651-426c-4fc2-bf12-e74b4a0a3b29" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/ServletInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/apply/ApplyRule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/apply/Output.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/controller/AnalyzeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/rule/Rule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/java/com/minh/rule/TextRule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/demo/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/ServletInitializer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/apply/ApplyRule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/apply/Output.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/controller/AnalyzeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/rule/Rule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minh/rule/TextRule.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="38PxjFgoYBxXsUXz3lzDgAuca4d" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/rongk/OneDrive/Documents/Máy tính/Reason to alive/BE",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="color-truth" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.minh.Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e8398651-426c-4fc2-bf12-e74b4a0a3b29" name="Changes" comment="" />
+      <created>1768715141074</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1768715141074</updated>
+      <workItem from="1768715142202" duration="2471000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
