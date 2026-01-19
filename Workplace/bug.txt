@@ -2,3 +2,6 @@
 - fix modify original
 - phân loại emotion
 - replace ko cộng dồn done
+- đo p99 - đã có tool đo
+
+- tách user

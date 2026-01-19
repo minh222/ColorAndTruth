@@ -38,3 +38,5 @@ docker run -d -p 8080:8080 --name color-truth-app color-truth
 -> docker ps
 
 8. Build = github render
+
+* run test p99 : k6 run test.js

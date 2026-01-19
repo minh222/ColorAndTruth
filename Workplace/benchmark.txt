@@ -1,0 +1,19 @@
+k6 run test.js
+
+  █ TOTAL RESULTS
+
+    HTTP
+    http_req_duration..............: avg=294.42µs min=0s med=0s     max=12.14ms p(90)=1ms     p(95)=1.02ms  p(99)=1.51ms
+      { expected_response:true }...: avg=294.42µs min=0s med=0s     max=12.14ms p(90)=1ms     p(95)=1.02ms  p(99)=1.51ms
+    http_req_failed................: 0.00%  0 out of 691942
+    http_reqs......................: 691942 5765.926067/s
+
+    EXECUTION
+    iteration_duration.............: avg=8.66ms   min=0s med=9.51ms max=29.04ms p(90)=11.57ms p(95)=12.18ms p(99)=13.53ms
+    iterations.....................: 691942 5765.926067/s
+    vus............................: 50     min=50          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 187 MB 1.6 MB/s
+    data_sent......................: 118 MB 980 kB/s
