@@ -1,9 +1,10 @@
 package com.minh.rule;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Rule {
-    public static List<TextRule> textRules = List.of(
+    public static List<TextRule> textRules = Arrays.asList(
 
             // replace toxic
             new TextRule("thằng", "bạn", "thằng", "ko tôn trọng cá nhân"),

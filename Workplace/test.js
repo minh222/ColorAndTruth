@@ -13,7 +13,4 @@ export default function () {
     encodeURIComponent('Tao mừng cho mày mà cay vl');
 
   const res = http.post(url);
-
-  console.log('status =', res.status);
-  console.log('body =', res.body);
 }
