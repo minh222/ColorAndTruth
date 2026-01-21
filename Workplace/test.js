@@ -1,8 +1,8 @@
 import http from 'k6/http';
 
 export const options = {
-  vus: 50,
-  duration: '2m',
+  vus: 20,
+ iterations: 100000,
  summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)']
 };
 
@@ -14,3 +14,5 @@ export default function () {
 
   const res = http.post(url);
 }
+
+
