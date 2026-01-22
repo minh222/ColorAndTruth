@@ -13,7 +13,7 @@ public final class SharedExecutor {
                     CORES,
                     0L,
                     TimeUnit.MILLISECONDS,
-                    new LinkedBlockingQueue<>(10_000),
+                    new LinkedBlockingQueue<>(0),
                     new ThreadFactory() {
                         private final AtomicInteger idx = new AtomicInteger(1);
 
