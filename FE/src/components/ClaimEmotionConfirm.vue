@@ -2,40 +2,50 @@
   <div class="page">
     <!-- ORIGINAL INPUT -->
     <div class="card">
-    <h2>📝 Original Text</h2>
+      <h2>📝 Original Text</h2>
 
-    <textarea
-        v-model="originalText"
-        class="original-input"
-        placeholder="Nhập nội dung cần phân tích..."
-        rows="6"
-    ></textarea>
+      <div class="input-wrapper">
+        <textarea
+          v-model="originalText"
+          class="original-input"
+          placeholder="Nhập nội dung cần phân tích..."
+        />
+      </div>
 
-    <button
-        class="exact-btn"
-        :disabled="loading || !originalText.trim()"
-        @click="onExact"
-    >
-        {{ loading ? 'Đang phân tích...' : 'Exact' }}
-    </button>
+      <div class="actions">
+        <button
+          class="exact-btn"
+          :disabled="loading || !originalText.trim()"
+          @click="onExact"
+        >
+          {{ loading ? 'Đang phân tích...' : 'Exact' }}
+        </button>
+      </div>
     </div>
 
-
-    <!-- CONFIRM -->
-<!-- CONFIRM AREA -->
-    <div v-if="hasResult" class="card">
-    <div class="header-row">
+    <!-- CONFIRM (LUÔN TỒN TẠI, CHỈ ẨN) -->
+    <div
+      class="card confirm-card"
+      :class="{ hidden: !hasResult }"
+    >
+      <div class="header-row">
         <h2>✅ Confirm Extracted Content</h2>
 
-        <button class="toggle-btn" @click="toggleAttitude">
-        {{ showAttitude ? 'Ẩn Attitude' : 'Hiện Attitude' }}
-        </button>
-    </div>
+        <div class="eye-slot">
+          <button
+            class="eye-toggle"
+            @click="toggleAttitude"
+            :title="showAttitude ? 'Ẩn attitude' : 'Hiện attitude'"
+          >
+            {{ showAttitude ? '👁️‍🗨️' : '👁️' }}
+          </button>
+        </div>
+      </div>
 
-      <div class="confirm-area">
+      <div class="confirm-area confirm-body">
         <!-- CLAIM -->
         <div class="box claim-box">
-          <span class="tag claim-tag">CLAIM</span>
+          <span class="tag">CLAIM</span>
           <p>{{ claim }}</p>
         </div>
 
@@ -44,7 +54,7 @@
           v-if="showAttitude && activePanel === 'attitude'"
           class="box attitude-box"
         >
-          <span class="tag attitude-tag">ATTITUDE</span>
+          <span class="tag">ATTITUDE</span>
           <p>{{ attitude }}</p>
 
           <button
@@ -61,12 +71,15 @@
           v-if="showAttitude && activePanel === 'emotion'"
           class="box emotion-box"
         >
-          <span class="tag emotion-tag">EMOTION</span>
+          <span class="tag">EMOTION</span>
           <ul>
             <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
           </ul>
 
-          <button class="switch-btn" @click="activePanel = 'attitude'">
+          <button
+            class="switch-btn"
+            @click="activePanel = 'attitude'"
+          >
             ← Quay lại Attitude
           </button>
         </div>
@@ -76,14 +89,10 @@
 </template>
 
 <script setup>
-const hasResult = ref(false)
-
 import { ref } from 'vue'
 
 /* ORIGINAL */
-const originalText = ref(
-  '.'
-)
+const originalText = ref('')
 
 /* API RESULT */
 const claim = ref('')
@@ -91,6 +100,7 @@ const emotion = ref([])
 const attitude = ref('')
 
 /* UI STATE */
+const hasResult = ref(false)
 const showAttitude = ref(false)
 const activePanel = ref('attitude')
 const loading = ref(false)
@@ -111,10 +121,10 @@ const onExact = async () => {
     const data = await res.json()
 
     claim.value = data.claim
-    emotion.value = data.emotion
-    attitude.value = data.attitude
+    emotion.value = data.emotion || []
+    attitude.value = data.attitude || ''
 
-    hasResult.value = true          // 👈 DÒNG QUAN TRỌNG
+    hasResult.value = true
     showAttitude.value = true
     activePanel.value = 'attitude'
   } catch (e) {
@@ -124,8 +134,6 @@ const onExact = async () => {
   }
 }
 
-
-
 /* TOGGLE */
 const toggleAttitude = () => {
   showAttitude.value = !showAttitude.value
@@ -134,44 +142,109 @@ const toggleAttitude = () => {
 </script>
 
 <style scoped>
+/* PAGE */
 .page {
-  max-width: 960px;
+  width: min(960px, 100vw);
   margin: 30px auto;
   font-family: Arial, sans-serif;
 }
 
+/* CARD */
 .card {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
-.original-text {
-  line-height: 1.6;
-  white-space: pre-line;
-  margin-bottom: 10px;
+/* INPUT */
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.original-input {
+  width: 90%;
+  max-width: 820px;
+  min-height: 220px;
+  padding: 16px 18px;
+  font-size: 16px;
+  line-height: 1.7;
+  border-radius: 12px;
+  border: 2px solid #dee2e6;
+  background: #f8f9fa;
+  resize: vertical;
+}
+
+.original-input:focus {
+  outline: none;
+  border-color: #212529;
+  background: #fff;
+}
+
+/* ACTION */
+.actions {
+  margin-top: 12px;
+  text-align: right;
 }
 
 .exact-btn {
-  margin-top: 12px;
   padding: 8px 18px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   background: #212529;
   color: white;
   cursor: pointer;
 }
+
+.exact-btn:disabled {
+  opacity: 0.5;
+}
+
+/* CONFIRM */
+.confirm-card {
+  min-height: 320px;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* HEADER */
 .header-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
+.eye-slot {
+  width: 32px;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.eye-toggle {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.eye-toggle:hover {
+  background: #f1f3f5;
+  border-radius: 50%;
+}
+
+/* BODY */
 .confirm-area {
   display: flex;
   gap: 20px;
   margin-top: 15px;
+  min-height: 240px;
 }
 
 .box {
@@ -180,38 +253,32 @@ const toggleAttitude = () => {
   border-radius: 10px;
 }
 
+.claim-box {
+  background: #fff8e1;
+}
+
+.attitude-box {
+  background: #f3e5f5;
+}
+
+.emotion-box {
+  background: #e3f2fd;
+}
+
+.tag {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* SWITCH */
 .switch-btn {
   margin-top: 12px;
+  min-width: 160px;
+  white-space: nowrap;
   padding: 6px 12px;
   border-radius: 6px;
   border: 1px dashed #666;
   background: #f8f9fa;
   cursor: pointer;
-}
-.original-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ced4da;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: vertical;
-}
-
-.exact-btn:disabled {
-  background: #adb5bd;
-  cursor: not-allowed;
-}
-
-
-/* COLORS */
-.claim-box {
-  background: #fff8e1;
-}
-.attitude-box {
-  background: #f3e5f5;
-}
-.emotion-box {
-  background: #e3f2fd;
 }
 </style>
