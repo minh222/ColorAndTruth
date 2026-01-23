@@ -3,6 +3,7 @@ package com.minh.controller;
 import static com.minh.apply.ApplyRule.apply;
 
 import com.minh.apply.Output;
+import com.minh.config.ExecutorConfig;
 import com.minh.thread.SharedExecutor;
 import com.minh.thread.WallCpuProbe;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,12 @@ import java.util.concurrent.Semaphore;
 @RestController
 @RequestMapping("/api/v1")
 public class AnalyzeController {
-    private final Semaphore semaphore = new Semaphore(SharedExecutor.getCORES(), true);
+    private final Semaphore semaphore = new Semaphore(ExecutorConfig.getCore(), true);
 
     @PostMapping("/analyze")
     public Output analyze(@RequestParam String original) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw new ResponseStatusException( HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {

@@ -1,11 +1,13 @@
 package com.minh.thread;
 
+import com.minh.config.ExecutorConfig;
+
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SharedExecutor {
 
-    private static final int CORES = Runtime.getRuntime().availableProcessors();
+    private static final int CORES = ExecutorConfig.getCore();
 
     public static final ExecutorService executor0 =
             new ThreadPoolExecutor(
@@ -29,6 +31,4 @@ public final class SharedExecutor {
             );
     private SharedExecutor() {
     }
-
-
 }
