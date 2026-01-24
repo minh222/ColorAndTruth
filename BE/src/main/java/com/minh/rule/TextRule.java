@@ -29,7 +29,7 @@ public class TextRule {
 
     public String apply(String claim, Set<String> emotions, Set<String> attitudes) {
         if (!target.equals(replacement) && STRING_UTIL.contains(claim, target)) {
-            STRING_UTIL.replace(claim,target,replacement);
+            claim = STRING_UTIL.replace(claim,target,replacement);
         }
 
         emotions.add(emotion);

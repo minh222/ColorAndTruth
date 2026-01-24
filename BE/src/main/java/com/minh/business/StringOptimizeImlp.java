@@ -14,7 +14,7 @@ public class StringOptimizeImlp implements StringUtil {
     public boolean contains(String s, String target) { // chốt spec sẽ update
         Pattern pattern = Config.CACHE.get(
                 target,
-                t -> Pattern.compile("\\b" + Pattern.quote(t) + "\\b")
+                t -> Pattern.compile("(?<!\\p{L})" + Pattern.quote(t) + "(?!\\p{L})")
         );
         return pattern.matcher(s).find();
     }
@@ -22,7 +22,7 @@ public class StringOptimizeImlp implements StringUtil {
     @Override
     public String replace(String s, String target, String replacement) {
         return s.replaceAll(
-                "\\b" + Pattern.quote(target) + "\\b",
+                "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
         );
     }

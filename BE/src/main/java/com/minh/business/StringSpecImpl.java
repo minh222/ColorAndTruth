@@ -10,15 +10,16 @@ public class StringSpecImpl implements StringUtil {
 
     @Override
     public boolean contains(String s, String target) {
-        return s.matches(".*\\b" + Pattern.quote(target) + "\\b.*");
+        return s.matches(".*(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L}).*");
     }
 
     @Override
     public String replace(String s, String target, String replacement) {
         return s.replaceAll(
-                "\\b" + Pattern.quote(target) + "\\b",
+                "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
         );
+
     }
 
     @Override
