@@ -3,7 +3,7 @@ package com.minh.controller;
 import static com.minh.apply.ApplyRule.apply;
 
 import com.minh.apply.Output;
-import com.minh.config.ExecutorConfig;
+import com.minh.config.SpringConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 @RestController
 @RequestMapping("/api/v1")
 public class AnalyzeController {
-    private final Semaphore semaphore = new Semaphore(ExecutorConfig.getCore(), true);
+    private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
 
     @PostMapping("/analyze")
     public Output analyze(@RequestParam String original) {

@@ -1,7 +1,5 @@
 package com.minh.business;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +8,7 @@ public class StringSpecImpl implements StringUtil {
 
     @Override
     public boolean contains(String s, String target) {
-        return s.matches(".*\\b" + Pattern.quote(target) + "\\b.*"); //word boundary
+        return s.matches(".*\\b" + Pattern.quote(target) + "\\b.*");
     }
 
     @Override

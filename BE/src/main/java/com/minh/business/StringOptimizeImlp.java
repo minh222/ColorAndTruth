@@ -1,7 +1,6 @@
 package com.minh.business;
 
-import com.minh.config.RegexCache;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.minh.config.Config;
 import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,11 +8,14 @@ import java.util.regex.Pattern;
 // optimized - đối chiếu spec để trả nợ kĩ thuật
 @Service
 public class StringOptimizeImlp implements StringUtil {
-    @Autowired RegexCache regexCache;
 
     @Override
     public boolean contains(String s, String target) { // chốt spec sẽ update
-        return regexCache.get(target).matcher(s).find();
+        Pattern pattern = Config.CACHE.get(
+                target,
+                t -> Pattern.compile("\\b" + Pattern.quote(t) + "\\b")
+        );
+        return pattern.matcher(s).find();
     }
 
     @Override

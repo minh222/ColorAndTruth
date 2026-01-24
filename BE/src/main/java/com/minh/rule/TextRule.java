@@ -1,13 +1,13 @@
 package com.minh.rule;
 
-import com.minh.business.StringOptimizeImlp;
-import com.minh.business.StringSpecImpl;
 import com.minh.business.StringUtil;
 
 import java.util.Set;
 
+import static com.minh.config.Config.STRING_UTIL;
+
+
 public class TextRule {
-    private static final StringUtil STRING_UTIL = new StringOptimizeImlp();
 
     private final String target;
     private final String replacement; // "" = remove
