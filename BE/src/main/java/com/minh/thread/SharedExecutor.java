@@ -6,7 +6,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SharedExecutor {
-
     private static final int CORES = ExecutorConfig.getCore();
 
     public static final ExecutorService executor0 =

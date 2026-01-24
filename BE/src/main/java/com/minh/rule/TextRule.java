@@ -1,8 +1,12 @@
 package com.minh.rule;
 
+import com.minh.ultil.StringOptimizeImlp;
+import com.minh.ultil.StringUtil;
+
 import java.util.Set;
 
 public class TextRule {
+    private static final StringUtil STRING_UTIL = new StringOptimizeImlp();
 
     private final String target;
     private final String replacement; // "" = remove
@@ -20,12 +24,13 @@ public class TextRule {
     }
 
     public boolean inside(String input) {
-        return input != null && input.contains(target);
+        return input != null && STRING_UTIL.contains(input,target);
     }
 
+
     public String apply(String claim, Set<String> emotions, Set<String> attitudes) {
-        if (!target.equals(replacement) && claim.contains(target)) {
-            claim = claim.replace(target, replacement);
+        if (!target.equals(replacement) && STRING_UTIL.contains(claim,target)) {
+            STRING_UTIL.replace(claim,target,replacement);
         }
 
         emotions.add(emotion);

@@ -1,5 +1,6 @@
 package com.minh.apply;
 
+
 import static com.minh.rule.Rule.textRules;
 
 import com.minh.rule.TextRule;

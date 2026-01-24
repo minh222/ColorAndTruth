@@ -7,6 +7,7 @@ public class Rule {
     public static List<TextRule> textRules = Arrays.asList(
 
             // replace toxic
+            new TextRule("con mẹ chúng mày", "", "con mẹ chúng mày", "chửi"),
             new TextRule("thằng", "bạn", "thằng", "ko tôn trọng cá nhân"),
             new TextRule("loại", "bạn", "loại", "hạ thấp giá trị con người"),
             new TextRule("loại này", "bạn", "loại này", "hạ thấp giá trị con người"),
@@ -31,6 +32,14 @@ public class Rule {
             new TextRule("sống lỗi", "", "sống lỗi", "chỉ trích đạo đức"),
             new TextRule("tao", "tôi", "tao", "none"),
             new TextRule("mày", "bạn", "mày", "none"),
+            new TextRule("lũ", "những người", "lũ", "hạ thấp giá trị con người"),
+            new TextRule("con", "bạn gái", "con", "hạ thấp giá trị con người"),
+            new TextRule("nhảm vãi", "thiếu giá trị", "nhảm vãi", "đánh giá nội dung rất tiêu cực"),
+            new TextRule("thần kinh", "", "thần kinh", "không bình thường"),
+            new TextRule("đéo", "không", "đéo", "đéo"),
+            new TextRule("chó", "", "chó", "khinh người"),
+            new TextRule("cc", "", "cc", "chửi"),
+
 
             // emotion
             new TextRule("buồn quá", "", "buồn quá", "biểu lộ cảm xúc buồn"),
@@ -57,7 +66,11 @@ public class Rule {
             new TextRule("thôi kệ", "", "thôi kệ", "chấp nhận tiêu cực"),
             new TextRule("tuỳ", "", "tuỳ", "không quan tâm"),
             new TextRule("quan tâm làm gì", "", "quan tâm làm gì", "mất động lực"),
-            new TextRule("nhảm vãi", "thiếu giá trị", "nhảm vãi", "đánh giá nội dung rất tiêu cực"),
+            new TextRule("ta nói nó chán", "", "ta nói nó chán", "mất động lực"),
+            new TextRule("tuyệt vọng", "", "tuyệt vọng", "mất niềm tin"),
+            new TextRule("stress", "", "stress", "áp lực"),
+
+
             // khen
             new TextRule("cuti quá", "đáng yêu quá", "cuti quá", "cuti quá"),
             new TextRule("nhaaaaaaaa", "", "nhaaaaaaaa", "nhaaaaaaaa (cute voice) "),
@@ -75,13 +88,11 @@ public class Rule {
             // remove
             new TextRule("con ơi", "", "con ơi", "cảm xúc mạnh"),
             new TextRule("đó con", "", "đó con", "cảm xúc mạnh"),
-            new TextRule("lắm", "", "lắm", "nhấn mạnh cảm xúc"),
             new TextRule("con ơi", "", "con ơi", "cảm xúc mạnh"),
             new TextRule("trời ơi", "", "trời ơi", "cảm xúc mạnh"),
             new TextRule("ôi trời", "", "ôi trời", "cảm xúc mạnh"),
             new TextRule("vãi", "", "vãi", "cảm xúc mạnh"),
             new TextRule("vl", "", "vl", "cảm xúc mạnh"),
-            new TextRule("lắm", "", "lắm", "nhấn mạnh cảm xúc"),
             new TextRule("ta", "", "ta", "nghi vấn"),
             new TextRule("ghê", "", "ghê", "nhấn mạnh cảm xúc"),
 
@@ -94,9 +105,10 @@ public class Rule {
             new TextRule("!",   "", "!", "cảm thán"),
             new TextRule("?!",  "", "?!", "châm biếm"),
             new TextRule("!?",  "", "!?", "châm biếm"),
-            new TextRule("...", "", "...", "chán nản")
+            new TextRule("...", "", "...", "chán nản"),
 
-
+            // icon
+            new TextRule(":)))", "", ":)))", "cười")
             );
 
 

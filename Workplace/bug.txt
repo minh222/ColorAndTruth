@@ -5,3 +5,9 @@
 - đo p99 - đã có tool đo
 
 - tách user
+- login user
+- build comnment be
+- deploy fe
+- fix Hoa sang thường
+- tao -> dính ta
+- thiết kế lưu ý đồ
