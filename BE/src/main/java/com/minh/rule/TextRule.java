@@ -1,7 +1,8 @@
 package com.minh.rule;
 
-import com.minh.ultil.StringOptimizeImlp;
-import com.minh.ultil.StringUtil;
+import com.minh.business.StringOptimizeImlp;
+import com.minh.business.StringSpecImpl;
+import com.minh.business.StringUtil;
 
 import java.util.Set;
 

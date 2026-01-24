@@ -1,4 +1,4 @@
-package com.minh.ultil;
+package com.minh.business;
 
 // spec
 public class StringSpecImpl implements StringUtil {
@@ -23,5 +23,10 @@ public class StringSpecImpl implements StringUtil {
             }
         }
         return String.join(" ", words);
+    }
+
+    @Override
+    public String normalize(String s) {
+        return s.replaceAll("\\s+", " ").trim().toLowerCase();
     }
 }

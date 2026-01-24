@@ -28,6 +28,7 @@ public final class SharedExecutor {
                     },
                     new ThreadPoolExecutor.AbortPolicy()
             );
+
     private SharedExecutor() {
     }
 }

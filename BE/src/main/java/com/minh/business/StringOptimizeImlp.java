@@ -1,6 +1,8 @@
-package com.minh.ultil;
+package com.minh.business;
 
-// optimized - đối chiếu v1 để trả nợ kĩ thuật
+import java.util.regex.Pattern;
+
+// optimized - đối chiếu spec để trả nợ kĩ thuật
 public class StringOptimizeImlp implements StringUtil {
 
     // 30% benkmark on v1
@@ -59,5 +61,10 @@ public class StringOptimizeImlp implements StringUtil {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public String normalize(String s) { // fast + readablity ko cần optimize
+        return s.replaceAll("\\s+", " ").trim().toLowerCase();
     }
 }
