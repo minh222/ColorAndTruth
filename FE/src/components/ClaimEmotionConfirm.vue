@@ -2,7 +2,7 @@
   <div class="page">
     <!-- ORIGINAL INPUT -->
     <div class="card">
-      <h2>📝 Original Text</h2>
+      <h2>📝 Nhập nội dung</h2>
 
       <div class="input-wrapper">
         <textarea
@@ -29,7 +29,7 @@
       :class="{ hidden: !hasResult }"
     >
       <div class="header-row">
-        <h2>✅ Confirm Extracted Content</h2>
+        <h2>✅ Chỉnh sửa lại luận điểm sau khi đã tách cảm xúc (lưu ý ko đưa thêm cảm xúc vào vì app mình ko xử lí đc)</h2>
 
         <div class="eye-slot">
           <button
@@ -45,8 +45,36 @@
       <div class="confirm-area confirm-body">
         <!-- CLAIM -->
         <div class="box claim-box">
-          <span class="tag">CLAIM</span>
-          <p>{{ claim }}</p>
+          <div class="claim-header">
+            <span class="tag">Ý CHÍNH</span>
+
+            <button
+              v-if="!editingClaim"
+              class="edit-btn"
+              @click="() => {
+                editedClaim = claim
+                editingClaim = true
+              }"
+            >
+              ✏️
+            </button>
+          </div>
+
+          <!-- VIEW -->
+          <p v-if="!editingClaim">
+            {{ claim }}
+          </p>
+
+          <!-- EDIT -->
+          <textarea
+            v-else
+            v-model="editedClaim"
+            class="claim-editor"
+            @blur="() => {
+              claim = editedClaim
+              editingClaim = false
+            }"
+          />
         </div>
 
         <!-- ATTITUDE -->
@@ -54,7 +82,7 @@
           v-if="showAttitude && activePanel === 'attitude'"
           class="box attitude-box"
         >
-          <span class="tag">ATTITUDE</span>
+          <span class="tag">THÁI ĐỘ</span>
           <p>{{ attitude }}</p>
 
           <button
@@ -71,11 +99,13 @@
           v-if="showAttitude && activePanel === 'emotion'"
           class="box emotion-box"
         >
-          <span class="tag">EMOTION</span>
+          <span class="tag">CẢM SÚC</span>
           <ul>
             <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
           </ul>
-
+          <p class="original-preview">
+            {{ originalText }}
+          </p>
           <button
             class="switch-btn"
             @click="activePanel = 'attitude'"
@@ -98,6 +128,8 @@ const originalText = ref('')
 const claim = ref('')
 const emotion = ref([])
 const attitude = ref('')
+const editingClaim = ref(false)
+const editedClaim = ref('')
 
 /* UI STATE */
 const hasResult = ref(false)
@@ -123,6 +155,9 @@ const onExact = async () => {
     claim.value = data.claim
     emotion.value = data.emotion || []
     attitude.value = data.attitude || ''
+    editedClaim.value = claim.value
+    editingClaim.value = false
+
 
     hasResult.value = true
     showAttitude.value = true
@@ -280,5 +315,33 @@ const toggleAttitude = () => {
   border: 1px dashed #666;
   background: #f8f9fa;
   cursor: pointer;
+}
+
+.claim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-btn:hover {
+  opacity: 0.7;
+}
+
+.claim-editor {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 15px;
+  line-height: 1.6;
 }
 </style>

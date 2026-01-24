@@ -1,7 +1,5 @@
 package com.minh.rule;
 
-import com.minh.business.StringUtil;
-
 import java.util.Set;
 
 import static com.minh.config.Config.STRING_UTIL;

@@ -1,4 +1,4 @@
-package com.minh.business;
+package com.minh.abtract;
 
 public interface StringUtil {
     boolean contains(String s, String target);
