@@ -1,66 +1,27 @@
 package com.minh.business;
 
+import com.minh.config.RegexCache;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // optimized - đối chiếu spec để trả nợ kĩ thuật
+@Service
 public class StringOptimizeImlp implements StringUtil {
+    @Autowired RegexCache regexCache;
 
-    // 30% benkmark on v1
     @Override
-    public boolean contains(String s, String target) {
-        int n = s.length(); // bỏ aloc
-        int i = 0;
-
-        while (i < n) {
-            while (i < n && Character.isWhitespace(s.charAt(i))) {  // dùng while skip giảm số lần ko thỏa so vs for if thường phải duyệt hết
-                i++;
-            }
-            if (i >= n) break;
-
-            int start = i;
-            while (i < n && !Character.isWhitespace(s.charAt(i))) { // dùng while skip white space
-                i++;
-            }
-
-            int len = i - start;
-            if (len == target.length() && s.regionMatches(start, target, 0, len)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean contains(String s, String target) { // chốt spec sẽ update
+        return regexCache.get(target).matcher(s).find();
     }
 
-    // 30% benkmark on v1
     @Override
-    public String replace(String s,String target, String replacement) {
-        int n = s.length();
-        int i = 0;
-
-        StringBuilder sb = new StringBuilder(n);
-        boolean firstWord = true;
-
-        while (i < n) {
-            while (i < n && Character.isWhitespace(s.charAt(i))) {
-                i++;
-            }
-            if (i >= n) break;
-
-            if (!firstWord) sb.append(' ');
-            firstWord = false;
-
-            int start = i;
-            while (i < n && !Character.isWhitespace(s.charAt(i))) {
-                i++;
-            }
-
-            int len = i - start;
-            if (len == target.length() && s.regionMatches(start, target, 0, len)) {
-                sb.append(replacement);
-            } else {
-                sb.append(s, start, i);
-            }
-        }
-        return sb.toString();
+    public String replace(String s, String target, String replacement) {
+        return s.replaceAll(
+                "\\b" + Pattern.quote(target) + "\\b",
+                Matcher.quoteReplacement(replacement)
+        );
     }
 
     @Override

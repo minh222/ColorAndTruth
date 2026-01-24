@@ -1,32 +1,28 @@
 package com.minh.business;
 
-// spec
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// spec - ưu tiên readable
 public class StringSpecImpl implements StringUtil {
 
     @Override
     public boolean contains(String s, String target) {
-        String[] words = s.split("\\s+");
-        for (String word : words) {
-            if (word.equals(target)) {
-                return true;
-            }
-        }
-        return false;
+        return s.matches(".*\\b" + Pattern.quote(target) + "\\b.*"); //word boundary
     }
 
     @Override
-    public String replace(String s, String target,String replacement) {
-        String[] words = s.split("\\s+");
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].equals(target)) {
-                words[i] = replacement;
-            }
-        }
-        return String.join(" ", words);
+    public String replace(String s, String target, String replacement) {
+        return s.replaceAll(
+                "\\b" + Pattern.quote(target) + "\\b",
+                Matcher.quoteReplacement(replacement)
+        );
     }
 
     @Override
     public String normalize(String s) {
-        return s.replaceAll("\\s+", " ").trim().toLowerCase();
+        return s.replaceAll("\\s+", " ").trim();
     }
 }

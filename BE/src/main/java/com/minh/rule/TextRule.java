@@ -25,12 +25,12 @@ public class TextRule {
     }
 
     public boolean inside(String input) {
-        return input != null && STRING_UTIL.contains(input,target);
+        return input != null && STRING_UTIL.contains(input, target);
     }
 
 
     public String apply(String claim, Set<String> emotions, Set<String> attitudes) {
-        if (!target.equals(replacement) && STRING_UTIL.contains(claim,target)) {
+        if (!target.equals(replacement) && STRING_UTIL.contains(claim, target)) {
             STRING_UTIL.replace(claim,target,replacement);
         }
 
