@@ -13,105 +13,116 @@
       </div>
 
       <div class="actions">
+        <!-- ✨ NÚT ẨN/HIỆN PANEL -->
+        <button
+          v-if="hasResult"
+          class="toggle-confirm-btn"
+          @click="toggleConfirmPanel"
+        >
+          {{ showConfirmPanel ? "Ẩn ." : "Hiện" }}
+        </button>
+
         <button
           class="exact-btn"
           :disabled="loading || !originalText.trim()"
           @click="onExact"
         >
-          {{ loading ? 'Đang phân tích...' : 'Exact' }}
+          {{ loading ? "Đang phân tích..." : "Exact" }}
         </button>
       </div>
     </div>
 
-    <!-- CONFIRM (LUÔN TỒN TẠI, CHỈ ẨN) -->
-    <div
-      class="card confirm-card"
-      :class="{ hidden: !hasResult }"
-    >
-      <div class="header-row">
-        <h2>✅ Chỉnh sửa lại luận điểm sau khi đã tách cảm xúc (lưu ý ko đưa thêm cảm xúc vào vì app mình ko xử lí đc)</h2>
+    <div v-if="hasResult" class="confirm-wrapper">
+      <!-- CONFIRM (LUÔN TỒN TẠI, CHỈ ẨN) -->
+      <div v-show="showConfirmPanel && hasResult" class="card confirm-card">
+        <div class="header-row">
+          <h2>✅ Chỉnh sửa lại luận điểm</h2>
 
-        <div class="eye-slot">
-          <button
-            class="eye-toggle"
-            @click="toggleAttitude"
-            :title="showAttitude ? 'Ẩn attitude' : 'Hiện attitude'"
-          >
-            {{ showAttitude ? '👁️‍🗨️' : '👁️' }}
-          </button>
-        </div>
-      </div>
-
-      <div class="confirm-area confirm-body">
-        <!-- CLAIM -->
-        <div class="box claim-box">
-          <div class="claim-header">
-            <span class="tag">Ý CHÍNH</span>
-
+          <div class="eye-slot">
             <button
-              v-if="!editingClaim"
-              class="edit-btn"
-              @click="() => {
-                editedClaim = claim
-                editingClaim = true
-              }"
+              class="eye-toggle"
+              @click="toggleAttitude"
+              :title="showAttitude ? 'Ẩn attitude' : 'Hiện attitude'"
             >
-              ✏️
+              {{ showAttitude ? "👁️‍🗨️" : "👁️" }}
+            </button>
+          </div>
+        </div>
+
+        <div class="confirm-area confirm-body">
+          <!-- CLAIM -->
+          <div class="box claim-box">
+            <div class="claim-header">
+              <span class="tag">Ý CHÍNH</span>
+
+              <button
+                v-if="!editingClaim"
+                class="edit-btn"
+                @click="
+                  () => {
+                    editedClaim = claim;
+                    editingClaim = true;
+                  }
+                "
+              >
+                ✏️
+              </button>
+            </div>
+
+            <!-- VIEW -->
+            <p v-if="!editingClaim">
+              {{ claim }}
+            </p>
+
+            <!-- EDIT -->
+            <textarea
+              v-else
+              ref="claimTextarea"
+              v-model="editedClaim"
+              class="claim-editor"
+              @blur="onClaimBlur"
+            />
+            <button
+              class="switch-btn"
+              @mousedown.prevent="analyzeSelectedText"
+            >
+              Giấu cảm xúc (hoặc những điều bạn muốn giấu kín)
             </button>
           </div>
 
-          <!-- VIEW -->
-          <p v-if="!editingClaim">
-            {{ claim }}
-          </p>
-
-          <!-- EDIT -->
-          <textarea
-            v-else
-            v-model="editedClaim"
-            class="claim-editor"
-            @blur="() => {
-              claim = editedClaim
-              editingClaim = false
-            }"
-          />
-        </div>
-
-        <!-- ATTITUDE -->
-        <div
-          v-if="showAttitude && activePanel === 'attitude'"
-          class="box attitude-box"
-        >
-          <span class="tag">THÁI ĐỘ</span>
-          <p>{{ attitude }}</p>
-
-          <button
-            v-if="emotion.length"
-            class="switch-btn"
-            @click="activePanel = 'emotion'"
+          <!-- ATTITUDE -->
+          <div
+            v-if="showAttitude && activePanel === 'attitude'"
+            class="box attitude-box"
           >
-            Hiện Emotion →
-          </button>
-        </div>
+            <span class="tag">THÁI ĐỘ</span>
+            <p>{{ attitude }}</p>
 
-        <!-- EMOTION -->
-        <div
-          v-if="showAttitude && activePanel === 'emotion'"
-          class="box emotion-box"
-        >
-          <span class="tag">CẢM SÚC</span>
-          <ul>
-            <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
-          </ul>
-          <p class="original-preview">
-            {{ originalText }}
-          </p>
-          <button
-            class="switch-btn"
-            @click="activePanel = 'attitude'"
+            <button
+              v-if="emotion.length"
+              class="switch-btn"
+              @click="activePanel = 'emotion'"
+            >
+              Hiện Emotion →
+            </button>
+          </div>
+
+          <!-- EMOTION -->
+          <div
+            v-if="showAttitude && activePanel === 'emotion'"
+            class="box emotion-box"
           >
-            ← Quay lại Attitude
-          </button>
+            <span class="tag">CẢM SÚC</span>
+            <ul>
+              <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
+            </ul>
+            <p class="original-preview">
+              {{ selectedOriginalText || originalText }}
+            </p>
+            <button class="switch-btn" @click="activePanel = 'attitude'">
+              ← Quay lại Attitude
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -119,61 +130,122 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
+/* CLAIM */
+const claimTextarea = ref(null);
+const selectedOriginalText = ref("");
 /* ORIGINAL */
-const originalText = ref('')
+const originalText = ref("");
 
 /* API RESULT */
-const claim = ref('')
-const emotion = ref([])
-const attitude = ref('')
-const editingClaim = ref(false)
-const editedClaim = ref('')
+const claim = ref("");
+const emotion = ref([]);
+const attitude = ref("");
+const editingClaim = ref(false);
+const editedClaim = ref("");
 
 /* UI STATE */
-const hasResult = ref(false)
-const showAttitude = ref(false)
-const activePanel = ref('attitude')
-const loading = ref(false)
+const hasResult = ref(false);
+const showAttitude = ref(false);
+const activePanel = ref("attitude");
+const loading = ref(false);
+const showConfirmPanel = ref(false);
 
 /* ACTION */
 const onExact = async () => {
-  if (!originalText.value.trim()) return
+  if (!originalText.value.trim()) return;
 
-  loading.value = true
+  loading.value = true;
   try {
-    const query = encodeURIComponent(originalText.value)
+    const query = encodeURIComponent(originalText.value);
 
-    const res = await fetch(
-      `/api/v1/analyze?original=${query}`,
-      { method: 'POST' }
-    )
+    const res = await fetch(`/api/v1/analyze?original=${query}`, {
+      method: "POST",
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
-    claim.value = data.claim
-    emotion.value = data.emotion || []
-    attitude.value = data.attitude || ''
-    editedClaim.value = claim.value
-    editingClaim.value = false
+    claim.value = data.claim;
+    emotion.value = data.emotion || [];
+    attitude.value = data.attitude || "";
+    editedClaim.value = claim.value;
+    editingClaim.value = false;
+  
+    hasResult.value = true;
+    showConfirmPanel.value = true;
 
-
-    hasResult.value = true
-    showAttitude.value = true
-    activePanel.value = 'attitude'
+    showAttitude.value = true;
+    activePanel.value = "attitude";
   } catch (e) {
-    alert('Không gọi được API')
+    alert("Không gọi được API");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
+
+const analyzeSelectedText = async () => {
+  const el = claimTextarea.value;
+  if (!el) return;
+
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+
+  if (start === end) {
+    alert("Chưa bôi đen đoạn nào");
+    return;
+  }
+
+  const selectedText = el.value.substring(start, end);
+  selectedOriginalText.value = selectedText;
+  
+  // 🔥 CALL API BẰNG ĐOẠN ĐƯỢC CHỌN
+  const res = await fetch(
+    `/api/v1/exact?original=${encodeURIComponent(selectedText)}`,
+    { method: "POST" }
+  );
+
+  const before = el.value.slice(0, start);
+  const after = el.value.slice(end);
+
+  editedClaim.value = before + after;
+
+  // 🎯 đưa cursor về đúng chỗ
+  requestAnimationFrame(() => {
+    el.focus();
+    el.setSelectionRange(start, start);
+  });
+
+  const data = await res.json();
+
+  // Xử lý kết quả
+  emotion.value = data.emotion || [];
+  attitude.value = data.attitude || "";
+};
+
+const onClaimBlur = () => {
+  claim.value = editedClaim.value;
+  editingClaim.value = false;
+};
+
+const toggleConfirmPanel = () => {
+  const scrollY = window.scrollY;
+  document.activeElement?.blur();
+  showConfirmPanel.value = !showConfirmPanel.value;
+
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      top: scrollY,
+      behavior: "auto",
+    });
+  });
+};
 
 /* TOGGLE */
 const toggleAttitude = () => {
-  showAttitude.value = !showAttitude.value
-  activePanel.value = 'attitude'
-}
+  showAttitude.value = !showAttitude.value;
+  activePanel.value = "attitude";
+};
 </script>
 
 <style scoped>
@@ -190,7 +262,7 @@ const toggleAttitude = () => {
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
 /* INPUT */
@@ -239,7 +311,8 @@ const toggleAttitude = () => {
 
 /* CONFIRM */
 .confirm-card {
-  min-height: 320px;
+  position: absolute;
+  inset: 0;
 }
 
 .hidden {
@@ -343,5 +416,38 @@ const toggleAttitude = () => {
   resize: vertical;
   font-size: 15px;
   line-height: 1.6;
+}
+.actions {
+  display: flex;
+  justify-content: center; /* ← CĂN GIỮA */
+  gap: 12px; /* khoảng cách giữa 2 nút */
+  align-items: center;
+  margin-top: 12px;
+}
+
+.toggle-confirm-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: bold;
+}
+.toggle-confirm-btn:hover {
+  background: #e9ecef;
+}
+.confirm-wrapper {
+  position: relative;
+  min-height: 340px;
+}
+
+.confirm-card.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+textarea {
+  scroll-margin-top: 0;
 }
 </style>
