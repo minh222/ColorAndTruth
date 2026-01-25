@@ -3,11 +3,13 @@
 - phân loại emotion
 - replace ko cộng dồn done
 - đo p99 - đã có tool đo
+- fix Hoa sang thường
+- tao -> dính ta
 
 - tách user
 - login user
 - build comnment be
 - deploy fe
-- fix Hoa sang thường
-- tao -> dính ta
 - thiết kế lưu ý đồ
+- có cho phép chính sửa emo ko? có, chế độ thêm cảm xúc, nhưng phải có nút convert ngược lại thái độ?
+

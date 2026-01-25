@@ -1,5 +1,6 @@
 package com.minh.apply;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Output {
@@ -25,10 +26,18 @@ public class Output {
     }
 
     public List<String> getEmotion() {
+        if (emotion.isEmpty()) {
+            return Collections.singletonList(" - ");
+        }
         return emotion;
     }
 
     public String getAttitude() {
+        if (attitude.isEmpty()) {
+            return " - ";
+        }
         return attitude;
     }
+
+
 }

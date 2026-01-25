@@ -69,6 +69,9 @@ public class Rule {
             new TextRule("ta nói nó chán", "", "ta nói nó chán", "mất động lực"),
             new TextRule("tuyệt vọng", "", "tuyệt vọng", "mất niềm tin"),
             new TextRule("stress", "", "stress", "áp lực"),
+            new TextRule("buồn", "", "buồn", "hong vui"),
+            new TextRule("mệt mỏi", "", "mệt mỏi", "sức khỏe ko ổn"),
+            new TextRule("chán", "", "chán", "mất hứng thú"),
 
 
             // khen

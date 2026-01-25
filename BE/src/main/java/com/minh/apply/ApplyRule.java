@@ -4,8 +4,10 @@ package com.minh.apply;
 import static com.minh.config.Config.STRING_UTIL;
 import static com.minh.rule.Rule.textRules;
 import com.minh.rule.TextRule;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
+
 
 public class ApplyRule {
 
@@ -22,13 +24,25 @@ public class ApplyRule {
 
         return new Output(
                 original,
-                normalize(claim),
+                STRING_UTIL.normalize(claim),
                 new ArrayList<>(emotions),
                 String.join(", ", attitudes)
         );
     }
 
-    private static String normalize(String s) {
-        return s.replaceAll("\\s+", " ").trim();
+    public static Output exact(String original) {
+        Set<String> emotions = new HashSet<>();
+        Set<String> attitudes = new HashSet<>();
+        String claim = STRING_UTIL.normalize(original);
+
+
+        return new Output(
+                original,
+                STRING_UTIL.normalize(claim),
+                new ArrayList<>(emotions),
+                String.join(", ", attitudes)
+        );
     }
+
+
 }
