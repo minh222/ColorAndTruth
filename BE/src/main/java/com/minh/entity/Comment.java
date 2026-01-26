@@ -17,4 +17,15 @@ public class Comment {
 
     @Column
     private String claim;
+
+    public Comment(Long userId, String emotion, String claim) {
+
+        this.userId = userId;
+        this.emotion = emotion;
+        this.claim = claim;
+    }
+
+    public Comment() {
+
+    }
 }
