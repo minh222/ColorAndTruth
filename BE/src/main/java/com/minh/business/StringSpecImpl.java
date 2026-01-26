@@ -1,20 +1,20 @@
 package com.minh.business;
 
-import com.minh.abtract.StringUtil;
+import com.minh.abtract.String;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// spec - ưu tiên readable
-public class StringSpecImpl implements StringUtil {
+// spec - ưu tiên readable, dev song song vs optimize
+public class StringSpecImpl implements String {
 
     @Override
-    public boolean contains(String s, String target) {
+    public boolean contains(java.lang.String s, java.lang.String target) {
         return s.matches(".*(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L}).*");
     }
 
     @Override
-    public String replace(String s, String target, String replacement) {
+    public java.lang.String replace(java.lang.String s, java.lang.String target, java.lang.String replacement) {
         return s.replaceAll(
                 "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
@@ -23,7 +23,7 @@ public class StringSpecImpl implements StringUtil {
     }
 
     @Override
-    public String normalize(String s) {
+    public java.lang.String normalize(java.lang.String s) {
         return s.replaceAll("\\s+", " ").trim();
     }
 }

@@ -72,6 +72,7 @@ public class Rule {
             new TextRule("buồn", "", "buồn", "hong vui"),
             new TextRule("mệt mỏi", "", "mệt mỏi", "sức khỏe ko ổn"),
             new TextRule("chán", "", "chán", "mất hứng thú"),
+            new TextRule("hihi", "", "hihi", "cười"),
 
 
             // khen
