@@ -44,7 +44,6 @@ public class AnalyzeController {
         }
     }
 
-
     @PostMapping("/postComment")
     public String postComment(@DataAccess PostCommentDataAccess access,
                               @RequestParam String claim,
