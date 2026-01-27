@@ -1,7 +1,7 @@
-<script setup>
-import ClaimEmotionConfirm from './components/ClaimEmotionConfirm.vue'
-</script>
-
 <template>
-  <ClaimEmotionConfirm />
+  <Home />
 </template>
+
+<script setup>
+import Home from "./pages/Home.vue";
+</script>
