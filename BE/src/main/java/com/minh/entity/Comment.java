@@ -1,9 +1,13 @@
 package com.minh.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "comment")
+@Getter
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
