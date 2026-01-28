@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.Semaphore;
 
 @RestController
@@ -19,17 +18,23 @@ public class AuthController {
     private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
 
     @PostMapping("/login")
-    public boolean login(@RequestParam String password,
-                         @DataAccess LoginDataAccess loginDataAccess,
-                         HttpServletRequest httpRequest) {
+    public String login(@RequestParam String password,
+                        @RequestParam String name,
+                        @DataAccess LoginDataAccess loginDataAccess) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            Long userId = Jwt.getUserId(httpRequest);
+            Long userId = loginDataAccess.getUserId(name);
             byte[] stored = loginDataAccess.getStored(userId);
-            return Verifier.verify(password.toCharArray(), stored);
+            boolean ok = Verifier.verify(password.toCharArray(), stored);
+
+            if (!ok) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+            }
+
+            return Jwt.issue(userId.toString(), 3600);
         } finally {
             semaphore.release();
         }

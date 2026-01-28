@@ -16,6 +16,11 @@ public class LoginDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
         return user.getPassword();
     }
 
+    public Long getUserId(String name) {
+        User user = repos.userRepository.findByName(name);
+        return user.getId();
+    }
+
     public String save(String name, byte[] password) {
         User existsUser = repos.userRepository.findByName(name);
         if (existsUser != null) {
