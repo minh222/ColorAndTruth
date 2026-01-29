@@ -22,6 +22,9 @@ public class Comment {
     @Column
     private String claim;
 
+    @Column
+    private Long parentId;
+
     public Comment(Long userId, String emotion, String claim) {
 
         this.userId = userId;

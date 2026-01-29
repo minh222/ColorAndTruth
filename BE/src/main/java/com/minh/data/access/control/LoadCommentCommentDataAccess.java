@@ -25,4 +25,13 @@ public class LoadCommentCommentDataAccess { // gateway :má»—i bussiness truy cáº
     public String getEmotionById(Long lastId) {
         return repos.commentRepository.getEmotionById(lastId);
     }
+
+    public List<Comment> loadChildrenById(Long id, Long lastId, int limit) {
+        if (lastId == null) {
+            Long maxId = repos.commentRepository.findMaxIdByParentId(id);
+            lastId = maxId == null ? null : maxId + 1;
+        }
+
+        return repos.commentRepository.findNextByParentId(id, lastId, PageRequest.of(0, limit));
+    }
 }

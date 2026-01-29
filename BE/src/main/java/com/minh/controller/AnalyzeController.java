@@ -23,7 +23,7 @@ public class AnalyzeController {
     private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
 
     @PostMapping("/analyze")
-    public Output analyze(@RequestParam String original) {
+    public Output analyze(String original) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
@@ -36,7 +36,7 @@ public class AnalyzeController {
     }
 
     @PostMapping("/exact")
-    public Output exact(@RequestParam String original) {
+    public Output exact(String original) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
@@ -50,8 +50,8 @@ public class AnalyzeController {
 
     @PostMapping("/postComment")
     public String postComment(@DataAccess PostCommentDataAccess access,
-                              @RequestParam String claim,
-                              @RequestParam String emotion,
+                              String claim,
+                              String emotion,
                               HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
@@ -83,13 +83,29 @@ public class AnalyzeController {
 
     @GetMapping("/loadComment/{id}")
     public String getEmotionById(@DataAccess LoadCommentCommentDataAccess access,
-                              @PathVariable Long id) {
+                                 @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
             return access.getEmotionById(id);
+        } finally {
+            semaphore.release();
+        }
+    }
+
+    @GetMapping("/loadChildren")
+    public List<Comment> loadChildrenById(@DataAccess LoadCommentCommentDataAccess access,
+                                          Long id,
+                                          Long lastId,
+                                          int limit) {
+        if (!semaphore.tryAcquire()) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+        }
+
+        try {
+            return access.loadChildrenById(id, lastId, limit);
         } finally {
             semaphore.release();
         }

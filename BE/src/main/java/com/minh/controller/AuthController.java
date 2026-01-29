@@ -18,8 +18,8 @@ public class AuthController {
     private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
 
     @PostMapping("/login")
-    public String login(@RequestParam String password,
-                        @RequestParam String name,
+    public String login(String password,
+                        String name,
                         @DataAccess LoginDataAccess access) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
@@ -41,8 +41,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String password,
-                           @RequestParam String name,
+    public String register(String password,
+                           String name,
                            @DataAccess LoginDataAccess access) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
@@ -59,7 +59,7 @@ public class AuthController {
 
 
     @GetMapping("/access-token")
-    public String getToken(@RequestParam String userId) {
+    public String getToken(String userId) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
