@@ -20,14 +20,14 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String password,
                         @RequestParam String name,
-                        @DataAccess LoginDataAccess loginDataAccess) {
+                        @DataAccess LoginDataAccess access) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            Long userId = loginDataAccess.getUserId(name);
-            byte[] stored = loginDataAccess.getStored(userId);
+            Long userId = access.getUserId(name);
+            byte[] stored = access.getStored(userId);
             boolean ok = Verifier.verify(password.toCharArray(), stored);
 
             if (!ok) {
@@ -43,14 +43,14 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestParam String password,
                            @RequestParam String name,
-                           @DataAccess LoginDataAccess loginDataAccess) {
+                           @DataAccess LoginDataAccess access) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
             byte[] verifier = Verifier.creteVerify(password.toCharArray());
-            String userId = loginDataAccess.save(name, verifier);
+            String userId = access.save(name, verifier);
             return Jwt.issue(userId, 3600);
         } finally {
             semaphore.release();

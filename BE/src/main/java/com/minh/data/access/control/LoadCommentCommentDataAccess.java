@@ -14,7 +14,7 @@ public class LoadCommentCommentDataAccess { // gateway :má»—i bussiness truy cáº
         this.repos = repos;
     }
 
-    public List<Comment> loadComment(Long lastId, int limit) {
+    public List<Comment> loadComment(Long lastId, int limit) { // load tá»« lastId -> lastId + limit
         if (lastId == null) {
             lastId = repos.commentRepository.findMaxId() + 1;
         }
@@ -22,4 +22,7 @@ public class LoadCommentCommentDataAccess { // gateway :má»—i bussiness truy cáº
         return repos.commentRepository.findNext(lastId, PageRequest.of(0, limit));
     }
 
+    public String getEmotionById(Long lastId) {
+        return repos.commentRepository.getEmotionById(lastId);
+    }
 }

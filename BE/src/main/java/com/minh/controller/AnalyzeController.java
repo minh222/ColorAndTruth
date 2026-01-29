@@ -1,8 +1,8 @@
 package com.minh.controller;
 
-
 import com.minh.apply.ApplyRule;
 import com.minh.apply.Output;
+import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.LoadCommentCommentDataAccess;
 import com.minh.data.access.control.PostCommentDataAccess;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -50,13 +51,15 @@ public class AnalyzeController {
     @PostMapping("/postComment")
     public String postComment(@DataAccess PostCommentDataAccess access,
                               @RequestParam String claim,
-                              @RequestParam String emotion) {
+                              @RequestParam String emotion,
+                              HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            access.saveComment(emotion, claim);
+            Long userId = Jwt.getUserId(request);
+            access.saveComment(userId, emotion, claim);
             return "ok";
         } finally {
             semaphore.release();
@@ -73,6 +76,20 @@ public class AnalyzeController {
 
         try {
             return access.loadComment(lastId, limit);
+        } finally {
+            semaphore.release();
+        }
+    }
+
+    @GetMapping("/loadComment/{id}")
+    public String getEmotionById(@DataAccess LoadCommentCommentDataAccess access,
+                              @PathVariable Long id) {
+        if (!semaphore.tryAcquire()) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+        }
+
+        try {
+            return access.getEmotionById(id);
         } finally {
             semaphore.release();
         }

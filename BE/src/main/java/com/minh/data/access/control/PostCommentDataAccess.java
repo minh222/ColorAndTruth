@@ -11,7 +11,7 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         this.repos = repos;
     }
 
-    public Comment saveComment(String emotion, String claim) {
-        return repos.commentRepository.save(new Comment(1L, emotion, claim));
+    public void saveComment(Long userId, String emotion, String claim) {
+        repos.commentRepository.save(new Comment(userId, emotion, claim));
     }
 }

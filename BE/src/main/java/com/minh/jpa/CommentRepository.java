@@ -10,14 +10,16 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    @Query(
-            "select c " +
+    @Query( "select c " +
             "from Comment c " +
             "where (:lastId is null or c.id < :lastId) " +
             "order by c.id desc"
     )
-    List<Comment> findNext(@Param("lastId") Long lastId, Pageable pageable);
+    List<Comment> findNext(Long lastId, Pageable pageable);
 
     @Query("select max(c.id) from Comment c")
     Long findMaxId();
+
+    @Query("select  c.emotion  from Comment c where c.id = :id")
+    String getEmotionById(Long id);
 }
