@@ -146,7 +146,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { getCurrentInstance } from "vue";
 const emit = defineEmits(["close", "submitted"]);
+
+/* PROXY */
+const { proxy } = getCurrentInstance();
+const authFetch = proxy.$authFetch;
 
 /* CLAIM */
 const claimTextarea = ref(null);
@@ -176,7 +181,7 @@ const onExact = async () => {
   try {
     const query = encodeURIComponent(originalText.value);
 
-    const res = await fetch(`/api/v1/analyze?original=${query}`, {
+    const res = await authFetch(`/api/v1/analyze?original=${query}`, {
       method: "POST",
     });
 
@@ -216,7 +221,7 @@ const analyzeSelectedText = async () => {
   selectedOriginalText.value = selectedText;
 
   // 🔥 CALL API BẰNG ĐOẠN ĐƯỢC CHỌN
-  const res = await fetch(
+  const res = await authFetch(
     `/api/v1/exact?original=${encodeURIComponent(selectedText)}`,
     { method: "POST" },
   );
@@ -251,7 +256,7 @@ const submitClaimEmotion = async () => {
   });
 
   try {
-    const res = await fetch(`/api/v1/postComment?${params.toString()}`, {
+    const res = await authFetch(`/api/v1/postComment?${params.toString()}`, {
       method: "POST",
     });
 

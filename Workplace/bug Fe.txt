@@ -1,0 +1,11 @@
+❌ Import sai tên component → Vue im lặng
+
+❌ App.vue không render Home.vue
+
+❌ absolute + inset:0 phá modal
+
+❌ scoped CSS không ăn
+
+❌ emit mà không có listener
+
+❌ layer che click ❌

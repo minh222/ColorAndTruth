@@ -1,17 +1,21 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+// vite.config.js
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
   plugins: [vue()],
   server: {
-    port: 5174, // 👈 ghi rõ luôn
     proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
+      "/api": {
+        target: "http://localhost:8080",
         changeOrigin: true,
+
+        // 🔥 rất quan trọng với Spring / JWT
         secure: false,
-        rewrite: (path) => path, // 👈 BẮT BUỘC thêm dòng này
+
+        // 🔥 GIỮ NGUYÊN PATH /api/...
+        rewrite: (path) => path,
       },
     },
   },
-})
+});
