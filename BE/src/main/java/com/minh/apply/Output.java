@@ -10,20 +10,18 @@ public class Output {
     private final List<String> emotion;
     private final String attitude;
 
-    public Output(String original, String claim, List<String> emotion, String attitude) {
+    public Output(String original, List<String> emotion, String attitude, String claim) {
         this.original = original;
-        this.claim = claim;
         this.emotion = emotion;
         this.attitude = attitude;
+        this.claim = claim;
     }
 
     public String getOriginal() {
         return original;
     }
 
-    public String getClaim() {
-        return claim;
-    }
+
 
     public List<String> getEmotion() {
         if (emotion.isEmpty()) {
@@ -37,6 +35,10 @@ public class Output {
             return " - ";
         }
         return attitude;
+    }
+
+    public String getClaim() {
+        return claim;
     }
 
 

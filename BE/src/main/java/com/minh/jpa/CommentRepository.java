@@ -14,22 +14,23 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "and c.parentId is null " +
             "order by c.id desc"
     )
-    List<Comment> findNext(Long lastId, Pageable pageable);
+    List<Comment> loadComment(Long lastId, Pageable pageable);
 
     @Query("select max(c.id) from Comment c where c.parentId is null")
     Long findMaxId();
 
-    @Query("select  c.emotion  from Comment c where c.id = :id")
+    @Query("select  c.emotion  from Comment c where :id = c.id")
     String getEmotionById(Long id);
 
-    @Query("select max(c.id) from Comment c where (:id is null and c.parentId is null) or c.parentId = :id")
-    Long findMaxIdByParentId(Long id);
+    @Query( "select max(c.id) from Comment c " +
+            "where :id = c.parentId or (:id is null and c.parentId is null)")
+    Long getMaxChildrenIdById(Long id);
 
-    @Query("select c " +
+    @Query( "select c " +
             "from Comment c " +
-            "where (:lastId is null or c.id < :lastId) " +
-            "and ((:id is null and c.parentId is null) or c.parentId = :id )" +
+            "where (:id = c.parentId or (:id is null and c.parentId is null))" +
+            "and (:lastId > c.id or :lastId is null) " +
             "order by c.id desc"
     )
-    List<Comment> findNextByParentId(Long id, Long lastId, Pageable pageable);
+    List<Comment> loadChildrenById(Long id, Long lastId, Pageable pageable);
 }

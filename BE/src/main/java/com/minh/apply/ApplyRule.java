@@ -3,8 +3,8 @@ package com.minh.apply;
 
 import static com.minh.config.Config.STRING_UTIL;
 import static com.minh.rule.Rule.textRules;
+
 import com.minh.rule.TextRule;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -24,9 +24,9 @@ public class ApplyRule {
 
         return new Output(
                 original,
-                STRING_UTIL.normalize(claim),
                 new ArrayList<>(emotions),
-                String.join(", ", attitudes)
+                String.join(", ", attitudes),
+                STRING_UTIL.normalize(claim)
         );
     }
 
@@ -38,9 +38,9 @@ public class ApplyRule {
 
         return new Output(
                 original,
-                STRING_UTIL.normalize(claim),
                 new ArrayList<>(emotions),
-                String.join(", ", attitudes)
+                String.join(", ", attitudes),
+                STRING_UTIL.normalize(claim)
         );
     }
 

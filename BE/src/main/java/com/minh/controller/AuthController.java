@@ -5,7 +5,8 @@ import com.minh.auth.Jwt;
 import com.minh.auth.Verifier;
 import com.minh.config.DataAccess;
 import com.minh.config.SpringConfig;
-import com.minh.data.access.control.LoginDataAccess;
+import com.minh.data.access.control.auth.LoginDataAccess;
+import com.minh.data.access.control.auth.RegisterDataAccess;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,9 +19,9 @@ public class AuthController {
     private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
 
     @PostMapping("/login")
-    public String login(String password,
-                        String name,
-                        @DataAccess LoginDataAccess access) {
+    public String login(@DataAccess LoginDataAccess access,
+                        String password,
+                        String name) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
@@ -41,9 +42,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(String password,
-                           String name,
-                           @DataAccess LoginDataAccess access) {
+    public String register(@DataAccess RegisterDataAccess access,
+                           String password,
+                           String name) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
@@ -51,20 +52,6 @@ public class AuthController {
         try {
             byte[] verifier = Verifier.creteVerify(password.toCharArray());
             String userId = access.save(name, verifier);
-            return Jwt.issue(userId, 3600);
-        } finally {
-            semaphore.release();
-        }
-    }
-
-
-    @GetMapping("/access-token")
-    public String getToken(String userId) {
-        if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
-        }
-
-        try {
             return Jwt.issue(userId, 3600);
         } finally {
             semaphore.release();

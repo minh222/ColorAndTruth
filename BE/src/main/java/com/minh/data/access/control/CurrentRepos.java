@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CurrentRepos { // danh bạ chứa tất cả repo app
-    @Autowired CommentRepository commentRepository;
-    @Autowired UserRepository userRepository;
+    @Autowired
+    public CommentRepository commentRepository;
+    @Autowired
+    public UserRepository userRepository;
 
 }

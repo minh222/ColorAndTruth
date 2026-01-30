@@ -1,5 +1,6 @@
-package com.minh.data.access.control;
+package com.minh.data.access.control.comment;
 
+import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Comment;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         this.repos = repos;
     }
 
-    public void saveComment(Long userId, String emotion, String claim) {
-        repos.commentRepository.save(new Comment(userId, emotion, claim));
+    public void saveComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim) {
+        repos.commentRepository.save(new Comment(userId, emotion, claim, id, isDebateClaim));
     }
 }

@@ -25,11 +25,16 @@ public class Comment {
     @Column
     private Long parentId;
 
-    public Comment(Long userId, String emotion, String claim) {
+    @Column
+    private Boolean isDebateClaim;
+
+    public Comment(Long userId, String emotion, String claim,Long parentId, Boolean isDebateClaim) {
 
         this.userId = userId;
         this.emotion = emotion;
         this.claim = claim;
+        this.parentId = parentId;
+        this.isDebateClaim = isDebateClaim;
     }
 
     public Comment() {

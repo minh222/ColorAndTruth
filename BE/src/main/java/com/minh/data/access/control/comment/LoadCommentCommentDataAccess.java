@@ -1,7 +1,9 @@
-package com.minh.data.access.control;
+package com.minh.data.access.control.comment;
 
+import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Comment;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,20 +20,7 @@ public class LoadCommentCommentDataAccess { // gateway :má»—i bussiness truy cáº
         if (lastId == null) {
             lastId = repos.commentRepository.findMaxId() + 1;
         }
-
-        return repos.commentRepository.findNext(lastId, PageRequest.of(0, limit));
-    }
-
-    public String getEmotionById(Long lastId) {
-        return repos.commentRepository.getEmotionById(lastId);
-    }
-
-    public List<Comment> loadChildrenById(Long id, Long lastId, int limit) {
-        if (lastId == null) {
-            Long maxId = repos.commentRepository.findMaxIdByParentId(id);
-            lastId = maxId == null ? null : maxId + 1;
-        }
-
-        return repos.commentRepository.findNextByParentId(id, lastId, PageRequest.of(0, limit));
+        Pageable pageLimit = PageRequest.of(0, limit);
+        return repos.commentRepository.loadComment(lastId, pageLimit);
     }
 }
