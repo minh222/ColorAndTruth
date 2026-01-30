@@ -116,7 +116,7 @@
               v-if="showAttitude && activePanel === 'emotion'"
               class="box emotion-box"
             >
-              <span class="tag">CẢM SÚC</span>
+              <span class="tag">TRUE EMOTION/BELIVE AND HEART</span>
               <ul>
                 <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
               </ul>
@@ -133,7 +133,7 @@
             <button
               class="submit-btn"
               :disabled="loading || !emotion.length"
-              @click="submitClaimEmotion"
+              @click="showDebateConfirm = true"
             >
               📤 Gửi Claim + Emotion
             </button>
@@ -142,12 +142,30 @@
       </div>
     </div>
   </div>
+  
+  <!-- POPUP CONFIRM -->
+  <div v-if="showDebateConfirm" class="debate-popup">
+    <div class="popup-card">
+      <!-- ❌ NÚT ĐÓNG -->
+      <button class="popup-close" @click="cancelDebatePopup"> ✖ </button>
+      
+      <p>🗣️ Sau khi có người xem true emotion của bạn, bạn có cho phép họ reply không, nếu không họ không thể reply, nếu có họ chỉ có thể bình luận xung quanh ý chính mà không được phản biện true emotion (họ được phép công nhận true emotion của bạn) ? (nhấn x để suy nghĩ thêm)</p>
+
+      <div class="popup-actions">
+        <button @click="confirmSubmit(true)">Có</button>
+        <button @click="confirmSubmit(false)">Không</button>
+      </div>
+
+    </div>
+  </div>
+
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { getCurrentInstance } from "vue";
 const emit = defineEmits(["close", "submitted"]);
+const showDebateConfirm = ref(false);
 
 /* PROXY */
 const { proxy } = getCurrentInstance();
@@ -174,6 +192,17 @@ const loading = ref(false);
 const showConfirmPanel = ref(false);
 
 /* ACTION */
+const props = defineProps({
+  replyTo: {
+    type: [Object, null],
+    default: null
+  }
+});
+
+const cancelDebatePopup = () => {
+  showDebateConfirm.value = false;
+};
+
 const onExact = async () => {
   if (!originalText.value.trim()) return;
 
@@ -249,11 +278,21 @@ const onClose = () => {
   emit("close");
 };
 
-const submitClaimEmotion = async () => {
+const confirmSubmit = async (isDebateClaim) => {
+  showDebateConfirm.value = false;
+
   const params = new URLSearchParams({
     claim: claim.value,
     emotion: selectedOriginalText.value,
   });
+
+  if (isDebateClaim) {
+    params.append("isDebateClaim", "true");
+  }
+
+  if (props.replyTo) {
+    params.append("id", props.replyTo.id);
+  }
 
   try {
     const res = await authFetch(`/api/v1/postComment?${params.toString()}`, {
@@ -262,20 +301,14 @@ const submitClaimEmotion = async () => {
 
     if (!res.ok) throw new Error("Request failed");
 
-    // 🔥 reset cửa sổ
     resetState();
-
-    // 🔥 báo cho CHA reload
     emit("submitted");
-
-    // 🔥 đóng modal
     emit("close");
   } catch (e) {
     console.error(e);
     alert("Không gửi được dữ liệu");
   }
 };
-
 
 const onClaimBlur = () => {
   claim.value = editedClaim.value;
@@ -321,6 +354,57 @@ const resetState = () => {
 </script>
 
 <style scoped>
+.debate-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-card {
+  background: white;
+  padding: 20px 24px;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  text-align: center;
+  min-width: 320px;
+}
+
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.popup-close:hover {
+  opacity: 1;
+}
+
+.popup-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.popup-actions button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+
 /* PAGE */
 .page {
   width: min(960px, 100vw);

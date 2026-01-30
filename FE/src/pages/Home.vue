@@ -1,10 +1,28 @@
 <template>
+  <!-- 🔎 GLOBAL RULE NOTE -->
+  <div class="global-rule">
+    <p>
+      Nếu bạn không xem <b>true emotion</b> bạn có thể bình luận thoải mái,
+      không có ràng buộc gì.
+    </p>
+
+    <p>
+      Nếu bạn xem <b>true emotion</b> của con người, bạn phải chấp nhận
+      <b>không được phản biện</b> nó.
+    </p>
+
+    <p>
+      Một số comment có thể <b>khóa phản hồi</b> sau khi xem true emotion
+      nếu người đăng cài đặt thiết lập đó.
+    </p>
+  </div>
+
   <!-- LOGOUT -->
   <button class="logout-btn" @click="logout">🚪 Logout</button>
 
   <!-- OPEN MODAL -->
-  <button class="open-btn" @click="showModal = true">
-    🪟 Mở cửa sổ phân tích
+  <button class="open-btn" @click="openAnalyze">
+    🪟 Bình luận ý kiến
   </button>
 
   <!-- COMMENT LIST -->
@@ -15,6 +33,7 @@
       v-for="c in comments"
       :key="c.id"
       :comment="c"
+      @reply="onReply"
     />
 
     <button
@@ -35,10 +54,13 @@
     class="overlay"
     @click.self="showModal = false"
   >
-    <ClaimEmotionConfirm
-      @close="showModal = false"
-      @submitted="onReload"
-    />
+
+  <ClaimEmotionConfirm
+    :replyTo="replyingTo"
+    @close="() => { replyingTo = null; showModal = false }"
+    @submitted="onReload"
+  />
+
   </div>
 </template>
 
@@ -66,6 +88,19 @@ const lastId = ref(null);
 const loading = ref(false);
 const noMore = ref(false);
 const LIMIT = 5;
+
+/* REPLY STATE */
+const replyingTo = ref(null);
+
+const onReply = (comment) => {
+  replyingTo.value = comment;
+  showModal.value = true;  
+};
+
+const openAnalyze = () => {
+  replyingTo.value = null; // 👈 chế độ phân tích thường
+  showModal.value = true;
+};
 
 const loadComments = async () => {
   if (loading.value || noMore.value) return;
@@ -126,6 +161,7 @@ onMounted(loadComments);
   padding: 16px;
   background: #fff;
   border-radius: 12px;
+  text-align: left;   /* ✅ */
 }
 
 .logout-btn {
@@ -139,4 +175,28 @@ onMounted(loadComments);
   color: #fff;
   cursor: pointer;
 }
+.global-rule {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  max-width: 720px;          /* 👈 rất quan trọng cho text dài */
+  padding: 12px 16px;
+
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
+
+  color: rgba(0,0,0,0.45);
+  font-style: italic;
+  text-align: center;
+
+  pointer-events: none;
+  z-index: 1;
+}
+.global-rule p {
+  margin: 6px 0;
+}
+
 </style>
