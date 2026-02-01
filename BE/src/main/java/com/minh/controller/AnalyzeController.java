@@ -1,7 +1,7 @@
 package com.minh.controller;
 
-import com.minh.apply.ApplyRule;
-import com.minh.apply.Output;
+import com.minh.apply.rule.ApplyRule;
+import com.minh.apply.rule.Output;
 import com.minh.config.SpringConfig;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

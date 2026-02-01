@@ -3,14 +3,9 @@ package com.minh.config;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.minh.business.StringOptimizeImlp;
-import com.minh.abtract.String;
-import com.minh.entity.Comment;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.minh.business.abtract.String;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public final class Config {
@@ -20,4 +15,6 @@ public final class Config {
                     .build();
 
     public static final String STRING_UTIL = new StringOptimizeImlp(); // StringSpecImpl StringOptimizeImlp
+
+    public static final LocalDate today = LocalDate.now();
 }

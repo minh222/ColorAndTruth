@@ -1,4 +1,4 @@
-package com.minh.abtract;
+package com.minh.business.abtract;
 
 public interface String {
     boolean contains(java.lang.String s, java.lang.String target);

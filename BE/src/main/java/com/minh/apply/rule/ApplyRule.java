@@ -1,10 +1,8 @@
-package com.minh.apply;
+package com.minh.apply.rule;
 
 
 import static com.minh.config.Config.STRING_UTIL;
-import static com.minh.rule.Rule.textRules;
-
-import com.minh.rule.TextRule;
+import static com.minh.apply.rule.Rule.textRules;
 
 import java.util.*;
 

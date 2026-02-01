@@ -1,6 +1,6 @@
 package com.minh.business;
 
-import com.minh.abtract.String;
+import com.minh.business.abtract.String;
 import com.minh.config.Config;
 import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;

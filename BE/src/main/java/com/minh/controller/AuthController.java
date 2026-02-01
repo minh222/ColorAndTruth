@@ -35,7 +35,7 @@ public class AuthController {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
             }
 
-            return Jwt.issue(userId.toString(), 3600);
+            return Jwt.issue(userId.toString(), 10000);
         } finally {
             semaphore.release();
         }
@@ -52,9 +52,11 @@ public class AuthController {
         try {
             byte[] verifier = Verifier.creteVerify(password.toCharArray());
             String userId = access.save(name, verifier);
-            return Jwt.issue(userId, 3600);
+            return Jwt.issue(userId, 10000);
         } finally {
             semaphore.release();
         }
     }
+
+
 }

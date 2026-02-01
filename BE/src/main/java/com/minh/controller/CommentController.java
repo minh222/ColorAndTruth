@@ -1,7 +1,5 @@
 package com.minh.controller;
 
-import com.minh.apply.ApplyRule;
-import com.minh.apply.Output;
 import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.comment.GetEmotionByIdDataAccess;
@@ -61,13 +59,15 @@ public class CommentController {
 
     @GetMapping("/loadComment/{id}")
     public String getEmotionById(@DataAccess GetEmotionByIdDataAccess access,
-                                 @PathVariable Long id) {
+                                 @PathVariable Long id,
+                                 HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            return access.getEmotionById(id);
+            Long userId = Jwt.getUserId(request);
+            return access.getEmotionById(id, userId);
         } finally {
             semaphore.release();
         }
@@ -88,5 +88,4 @@ public class CommentController {
             semaphore.release();
         }
     }
-
 }

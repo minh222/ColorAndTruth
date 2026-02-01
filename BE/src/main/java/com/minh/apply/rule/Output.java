@@ -1,4 +1,4 @@
-package com.minh.apply;
+package com.minh.apply.rule;
 
 import java.util.Collections;
 import java.util.List;

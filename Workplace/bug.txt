@@ -5,20 +5,38 @@
 - đo p99 - đã có tool đo
 - fix Hoa sang thường done
 - tao -> dính ta done
-- có cho phép chính sửa emo ko? ko
+- có cho phép chính sửa emo ko? ko done
 - build comnment be done
 - load comment done
 - lấy token lưu userid done
-
-- tách user
-- login user
+- thiết kế lại popup done
+- tách user done 
+- login user done
+- hiện user done
+- set số lần xóa done
+- ẩn emotion f12 done
 
 - deploy fe
 - thiết kế lưu ý đồ
-- ẩn emotion f12
-- hiện user
+
 - thêm layer attitude
 - thêm case attitude
 - thêm logo app
-- reply comment
+- reply comment - thêm parent cmnt id - tree -> lazy load
 - bug register 
+- refactor lại analyze
+- pass > 5 kí tự
+- click xem lưu user xem -> tạo bảng read
+- logout khi token quá hạn
+- tổ chức lại config
+- upload image
+- thêm trước sau
+- màn hình bung
+
+- ghi đè file update
+- reply quote lại
+- đánh số phản hồi
+- chia lại data access
+- deploy db
+- load user theo commnent
+- load more, thu nhỏ

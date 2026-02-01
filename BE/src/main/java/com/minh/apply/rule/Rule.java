@@ -1,4 +1,4 @@
-package com.minh.rule;
+package com.minh.apply.rule;
 
 import java.util.Arrays;
 import java.util.List;

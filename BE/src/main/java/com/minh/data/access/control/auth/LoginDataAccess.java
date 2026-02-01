@@ -21,4 +21,12 @@ public class LoginDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
         User user = repos.userRepository.findByName(name);
         return user.getId();
     }
+
+    public User getUser(Long id) {
+        return repos.userRepository.findById(id);
+    }
+
+    public void updateUser(User user) {
+        repos.userRepository.save(user);
+    }
 }
