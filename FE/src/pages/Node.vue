@@ -33,6 +33,20 @@
       />
     </div>
   </div>
+  <!-- POPUP CONFIRM -->
+  <div v-if="showDebateConfirm" class="debate-popup">
+    <div class="popup-card">
+      <p>
+        🗣️  Không đc phản biện phần này nếu muốn xem 
+      </p>
+
+      <div class="popup-actions">
+        <button @click="confirmSubmit(true)">Oke</button>
+        <button @click="confirmSubmit(false)">Không xem nữa</button>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup>
@@ -42,6 +56,9 @@ import { ref, getCurrentInstance } from "vue";
 defineOptions({
   name: "Node"
 });
+
+const showDebateConfirm = ref(false);
+const pendingShowEmotion = ref(false); // đánh dấu đang chờ confirm
 
 /* reply */
 const emit = defineEmits(["reply"]);
@@ -67,15 +84,16 @@ const props = defineProps({
   comment: { type: Object, required: true }
 });
 
+const cancelDebatePopup = () => {
+  showDebateConfirm.value = false;
+  pendingShowEmotion.value = false;
+};
 
-const toggleEmotion = async () => {
-  if (showEmotion.value) {
-    showEmotion.value = false;
-    return;
-  }
+const confirmSubmit = async (allowReply) => {
+  showDebateConfirm.value = false;
+  pendingShowEmotion.value = false;
 
-  const ok = window.confirm("Bạn ko đc phản biện vào phần này (có thể công nhận) vì nó là cảm xúc/ niềm tin con người");
-  if (!ok) return;
+  if (!allowReply) return;
 
   if (!emotion.value) {
     const res = await authFetch(`/api/v1/loadComment/${props.comment.id}`);
@@ -83,6 +101,16 @@ const toggleEmotion = async () => {
   }
 
   showEmotion.value = true;
+};
+
+
+const toggleEmotion = async () => {
+  if (showEmotion.value) {
+    showEmotion.value = false;
+    return;
+  }
+  showDebateConfirm.value = true;
+   
 };
 
 const toggleReplies = async () => {
@@ -106,6 +134,56 @@ const toggleReplies = async () => {
 
 
 <style scoped>
+.debate-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-card {
+  background: white;
+  padding: 20px 24px;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  text-align: center;
+  min-width: 320px;
+}
+
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: 0.6;
+}
+
+.popup-close:hover {
+  opacity: 1;
+}
+
+.popup-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.popup-actions button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
 .comment-node {
   margin-top: 10px;
   display: block;
