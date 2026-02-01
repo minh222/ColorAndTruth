@@ -17,19 +17,20 @@
     </p>
   </div>
 
-  <p v-if="user.avatarChangeCount !== undefined" class="avatar-limit">
-    Bạn còn {{ 3 - user.avatarChangeCount }} lần xóa avatar trong hôm nay
-  </p>
   <!-- USER INFO -->
   <div class="user-card">
     <div class="user-info">
       <h4>{{ user.name }}</h4>
       <p>{{ user.email }}</p>
     </div>
+
     <label class="avatar-wrapper">
       <img
         :src="avatarSrc"
         class="avatar"
+        referrerpolicy="no-referrer"
+        loading="lazy"
+        decoding="async"
       />
 
       <!-- ⏳ loading overlay -->
@@ -41,11 +42,11 @@
         type="file"
         accept="image/*"
         hidden
-        :disabled="avatarUploading"
+        :disabled="user.avatar || avatarUploading"
         @change="uploadAvatar"
       />
 
-      <span v-if="!avatarUploading" class="edit-avatar">✏️</span>
+      <span v-if="!user.avatar &&!avatarUploading" class="edit-avatar">✏️</span>
     </label>
 
     <div v-if="user.avatar" class="avatar-actions">
@@ -62,10 +63,14 @@
         🗑️ Xóa avatar
       </button>
     </div>
-  </div>
+    <p v-if="user.avatarChangeCount !== undefined" class="avatar-limit">
+      Bạn còn {{ 20 - user.avatarChangeCount }} lần xóa avatar trong hôm nay
+    </p>
+    <button class="logout-inline" @click="logout">
+    🚪 Logout
+    </button>
 
-  <!-- LOGOUT -->
-  <button class="logout-btn" @click="logout">🚪 Logout</button>
+  </div>
 
   <!-- OPEN MODAL -->
   <button class="open-btn" @click="openAnalyze">
@@ -82,17 +87,27 @@
       :comment="c"
       @reply="onReply"
     />
+    <div class="comment-actions">
+      <button
+        type="button"
+        v-if="!noMore && !loading"
+        @click="loadComments"
+        class="load-more"
+      >
+        Load more
+      </button>
 
-    <button
-      v-if="!noMore && !loading"
-      @click="loadComments"
-      class="load-more"
-    >
-      Load more
-    </button>
+      <button
+        type="button"
+        v-if="comments.length > LIMIT"
+        class="collapse-btn"
+        @click="collapse"
+      >
+        ⬆️ Thu gọn
+      </button>
+    </div>
 
-    <p v-if="loading">Đang load...</p>
-    <p v-if="noMore">Hết comment</p>
+    <p v-if="loading">Đang load...</p> 
   </div>
 
   <!-- MODAL -->
@@ -158,9 +173,11 @@ const avatarSrc = ref(defaultAvatar);
 const loadUser = async () => {
   const res = await authFetch("/api/v1/getUser");
   const data = await res.json();
+
   user.value = data;
   avatarSrc.value = data.avatar || defaultAvatar;
 };
+
 
 
 /* UPDATE AVATAR */
@@ -191,7 +208,7 @@ const removeAvatar = async () => {
 
     // 🔒 Bị giới hạn theo ngày
     if (res.status === 429) {
-      alert(err.message); // "Mỗi ngày chỉ được xóa avatar 3 lần"
+      alert(err.message); // "Mỗi ngày chỉ được xóa avatar 20 lần"
       return;
     }
 
@@ -249,7 +266,7 @@ const comments = ref([]);
 const lastId = ref(null);
 const loading = ref(false);
 const noMore = ref(false);
-const LIMIT = 5;
+const LIMIT = 4;
 const replyingTo = ref(null);
 
 const onReply = (comment) => {
@@ -294,6 +311,15 @@ onMounted(() => {
   loadUser();
   loadComments();
 });
+const collapse = () => {
+  comments.value.splice(LIMIT); // giữ lại LIMIT comment đầu
+  lastId.value = comments.value.at(-1)?.id ?? null;
+  noMore.value = false;
+
+  window.scrollTo({ bottom: 0, behavior: "smooth" });
+};
+
+
 </script>
 
 <style scoped>
@@ -390,7 +416,6 @@ onMounted(() => {
 }
 
 .logout-btn {
-  position: fixed;
   top: 16px;
   right: 16px;
   padding: 8px 14px;
@@ -402,7 +427,7 @@ onMounted(() => {
 }
 .global-rule {
   position: fixed;
-  bottom: 20px;
+  top: 0px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -467,6 +492,26 @@ onMounted(() => {
   flex-direction: column;
   gap: 6px;
 }
+.logout-inline {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #f3f4f6;
+  color: #333;
+  cursor: pointer;
+  font-size: 13px;
+}
 
-
+.logout-inline:hover {
+  background: #fee2e2;
+  color: crimson;
+}
+.comment-actions {
+  display: flex;
+  justify-content: center; /* 👈 kéo cả cụm ra giữa */
+  align-items: center;
+  gap: 16px;              /* 👈 khoảng cách giữa 2 nút */
+  margin-top: 16px;
+}
 </style>

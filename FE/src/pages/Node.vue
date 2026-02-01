@@ -8,7 +8,12 @@
           <button @click="toggleReplies">💬</button>
           <button @click="$emit('reply', comment)">↩ Reply</button>
           <button @click="toggleEmotion">
-            {{ showEmotion ? "👁️‍🗨️" : "👁️" }}
+            <span
+              class="emotion-toggle"
+              :class="{ open: showEmotion }"
+            >
+              {{ showEmotion ? "👁️" : "🕶️ (secret true emotion)" }}
+            </span>
           </button>
         </div>
       </div>
@@ -37,7 +42,7 @@
   <div v-if="showDebateConfirm" class="debate-popup">
     <div class="popup-card">
       <p>
-        🗣️  Không đc phản biện phần này nếu muốn xem 
+        🗣️  Không đc phản biện phần secret true emotion nếu muốn xem 
       </p>
 
       <div class="popup-actions">
@@ -210,17 +215,50 @@ const toggleReplies = async () => {
   width: 260px;
   height: 100%;
 
-  background: #f1f3f5;
-  border-left: 2px solid #ddd;
+  background: linear-gradient(135deg, #fff1f2, #fde2e4);
+  border-left: 2px solid #f3c6cc;
+
+  padding: 20px;
 
   transform: translateX(100%);
   transition: transform 0.25s ease;
+
+  /* 👇 nghệ thuật nằm đây */
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  line-height: 1.7;
+  font-weight: 500;
+  color: #7a2e3a;
+  letter-spacing: 0.3px;
+  font-style: italic;
 }
+
 
 .emotion-panel.show {
   transform: translateX(0);
 }
 
+.emotion-panel.show::before {
+  opacity: 1;
+}
+
+.emotion-panel::before {
+  content: "secret true emotion";
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: rgba(183, 74, 99, 0.12);
+  pointer-events: none;
+  user-select: none;
+}
 
 /* 🔥 CHỈ CHỪA CHỖ KHI MỞ */
 .comment-box.with-emotion {
@@ -293,5 +331,25 @@ const toggleReplies = async () => {
   display: flex;
   gap: 6px;
 }
+.emotion-toggle {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 14px;
+  color: rgba(0,0,0,0.6);
+  transition: 
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    filter 0.35s ease;
+  opacity: 0.6;
+  filter: blur(0.3px);
+}
+
+/* 🖤 khi mở nội tâm */
+.emotion-toggle.open {
+  opacity: 1;
+  transform: scale(1.08);
+  filter: blur(0);
+}
+ 
 
 </style>
