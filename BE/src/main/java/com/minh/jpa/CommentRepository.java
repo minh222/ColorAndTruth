@@ -15,7 +15,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select new com.minh.data.access.control.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count(cl.ancestorId), u.id) " +
             "from Comment c join User u on c.userId = u.id " +
-            "left join Closure cl on c.id = cl.ancestorId   " +
+            "join Closure cl on c.id = cl.ancestorId   " +
             "where (:lastId is null or c.id < :lastId) " +
             "and c.parentId is null " +
             "and c.date = :today " +
@@ -37,7 +37,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select new com.minh.data.access.control.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id) " +
             "from Comment c join User u on c.userId = u.id " +
-            "left join Closure cl on c.id = cl.ancestorId   " +
+            "join Closure cl on c.id = cl.ancestorId   " +
             "where (:id = c.parentId or (:id is null and c.parentId is null))" +
             "and (:lastId > c.id or :lastId is null) " +
             "and cl.ancestorId <> :id " +

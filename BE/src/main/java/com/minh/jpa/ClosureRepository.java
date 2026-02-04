@@ -19,6 +19,6 @@ public interface ClosureRepository extends JpaRepository<Closure, Long> {
 
      @Transactional
      @Modifying
-     @Query("delete from Closure c where c.ancestorId in :ids and c.ancestorId <> : id ")
-     void deleteByAncestorId(List<Long> ids, Long id);
+     @Query("delete from Closure c where c.descendantId = :id or c.ancestorId = :id ")
+     void deleteById(Long id);
 }

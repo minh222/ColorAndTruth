@@ -96,7 +96,6 @@ public class CommentController {
         }
 
         try {
-            access.removeComment(id);
             return access.removeComment(id);
         } finally {
             semaphore.release();

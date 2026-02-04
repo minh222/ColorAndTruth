@@ -30,13 +30,12 @@ public class LoadChildrenByIdDataAccess { // gateway :mỗi bussiness truy cập
     }
 
 
+
     @Transactional
     public Integer removeComment(Long id) {
-        repos.commentRepository.deleteById(id);
-
         Long  parentId = repos.commentRepository.getParentId( id);
-        List<Long> ids = Arrays.asList(parentId, id);
-        repos.closureRepository.deleteByAncestorId(ids, id);
+        repos.closureRepository.deleteById(id);
+        repos.commentRepository.deleteById(id);
         return repos.commentRepository.getCountById(parentId);
     }
 }
