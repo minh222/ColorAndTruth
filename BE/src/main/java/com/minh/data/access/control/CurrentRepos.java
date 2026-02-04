@@ -1,5 +1,6 @@
 package com.minh.data.access.control;
 
+import com.minh.jpa.ClosureRepository;
 import com.minh.jpa.CommentRepository;
 import com.minh.jpa.UserRepository;
 import com.minh.jpa.ViewEmotionRepository;
@@ -14,5 +15,7 @@ public class CurrentRepos { // danh bạ chứa tất cả repo app
     public UserRepository userRepository;
     @Autowired
     public ViewEmotionRepository viewEmotionRepository;
+    @Autowired
+    public ClosureRepository closureRepository;
 
 }

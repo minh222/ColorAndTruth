@@ -2,12 +2,10 @@ package com.minh.controller;
 
 import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
-import com.minh.data.access.control.comment.GetEmotionByIdDataAccess;
-import com.minh.data.access.control.comment.LoadChildrenByIdDataAccess;
-import com.minh.data.access.control.comment.LoadCommentCommentDataAccess;
-import com.minh.data.access.control.comment.PostCommentDataAccess;
+import com.minh.data.access.control.comment.*;
 import com.minh.config.SpringConfig;
 
+import com.minh.data.access.control.comment.response.LoadCommentResponse;
 import com.minh.entity.Comment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,15 +41,16 @@ public class CommentController {
     }
 
     @GetMapping("/loadComment")
-    public List<Comment> loadComment(@DataAccess LoadCommentCommentDataAccess access,
-                                     Long lastId,
-                                     int limit) {
+    public List<LoadCommentResponse> loadComment(@DataAccess LoadCommentCommentDataAccess access,
+                                                 Long lastId,
+                                                 Integer dayAgo,
+                                                 int limit) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            return access.loadComment(lastId, limit);
+            return access.loadComment(lastId, limit, dayAgo);
         } finally {
             semaphore.release();
         }
@@ -74,7 +73,7 @@ public class CommentController {
     }
 
     @GetMapping("/loadChildren")
-    public List<Comment> loadChildrenById(@DataAccess LoadChildrenByIdDataAccess access,
+    public List<LoadCommentResponse> loadChildrenById(@DataAccess LoadChildrenByIdDataAccess access,
                                           Long id,
                                           Long lastId,
                                           int limit) {
@@ -84,6 +83,21 @@ public class CommentController {
 
         try {
             return access.loadChildrenById(id, lastId, limit);
+        } finally {
+            semaphore.release();
+        }
+    }
+
+    @PostMapping("/remove/{id}")
+    public Integer removeComment(@DataAccess LoadChildrenByIdDataAccess access,
+                                @PathVariable Long id) {
+        if (!semaphore.tryAcquire()) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+        }
+
+        try {
+            access.removeComment(id);
+            return access.removeComment(id);
         } finally {
             semaphore.release();
         }

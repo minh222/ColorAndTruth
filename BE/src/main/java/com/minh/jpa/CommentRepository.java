@@ -1,20 +1,28 @@
 package com.minh.jpa;
 
+import com.minh.data.access.control.comment.response.LoadCommentResponse;
 import com.minh.entity.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    @Query("select c " +
-            "from Comment c " +
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    @Query("select new com.minh.data.access.control.comment.response.LoadCommentResponse" +
+            "(c.id, c.emotion, c.claim, u.name, u.avatar, count(cl.ancestorId), u.id) " +
+            "from Comment c join User u on c.userId = u.id " +
+            "left join Closure cl on c.id = cl.ancestorId   " +
             "where (:lastId is null or c.id < :lastId) " +
             "and c.parentId is null " +
+            "and c.date = :today " +
+            "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id " +
             "order by c.id desc"
     )
-    List<Comment> loadComment(Long lastId, Pageable pageable);
+    List<LoadCommentResponse> loadComment(Long lastId, LocalDate today, Pageable pageable);
 
     @Query("select max(c.id) from Comment c where c.parentId is null")
     Long findMaxId();
@@ -26,11 +34,21 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             "where :id = c.parentId or (:id is null and c.parentId is null)")
     Long getMaxChildrenIdById(Long id);
 
-    @Query( "select c " +
-            "from Comment c " +
+    @Query("select new com.minh.data.access.control.comment.response.LoadCommentResponse" +
+            "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id) " +
+            "from Comment c join User u on c.userId = u.id " +
+            "left join Closure cl on c.id = cl.ancestorId   " +
             "where (:id = c.parentId or (:id is null and c.parentId is null))" +
             "and (:lastId > c.id or :lastId is null) " +
+            "and cl.ancestorId <> :id " +
+            "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id " +
             "order by c.id desc"
     )
-    List<Comment> loadChildrenById(Long id, Long lastId, Pageable pageable);
+    List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, Pageable pageable);
+
+    @Query("select count(c.id) from Comment c where c.parentId =  :id ")
+    int getCountById(Long id);
+
+    @Query("select p.parentId from Comment p where p.id = :id")
+    Long getParentId(Long id);
 }

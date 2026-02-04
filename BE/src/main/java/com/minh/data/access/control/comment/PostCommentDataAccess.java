@@ -1,18 +1,40 @@
 package com.minh.data.access.control.comment;
 
 import com.minh.data.access.control.CurrentRepos;
+import com.minh.entity.Closure;
 import com.minh.entity.Comment;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos repos;
+    public final CurrentRepos r;
 
     public PostCommentDataAccess(CurrentRepos repos) {
-        this.repos = repos;
+        this.r = repos;
     }
 
+    @Transactional
     public void saveComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim) {
-        repos.commentRepository.save(new Comment(userId, emotion, claim, id, isDebateClaim));
+        Comment newComment = r.commentRepository.save(
+                new Comment(userId, emotion, claim, id, isDebateClaim, LocalDate.now(), 0)
+        );
+        Long newCommentId = newComment.getId();
+
+        if (id != null) {
+            List<Closure> closures = r.closureRepository.findAllByDescendantId(id);
+
+            List<Closure> copies = new ArrayList<>();
+            closures.forEach(
+        c -> copies.add(new Closure(c.getAncestorId(), newCommentId))
+            );
+            r.closureRepository.saveAll(copies);
+        }
+
+        r.closureRepository.save(new Closure(newCommentId, newCommentId));
     }
 }
