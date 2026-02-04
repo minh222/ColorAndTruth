@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "./pages/Auth.vue";
 import Home from "./pages/Home.vue";
+import Draw from "./pages/Draw.vue";
 
 const routes = [
   { path: "/", redirect: "/auth" },
@@ -10,21 +11,15 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/draw",
+    component: Draw,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("token");
-
-  if (to.meta.requiresAuth && !token) {
-    next("/auth");
-  } else {
-    next();
-  }
 });
 
 export default router;

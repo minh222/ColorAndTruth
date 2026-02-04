@@ -58,7 +58,7 @@ let speechTimer = null
 
 const EMOTIONS = {
   idle: ["Hmm...", "Đứng nghỉ tí 😐"],
-  happy: ["Đi dạo vui ghê~", "Biết bí mật rùi nha 😄"],
+  happy: ["Đi dạo vui ghê~", "Biết bí mật rùi nha 😄", "Cậu đang xem gì zọ"],
   angry: ["Tới mép rồi 😠"],
   sad: ["Mỏi chân quá 😢"]
 }

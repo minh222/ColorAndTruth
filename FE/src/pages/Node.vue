@@ -2,10 +2,25 @@
   <div class="comment-node">
     <div class="comment-box">
       <div class="content">
+        <!-- USER INFO -->
+        <div class="user-row">
+          <img
+            class="avatar"
+            :src="comment.avatar || '/default-avatar.png'"
+            alt="avatar"
+          />
+          <span class="username">
+            {{ comment.name || 'Ẩn danh' }}
+          </span>
+        </div>
+
         <p class="claim">{{ comment.claim }}</p>
 
         <div class="actions">
-          <button @click="toggleReplies">💬</button>
+          <button @click="toggleReplies">
+            💬 <span v-if="comment.count">({{ comment.count }})</span>
+          </button>
+
           <button @click="$emit('reply', comment)">↩ Reply</button>
           <button @click="toggleEmotion">
             <span
@@ -15,6 +30,15 @@
               {{ showEmotion ? "👁️" : "🕶️ (secret true emotion)" }}
             </span>
           </button>
+
+          <button
+            v-if="Number(comment.userId) === Number(currentUserId)"
+            class="delete-btn"
+            @click="confirmDelete"
+          >
+            🗑️
+          </button>
+
         </div>
       </div>
 
@@ -24,19 +48,23 @@
       >
         {{ emotion }}
       </div>
-    </div>
-
-    <!-- children -->
-    <div v-if="opened" class="children">
-      <p v-if="loading">⏳ Đang tải trả lời...</p>
+      <div v-if="opened" class="children">
+        <p v-if="loading">⏳ Đang tải trả lời...</p>
 
       <Node
         v-for="c in children"
         :key="c.id"
         :comment="c"
-        @reply="$emit('reply', $event)"  
+        :currentUserId="currentUserId"
+        @reply="$emit('reply', $event)"
+        @deleted="removeChild"
       />
+
+      </div>
     </div>
+
+    <!-- children -->
+
   </div>
   <!-- POPUP CONFIRM -->
   <div v-if="showDebateConfirm" class="debate-popup">
@@ -57,6 +85,30 @@
 <script setup>
 
 import { ref, getCurrentInstance } from "vue";
+const emit = defineEmits(["reply", "deleted"]);
+const confirmDelete = async () => {
+  const ok = confirm("Xóa comment này nha? Bay là bay luôn đó 😬");
+  if (!ok) return;
+
+  await authFetch(`/api/v1/remove/${props.comment.id}`, {
+    method: "POST"
+  });
+
+  emit("deleted", props.comment.id);
+};
+
+const removeChild = (id) => {
+  // 1. remove child khỏi list
+  children.value = children.value.filter(c => c.id !== id);
+
+  // 2. trừ count hiển thị
+  if (props.comment.count > 0) {
+    props.comment.count--;
+  }
+
+  // 3. bubble tiếp lên CHA (nếu còn cấp trên)
+  emit("deleted", id);
+};
 
 defineOptions({
   name: "Node"
@@ -64,9 +116,6 @@ defineOptions({
 
 const showDebateConfirm = ref(false);
 const pendingShowEmotion = ref(false); // đánh dấu đang chờ confirm
-
-/* reply */
-const emit = defineEmits(["reply"]);
 
 /* emotion */
 const showEmotion = ref(false);
@@ -86,7 +135,8 @@ const onReply = () => {
 };
 
 const props = defineProps({
-  comment: { type: Object, required: true }
+  comment: { type: Object, required: true },
+  currentUserId: { type: Number, required: true }
 });
 
 const cancelDebatePopup = () => {
@@ -210,8 +260,9 @@ const toggleReplies = async () => {
 .emotion-panel {
   position: absolute;
   top: 0;
+  bottom: 0;     /* 👈 quan trọng */
   right: 0;
-
+  
   width: 260px;
   height: 100%;
 
@@ -351,5 +402,26 @@ const toggleReplies = async () => {
   filter: blur(0);
 }
  
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
 
 </style>

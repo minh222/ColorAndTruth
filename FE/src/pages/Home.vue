@@ -66,9 +66,20 @@
     <p v-if="user.avatarChangeCount !== undefined" class="avatar-limit">
       Bạn còn {{ 20 - user.avatarChangeCount }} lần xóa avatar trong hôm nay
     </p>
-    <button class="logout-inline" @click="logout">
-    🚪 Logout
-    </button>
+    <div class="user-actions">
+      <button class="logout-inline" @click="logout">
+        🚪 Logout
+      </button>
+      <button
+        type="button"
+        class="yesterday-btn"
+        :class="{ active: dayAgo === 1 }"
+        @click="toggleYesterday"
+      >
+        🕰️ Hôm qua
+      </button>
+    </div>
+
 
   </div>
 
@@ -85,8 +96,13 @@
       v-for="c in comments"
       :key="c.id"
       :comment="c"
+      :currentUserId="user.id"
       @reply="onReply"
+      @deleted="removeRoot"
     />
+
+
+
     <div class="comment-actions">
       <button
         type="button"
@@ -135,7 +151,7 @@
       class="avatar-preview"
     />
   </div>
-
+  <Draw />
 </template>
 
 <script setup>
@@ -143,6 +159,11 @@ import { ref, onMounted, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
 import Node from "./Node.vue";
 import ClaimEmotionConfirm from "../components/ClaimEmotionConfirm.vue";
+import Draw from "./Draw.vue"
+const dayAgo = ref(0); // 0 = hôm nay, 1 = hôm qua
+const removeRoot = (id) => {
+  comments.value = comments.value.filter(c => c.id !== id);
+};
 
 const avatarUploading = ref(false);
 const avatarErrored = ref(false);
@@ -283,7 +304,7 @@ const loadComments = async () => {
   if (loading.value || noMore.value) return;
   loading.value = true;
 
-  let url = `/api/v1/loadComment?limit=${LIMIT}`;
+  let url = `/api/v1/loadComment?limit=${LIMIT}&dayAgo=${dayAgo.value}`;
   if (lastId.value) url += `&lastId=${lastId.value}`;
 
   const res = await authFetch(url);
@@ -299,6 +320,19 @@ const loadComments = async () => {
 
   loading.value = false;
 };
+
+const toggleYesterday = async () => {
+  // bật / tắt
+  dayAgo.value = dayAgo.value === 1 ? 0 : 1;
+
+  // reset list
+  comments.value = [];
+  lastId.value = null;
+  noMore.value = false;
+
+  await loadComments();
+};
+
 
 const onReload = async () => {
   comments.value = [];
@@ -514,4 +548,32 @@ const collapse = () => {
   gap: 16px;              /* 👈 khoảng cách giữa 2 nút */
   margin-top: 16px;
 }
+.yesterday-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #e5e7eb;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.yesterday-btn.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.yesterday-btn:hover {
+  background: #dbeafe;
+}
+.user-actions {
+  margin-left: auto;        /* đẩy cả cụm sang phải */
+  display: flex;
+  flex-direction: column;   /* xếp dọc */
+  gap: 8px;
+  align-items: flex-end;
+}
+
+
 </style>
