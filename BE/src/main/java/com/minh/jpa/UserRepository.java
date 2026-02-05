@@ -10,9 +10,4 @@ import javax.transaction.Transactional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findById(Long id);
     User findByName(String name);
-
-    @Transactional
-    @Modifying
-    @Query("update User u set u.avatar = null where :id = u.id ")
-    void update(Long id);
 }

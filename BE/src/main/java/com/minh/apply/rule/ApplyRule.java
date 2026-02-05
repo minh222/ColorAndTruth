@@ -1,6 +1,8 @@
 package com.minh.apply.rule;
 
 
+import com.minh.controller.analyze.AnalyzeResponse;
+
 import static com.minh.config.Config.STRING_UTIL;
 import static com.minh.apply.rule.Rule.textRules;
 
@@ -9,7 +11,7 @@ import java.util.*;
 
 public class ApplyRule {
 
-    public static Output apply(String original) {
+    public static AnalyzeResponse apply(String original) {
         Set<String> emotions = new HashSet<>();
         Set<String> attitudes = new HashSet<>();
         String claim = STRING_UTIL.normalize(original);
@@ -20,7 +22,7 @@ public class ApplyRule {
             }
         }
 
-        return new Output(
+        return new AnalyzeResponse(
                 original,
                 new ArrayList<>(emotions),
                 String.join(", ", attitudes),
@@ -28,13 +30,13 @@ public class ApplyRule {
         );
     }
 
-    public static Output exact(String original) {
+    public static AnalyzeResponse exact(String original) {
         Set<String> emotions = new HashSet<>();
         Set<String> attitudes = new HashSet<>();
         String claim = STRING_UTIL.normalize(original);
 
 
-        return new Output(
+        return new AnalyzeResponse(
                 original,
                 new ArrayList<>(emotions),
                 String.join(", ", attitudes),

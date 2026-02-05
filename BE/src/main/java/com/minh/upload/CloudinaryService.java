@@ -1,4 +1,4 @@
-package com.minh.image;
+package com.minh.upload;
 
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Value;

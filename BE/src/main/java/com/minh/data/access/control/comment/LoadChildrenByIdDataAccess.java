@@ -1,41 +1,27 @@
 package com.minh.data.access.control.comment;
 
 import com.minh.data.access.control.CurrentRepos;
-import com.minh.data.access.control.comment.response.LoadCommentResponse;
-import com.minh.entity.Comment;
+import com.minh.controller.comment.LoadCommentResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class LoadChildrenByIdDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos repos;
+    public final CurrentRepos r;
 
     public LoadChildrenByIdDataAccess(CurrentRepos repos) {
-        this.repos = repos;
+        this.r = repos;
     }
 
     public List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, int limit) {
         if (lastId == null) {
-            Long maxId = repos.commentRepository.getMaxChildrenIdById(id);
+            Long maxId = r.commentRepository.getMaxChildrenIdById(id);
             lastId = maxId == null ? null : maxId + 1;
         }
         Pageable pageLimit = PageRequest.of(0, limit);
-        return repos.commentRepository.loadChildrenById(id, lastId, pageLimit);
-    }
-
-
-
-    @Transactional
-    public Integer removeComment(Long id) {
-        Long  parentId = repos.commentRepository.getParentId( id);
-        repos.closureRepository.deleteById(id);
-        repos.commentRepository.deleteById(id);
-        return repos.commentRepository.getCountById(parentId);
+        return r.commentRepository.loadChildrenById(id, lastId, pageLimit);
     }
 }

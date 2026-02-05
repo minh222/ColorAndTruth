@@ -1,9 +1,8 @@
-package com.minh.entity;
+package com.minh.entity.id;
 
 import lombok.EqualsAndHashCode;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-
 
 @Embeddable
 @EqualsAndHashCode

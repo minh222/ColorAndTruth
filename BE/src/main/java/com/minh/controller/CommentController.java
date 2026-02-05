@@ -5,20 +5,25 @@ import com.minh.config.DataAccess;
 import com.minh.data.access.control.comment.*;
 import com.minh.config.SpringConfig;
 
-import com.minh.data.access.control.comment.response.LoadCommentResponse;
-import com.minh.entity.Comment;
+import com.minh.controller.comment.LoadCommentResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+
 @RestController
 @RequestMapping("/api/v1")
 public class CommentController {
-    private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
+
+    @Autowired @Qualifier("spring")
+    private Semaphore semaphore;
 
     @PostMapping("/postComment")
     public String postComment(@DataAccess PostCommentDataAccess access,
@@ -41,7 +46,7 @@ public class CommentController {
     }
 
     @GetMapping("/loadComment")
-    public List<LoadCommentResponse> loadComment(@DataAccess LoadCommentCommentDataAccess access,
+    public List<LoadCommentResponse> loadComment(@DataAccess LoadCommentDataAccess access,
                                                  Long lastId,
                                                  Integer dayAgo,
                                                  int limit) {
@@ -89,14 +94,15 @@ public class CommentController {
     }
 
     @PostMapping("/remove/{id}")
-    public Integer removeComment(@DataAccess LoadChildrenByIdDataAccess access,
+    public String removeComment(@DataAccess RemoveCommentDataAccess access,
                                 @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
         }
 
         try {
-            return access.removeComment(id);
+            access.removeComment(id);
+            return "ok";
         } finally {
             semaphore.release();
         }

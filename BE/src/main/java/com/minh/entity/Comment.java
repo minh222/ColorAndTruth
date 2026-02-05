@@ -2,6 +2,7 @@ package com.minh.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Table(name = "comment")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +40,6 @@ public class Comment {
     private Integer count;
 
     public Comment(Long userId, String emotion, String claim,Long parentId, Boolean isDebateClaim, LocalDate date, Integer count) {
-
         this.userId = userId;
         this.emotion = emotion;
         this.claim = claim;
@@ -46,9 +47,5 @@ public class Comment {
         this.isDebateClaim = isDebateClaim;
         this.date = date;
         this.count = count;
-    }
-
-    public Comment() {
-
     }
 }

@@ -1,4 +1,4 @@
-package com.minh.data.access.control.comment.response;
+package com.minh.controller.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

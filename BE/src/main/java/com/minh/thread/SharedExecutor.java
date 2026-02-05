@@ -5,13 +5,14 @@ import com.minh.config.SpringConfig;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.minh.config.Config.CORE;
+
 public final class SharedExecutor {
-    private static final int CORES = SpringConfig.getCore();
 
     public static final ExecutorService executor0 =
             new ThreadPoolExecutor(
-                    CORES,
-                    CORES,
+                    CORE,
+                    CORE,
                     0L,
                     TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<>(0),

@@ -1,16 +1,16 @@
-package com.minh.apply.rule;
+package com.minh.controller.analyze;
 
 import java.util.Collections;
 import java.util.List;
 
-public class Output {
+public class AnalyzeResponse {
 
     private final String original;
     private final String claim;
     private final List<String> emotion;
     private final String attitude;
 
-    public Output(String original, List<String> emotion, String attitude, String claim) {
+    public AnalyzeResponse(String original, List<String> emotion, String attitude, String claim) {
         this.original = original;
         this.emotion = emotion;
         this.attitude = attitude;

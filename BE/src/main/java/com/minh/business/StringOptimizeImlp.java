@@ -1,18 +1,20 @@
 package com.minh.business;
 
-import com.minh.business.abtract.String;
-import com.minh.config.Config;
+
+import com.minh.business.abtract.StringUtil;
 import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.minh.config.Config.CACHE;
+
+
 // optimized - đối chiếu spec để trả nợ kĩ thuật, dev song song vs spec ưu tiên fast
 @Service
-public class StringOptimizeImlp implements String {
-
+public class StringOptimizeImlp implements StringUtil {
     @Override
-    public boolean contains(java.lang.String s, java.lang.String target) { // chốt spec sẽ update
-        Pattern pattern = Config.CACHE.get(
+    public boolean contains(String s,  String target) { // chốt spec sẽ update
+        Pattern pattern = CACHE.get(
                 target,
                 t -> Pattern.compile("(?<!\\p{L})" + Pattern.quote(t) + "(?!\\p{L})")
         );
@@ -20,7 +22,7 @@ public class StringOptimizeImlp implements String {
     }
 
     @Override
-    public java.lang.String replace(java.lang.String s, java.lang.String target, java.lang.String replacement) {
+    public java.lang.String replace( String s,  String target,  String replacement) {
         return s.replaceAll(
                 "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
@@ -28,7 +30,7 @@ public class StringOptimizeImlp implements String {
     }
 
     @Override
-    public java.lang.String normalize(java.lang.String s) { // fast + readablity ko cần optimize
+    public java.lang.String normalize( String s) { // fast + readablity ko cần optimize
         return s.replaceAll("\\s+", " ").trim().toLowerCase();
     }
 }

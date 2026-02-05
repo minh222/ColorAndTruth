@@ -1,5 +1,6 @@
 package com.minh.entity;
 
+import com.minh.entity.id.CompositeId;
 import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
 

@@ -1,14 +1,17 @@
 package com.minh.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+
 import java.util.Objects;
 
-import static com.minh.config.Config.today;
+import static com.minh.config.Config.TODAY;
+
 
 @Entity
 @Table(name = "user")
@@ -45,15 +48,15 @@ public class User {
     }
 
     public void resetCountToday() {
-        if (!Objects.equals(today, this.avatarChangeDate)) { // today != (null or next day)
+        if (!Objects.equals(TODAY, this.avatarChangeDate)) { // today != (null or next day)
             this.avatarChangeCount = 0;
-            this.avatarChangeDate = today;
+            this.avatarChangeDate = TODAY;
         }
     }
 
     public void emptyAvatarAndIncreaseCounter() {
         this.avatar = null;
-        this.avatarChangeCount ++;
+        this.avatarChangeCount++;
     }
 }
 

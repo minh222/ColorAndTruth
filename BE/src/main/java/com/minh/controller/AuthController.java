@@ -7,16 +7,23 @@ import com.minh.config.DataAccess;
 import com.minh.config.SpringConfig;
 import com.minh.data.access.control.auth.LoginDataAccess;
 import com.minh.data.access.control.auth.RegisterDataAccess;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.util.concurrent.Semaphore;
+
 
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
-    private final Semaphore semaphore = new Semaphore(SpringConfig.getCore(), true);
+
+    @Autowired
+    @Qualifier("spring")
+    private Semaphore semaphore;
 
     @PostMapping("/login")
     public String login(@DataAccess LoginDataAccess access,

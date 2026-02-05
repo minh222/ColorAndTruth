@@ -26,12 +26,12 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         Long newCommentId = newComment.getId();
 
         if (id != null) {
-            List<Closure> closures = r.closureRepository.findAllByDescendantId(id);
-
             List<Closure> copies = new ArrayList<>();
-            closures.forEach(
+
+            r.closureRepository.findAllByDescendantId(id).forEach(
         c -> copies.add(new Closure(c.getAncestorId(), newCommentId))
             );
+
             r.closureRepository.saveAll(copies);
         }
 

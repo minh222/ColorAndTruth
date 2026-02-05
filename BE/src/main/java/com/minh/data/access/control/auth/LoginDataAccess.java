@@ -6,27 +6,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos repos;
+    public final CurrentRepos r;
 
     public LoginDataAccess(CurrentRepos repos) {
-        this.repos = repos;
+        this.r = repos;
     }
 
     public byte[] getStored(Long id) {
-        User user = repos.userRepository.findById(id);
+        User user = r.userRepository.findById(id);
         return user.getPassword();
     }
 
     public Long getUserId(String name) {
-        User user = repos.userRepository.findByName(name);
+        User user = r.userRepository.findByName(name);
         return user.getId();
-    }
-
-    public User getUser(Long id) {
-        return repos.userRepository.findById(id);
-    }
-
-    public void updateUser(User user) {
-        repos.userRepository.save(user);
     }
 }
