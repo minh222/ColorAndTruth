@@ -129,8 +129,7 @@
   <!-- MODAL -->
   <div
     v-if="showModal"
-    class="overlay"
-    @click.self="showModal = false"
+    class="overlay" 
   >
 
   <ClaimEmotionConfirm
@@ -422,13 +421,33 @@ const collapse = () => {
 .open-btn {
   margin: 20px auto;
   display: block;
-  padding: 10px 18px;
-  border-radius: 10px;
+  padding: 12px 22px;
+  border-radius: 12px;
   border: none;
-  background: #212529;
+
+  background: linear-gradient(135deg, #5f9cff, #7b7dff);
   color: #fff;
+
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
   cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(95,156,255,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+
+  transition: transform .2s ease, box-shadow .2s ease;
 }
+
+.open-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 6px 14px rgba(95,156,255,0.35),
+    inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
 
 .overlay {
   position: fixed;

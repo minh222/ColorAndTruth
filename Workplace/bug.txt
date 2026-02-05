@@ -15,6 +15,16 @@
 - hiện user done
 - set số lần xóa done
 - ẩn emotion f12 done
+- reply comment - thêm parent cmnt id - tree -> lazy load done
+- footer bị trắng done.
+- upload image done.
+- đăng nhập footer trắng done.
+- kéo logout vào userinfo done.
+- đánh số phản hồi done.
+- tự xóa comment -> get ngày hiện tại done 
+- hôm qua done
+- xóa comment riêng mỗi người done
+- lưu closure done
 
 - deploy fe
 - thiết kế lưu ý đồ
@@ -22,21 +32,54 @@
 - thêm layer attitude
 - thêm case attitude
 - thêm logo app
-- reply comment - thêm parent cmnt id - tree -> lazy load
-- bug register 
+
+- bug register - token quá hạn
 - refactor lại analyze
 - pass > 5 kí tự
 - click xem lưu user xem -> tạo bảng read
 - logout khi token quá hạn
 - tổ chức lại config
-- upload image
+
 - thêm trước sau
 - màn hình bung
 
 - ghi đè file update
 - reply quote lại
-- đánh số phản hồi
+
 - chia lại data access
 - deploy db
 - load user theo commnent
 - load more, thu nhỏ
+- refactor luồng exact
+- thêm mode define cảm xúc cho user
+- sửa lại 1 số popup
+
+- đổi form bình luận đẹp hơn
+- sound effect khi nhấn nút
+
+- like - làm dislike ko làm like
+- mini game
+
+- smooth lại nhập comment
+- đổi tên
+- bỏ bớt phần dư thừa trong code để app chạy nhẹ lại
+
+- thêm ai, thêm câu nói cho bloom
+- thêm nút gen câu nói cho npc 
+- npc name : bloom
+- nếu 1 comment tồn tại quá lâu -> mỗi ngày reset bảng 1 lần và lưu toàn bộ chat vào ngày hôm qua
+- npc tương tác vs 1 số thành phần
+
+- gen emotion sai -> binding original
+- secret true emotion nhảy xuống đáy
+
+- app dành cho những ai muốn thể hiện cảm xúc, niềm tin thật nhất mà ko sợ phán xét, dành cho những ai muốn phản hồi thẳng, thật mà ko sợ đụng chạm đến cảm giác thật của người khác
+- before, after see
+- khóa reply
+- giải thích ngắn lại
+- có thể xem emotion của mình mà ko cảnh báo
+- vietsub
+- fe trừ ko ổn
+
+
+- semaphore max core db

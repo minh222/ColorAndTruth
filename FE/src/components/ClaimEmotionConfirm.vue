@@ -1,26 +1,22 @@
 <template>
-  <div class="window" >
-    <button class="close-btn" @click="$emit('close')">✖</button>
-
+  <div class="window" :class="{ plain: mode === 'comment' }">
     <!-- 🔥 DÁN NGUYÊN CÁI <div class="page"> CŨ VÀO ĐÂY -->
-    <div class="page">
+    <div class="page" :class="{ plain: mode === 'comment' }">
       <!-- ORIGINAL INPUT -->
       <div class="card">
-        <h2>📝 Nhập nội dung</h2>
-
-        <div class="input-wrapper">
+        <div class="textarea-wrap">
           <textarea
             v-model="originalText"
             class="original-input"
-            placeholder="Nhập nội dung cần phân tích..."
+            placeholder="Nhập nội dung cần phân tích…"
           />
+          <button class="close-btn" @click="$emit('close')">✖</button>
         </div>
-
         <div class="actions">
           <!-- ✨ NÚT ẨN/HIỆN PANEL -->
           <button
             v-if="hasResult"
-            class="toggle-confirm-btn"
+            class="  exact-btn"
             @click="toggleConfirmPanel"
           >
             {{ showConfirmPanel ? "Ẩn ." : "Hiện" }}
@@ -31,16 +27,17 @@
             :disabled="loading || !originalText.trim()"
             @click="onExact"
           >
-            {{ loading ? "Đang phân tích..." : "Exact" }}
+            {{ loading ? "Đang phân tích..." : "Phân tích" }}
           </button>
         </div>
+
       </div>
 
       <div v-if="hasResult" class="confirm-wrapper">
         <!-- CONFIRM (LUÔN TỒN TẠI, CHỈ ẨN) -->
         <div v-show="showConfirmPanel && hasResult" class="card confirm-card">
           <div class="header-row">
-            <h2>✅ Chỉnh sửa lại luận điểm</h2>
+            <h4> Tại ô text ý chính, bôi đen phần muốn chuyển thành true emotion -> click giấu cảm xúc</h4>
 
             <div class="eye-slot">
               <button
@@ -57,7 +54,7 @@
             <!-- CLAIM -->
             <div class="box claim-box">
               <div class="claim-header">
-                <span class="tag">Ý CHÍNH</span>
+                <span class="tag">Ý CHÍNH </span>
 
                 <button
                   v-if="!editingClaim"
@@ -107,7 +104,7 @@
                 class="switch-btn"
                 @click="activePanel = 'emotion'"
               >
-                Hiện Emotion →
+                Xem True Emotion →
               </button>
             </div>
 
@@ -124,7 +121,7 @@
                 {{ selectedOriginalText || originalText }}
               </p>
               <button class="switch-btn" @click="activePanel = 'attitude'">
-                ← Quay lại Attitude
+                ← Xem Attitude
               </button>
             </div>
           </div>
@@ -135,7 +132,7 @@
               :disabled="loading || !emotion.length"
               @click="showDebateConfirm = true"
             >
-              📤 Gửi Claim + Emotion
+              📤 Gửi bình luận
             </button>
           </div>
         </div>
@@ -166,6 +163,7 @@ import { ref } from "vue";
 import { getCurrentInstance } from "vue";
 const emit = defineEmits(["close", "submitted"]);
 const showDebateConfirm = ref(false);
+const mode = ref("comment");  
 
 /* PROXY */
 const { proxy } = getCurrentInstance();
@@ -205,7 +203,7 @@ const cancelDebatePopup = () => {
 
 const onExact = async () => {
   if (!originalText.value.trim()) return;
-
+  mode.value = "exact";
   loading.value = true;
   try {
     const query = encodeURIComponent(originalText.value);
@@ -406,44 +404,78 @@ const resetState = () => {
 
 
 /* PAGE */
-.page {
-  width: min(960px, 100vw);
-  margin: 30px auto;
-  font-family: Arial, sans-serif;
+.page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background:
+    radial-gradient(2px 2px at 12% 22%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.5px 1.5px at 25% 70%, rgba(255,255,255,.5), transparent),
+    radial-gradient(2px 2px at 40% 35%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,.4), transparent),
+    radial-gradient(2px 2px at 70% 20%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.5px 1.5px at 82% 65%, rgba(255,255,255,.5), transparent);
+
+  animation: sparkleFloat 6s ease-in-out infinite;
 }
+
+.page {
+  position: relative;
+}
+
+@keyframes sparkleFloat {
+  0% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+}
+
+
 
 /* CARD */
 .card {
   background: #fff;
   border-radius: 12px;
-  padding: 20px;
+ 
   margin-bottom: 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  max-width: 520px;
+  padding: 6px 8px;
+  margin: 12px auto;
 }
 
-/* INPUT */
-.input-wrapper {
-  display: flex;
-  justify-content: center;
-}
+ 
 
 .original-input {
-  width: 90%;
-  max-width: 820px;
-  min-height: 220px;
-  padding: 16px 18px;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100px;
+
+  padding: 18px 20px;
   font-size: 16px;
   line-height: 1.7;
+
   border-radius: 12px;
-  border: 2px solid #dee2e6;
-  background: #f8f9fa;
+  border: 1px solid #ddd;
+  background: #fff;
+
   resize: vertical;
 }
 
 .original-input:focus {
   outline: none;
   border-color: #212529;
-  background: #fff;
 }
 
 /* ACTION */
@@ -453,13 +485,31 @@ const resetState = () => {
 }
 
 .exact-btn {
-  padding: 8px 18px;
-  border-radius: 8px;
+  padding: 10px 22px;
+  border-radius: 999px;              /* bo tròn đẹp */
   border: none;
-  background: #212529;
-  color: white;
+  background: linear-gradient(135deg, #1375d6, #c01515);
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
+
+.exact-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+}
+
+.exact-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
 
 .exact-btn:disabled {
   opacity: 0.5;
@@ -467,7 +517,9 @@ const resetState = () => {
 
 /* CONFIRM */
 .confirm-card {
-  position: absolute;
+  max-width: 100%;
+  overflow: hidden; /* 🔥 quan trọng */
+  position: relative;
   inset: 0;
   pointer-events: auto;
 }
@@ -509,10 +561,15 @@ const resetState = () => {
 .confirm-area {
   display: flex;
   gap: 20px;
-  margin-top: 15px;
-  min-height: 240px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+
+.confirm-area .box {
+  max-width: 100%;
+  box-sizing: border-box;
+}
 .box {
   flex: 1;
   padding: 16px;
@@ -574,6 +631,7 @@ const resetState = () => {
   resize: vertical;
   font-size: 15px;
   line-height: 1.6;
+  max-width: 420px;   /* ← giảm chiều ngang */
 }
 .actions {
   display: flex;
@@ -629,7 +687,7 @@ const resetState = () => {
   opacity: 0.9;
 }
 .window {
-  background: #f8f9fa;
+  background: transparent;
   width: min(1000px, 95vw);
   max-height: 90vh;
   overflow-y: auto;
@@ -640,17 +698,133 @@ const resetState = () => {
 }
 .close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;      /* 🔥 quan trọng */
-  background: transparent;
+  top: 8px;
+  right: 12px;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  font-weight: bold;
+
   border: none;
   cursor: pointer;
-  font-size: 18px;
+
+  color: #fff;
+  background: linear-gradient(135deg, #ff4d4f, #ff7a7a);
+
+  box-shadow:
+    0 6px 16px rgba(255, 77, 79, 0.45),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+
+.close-btn:hover {
+  transform: scale(1.08);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+}
+
+
 
 
 textarea {
   scroll-margin-top: 0;
 }
+
+.input-card {
+  width: 100%;
+  max-width: 820px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  border: 1px solid #e9ecef;
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+
+ 
+
+.original-input::placeholder {
+  color: #adb5bd;
+}
+
+ 
+
+.input-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #868e96;
+  font-style: italic;
+}
+.page.plain {
+  background: transparent;
+  box-shadow: none;
+  margin: 0;
+}
+.window.plain {
+  background: transparent;
+}
+.window.plain .card {
+  background: transparent;
+  box-shadow: none;
+}
+
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0;              /* ❌ bỏ auto */
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+
+  background: linear-gradient(135deg, #5f9cff, #7b7dff);
+  color: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(95,156,255,0.35);
+  transition: all .2s ease;
+}
+
+
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 6px 14px rgba(95,156,255,0.35),
+    inset 0 2px 4px rgba(0,0,0,0.2);
+}
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 26px rgba(95,156,255,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.textarea-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+
 </style>
