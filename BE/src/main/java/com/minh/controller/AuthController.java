@@ -1,28 +1,23 @@
 package com.minh.controller;
 
-
 import com.minh.auth.Jwt;
 import com.minh.auth.Verifier;
 import com.minh.config.DataAccess;
-import com.minh.config.SpringConfig;
 import com.minh.data.access.control.auth.LoginDataAccess;
 import com.minh.data.access.control.auth.RegisterDataAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 
 import java.util.concurrent.Semaphore;
 
+import static com.minh.config.Exception.http;
 
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
 
-    @Autowired
-    @Qualifier("spring")
+    @Autowired @Qualifier("spring")
     private Semaphore semaphore;
 
     @PostMapping("/login")
@@ -30,7 +25,7 @@ public class AuthController {
                         String password,
                         String name) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -39,7 +34,7 @@ public class AuthController {
             boolean ok = Verifier.verify(password.toCharArray(), stored);
 
             if (!ok) {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+                throw http(401, "Unauthorized");
             }
 
             return Jwt.issue(userId.toString(), 10000);
@@ -53,7 +48,7 @@ public class AuthController {
                            String password,
                            String name) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {

@@ -1,6 +1,6 @@
 package com.minh.jpa;
 
-import com.minh.controller.comment.LoadCommentResponse;
+import com.minh.controller.comment.response.LoadCommentResponse;
 import com.minh.entity.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query("select new com.minh.controller.comment.LoadCommentResponse" +
+    @Query("select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count(cl.ancestorId), u.id) " +
             "from Comment c join User u on c.userId = u.id " +
             "join Closure cl on c.id = cl.ancestorId   " +
@@ -32,7 +32,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where :id = c.parentId or (:id is null and c.parentId is null)")
     Long getMaxChildrenIdById(Long id);
 
-    @Query("select new com.minh.controller.comment.LoadCommentResponse" +
+    @Query("select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id) " +
             "from Comment c join User u on c.userId = u.id " +
             "join Closure cl on c.id = cl.ancestorId   " +

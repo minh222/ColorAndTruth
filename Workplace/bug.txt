@@ -25,6 +25,9 @@
 - hôm qua done
 - xóa comment riêng mỗi người done
 - lưu closure done
+- đổi form bình luận đẹp hơn done
+---------------------------------------------------------------------
+
 
 - deploy fe
 - thiết kế lưu ý đồ
@@ -54,7 +57,7 @@
 - thêm mode define cảm xúc cho user
 - sửa lại 1 số popup
 
-- đổi form bình luận đẹp hơn
+
 - sound effect khi nhấn nút
 
 - like - làm dislike ko làm like
@@ -83,3 +86,7 @@
 
 
 - semaphore max core db
+- click ra ngoài nền ko bị tắt
+- bể layout chỗ ý chính khi nhấn mắt
+- luôn lưu chữ thường
+- trả nợ kĩ thuật tech + update tech + knowlegde be

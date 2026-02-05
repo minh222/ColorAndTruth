@@ -1,7 +1,7 @@
 package com.minh.apply.rule;
 
 
-import com.minh.controller.analyze.AnalyzeResponse;
+import com.minh.controller.analyze.response.AnalyzeResponse;
 
 import static com.minh.config.Config.STRING_UTIL;
 import static com.minh.apply.rule.Rule.textRules;

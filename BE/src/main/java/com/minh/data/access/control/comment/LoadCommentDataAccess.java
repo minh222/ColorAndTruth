@@ -1,7 +1,7 @@
 package com.minh.data.access.control.comment;
 
 import com.minh.data.access.control.CurrentRepos;
-import com.minh.controller.comment.LoadCommentResponse;
+import com.minh.controller.comment.response.LoadCommentResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,6 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         }
         LocalDate today = LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo);
         Pageable pageLimit = PageRequest.of(0, limit);
-
         return r.commentRepository.loadComment(lastId, today, pageLimit);
     }
 }

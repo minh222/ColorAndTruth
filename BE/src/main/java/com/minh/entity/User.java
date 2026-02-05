@@ -48,15 +48,19 @@ public class User {
     }
 
     public void resetCountToday() {
-        if (!Objects.equals(TODAY, this.avatarChangeDate)) { // today != (null or next day)
-            this.avatarChangeCount = 0;
-            this.avatarChangeDate = TODAY;
+        if (!Objects.equals(TODAY, avatarChangeDate)) { // today != (null or next day)
+            avatarChangeCount = 0;
+            avatarChangeDate = TODAY;
         }
     }
 
+    public boolean exceed() {
+        return avatarChangeCount >= 20;
+    }
+
     public void emptyAvatarAndIncreaseCounter() {
-        this.avatar = null;
-        this.avatarChangeCount++;
+        avatar = null;
+        avatarChangeCount++;
     }
 }
 

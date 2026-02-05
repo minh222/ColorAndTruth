@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UploadDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos repos;
+    public final CurrentRepos r;
 
     public UploadDataAccess(CurrentRepos repos) {
-        this.repos = repos;
+        this.r = repos;
     }
 
     public User getUser(Long id) {
-        return repos.userRepository.findById(id);
+        return r.userRepository.findById(id);
     }
 
     public void updateUser(User user) {
-        repos.userRepository.save(user);
+        r.userRepository.save(user);
     }
 }

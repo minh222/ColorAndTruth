@@ -1,12 +1,12 @@
 package com.minh.business;
 
-import com.minh.business.abtract.StringUtil;
+import com.minh.business.abtract.Util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // spec - ưu tiên readable, dev song song vs optimize
-public class StringSpecImpl implements StringUtil {
+public class UtilSpecImpl implements Util {
 
     @Override
     public boolean contains(String s, String target) {
@@ -14,12 +14,11 @@ public class StringSpecImpl implements StringUtil {
     }
 
     @Override
-    public java.lang.String replace(String s, String target, String replacement) {
+    public String replace(String s, String target, String replacement) {
         return s.replaceAll(
                 "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
         );
-
     }
 
     @Override

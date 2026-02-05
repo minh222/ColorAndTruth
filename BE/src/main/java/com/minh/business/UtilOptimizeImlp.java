@@ -1,7 +1,7 @@
 package com.minh.business;
 
 
-import com.minh.business.abtract.StringUtil;
+import com.minh.business.abtract.Util;
 import org.springframework.stereotype.Service;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +11,7 @@ import static com.minh.config.Config.CACHE;
 
 // optimized - đối chiếu spec để trả nợ kĩ thuật, dev song song vs spec ưu tiên fast
 @Service
-public class StringOptimizeImlp implements StringUtil {
+public class UtilOptimizeImlp implements Util {
     @Override
     public boolean contains(String s,  String target) { // chốt spec sẽ update
         Pattern pattern = CACHE.get(
@@ -22,7 +22,7 @@ public class StringOptimizeImlp implements StringUtil {
     }
 
     @Override
-    public java.lang.String replace( String s,  String target,  String replacement) {
+    public String replace( String s,  String target,  String replacement) {
         return s.replaceAll(
                 "(?<!\\p{L})" + Pattern.quote(target) + "(?!\\p{L})",
                 Matcher.quoteReplacement(replacement)
@@ -30,7 +30,7 @@ public class StringOptimizeImlp implements StringUtil {
     }
 
     @Override
-    public java.lang.String normalize( String s) { // fast + readablity ko cần optimize
+    public String normalize( String s) { // fast + readablity ko cần optimize
         return s.replaceAll("\\s+", " ").trim().toLowerCase();
     }
 }

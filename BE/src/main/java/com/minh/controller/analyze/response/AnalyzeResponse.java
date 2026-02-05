@@ -1,4 +1,4 @@
-package com.minh.controller.analyze;
+package com.minh.controller.analyze.response;
 
 import java.util.Collections;
 import java.util.List;

@@ -24,7 +24,7 @@
 
           <button
             class="exact-btn"
-            :disabled="loading || !originalText.trim()"
+            :disabled="loading  "
             @click="onExact"
           >
             {{ loading ? "Đang phân tích..." : "Phân tích" }}
@@ -202,7 +202,7 @@ const cancelDebatePopup = () => {
 };
 
 const onExact = async () => {
-  if (!originalText.value.trim()) return;
+ 
   mode.value = "exact";
   loading.value = true;
   try {
@@ -488,8 +488,8 @@ const resetState = () => {
   padding: 10px 22px;
   border-radius: 999px;              /* bo tròn đẹp */
   border: none;
-  background: linear-gradient(135deg, #1375d6, #c01515);
-  color: #fff;
+  background: linear-gradient(135deg, #b0dad3, #d7d7ec);
+  color: #64071f;
 
   font-size: 15px;
   font-weight: 700;

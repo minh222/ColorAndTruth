@@ -12,6 +12,8 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+import static com.minh.config.Exception.http;
+
 public final  class Jwt {
     private static SecretKey key;
 
@@ -48,14 +50,14 @@ public final  class Jwt {
         String auth = request.getHeader("Authorization");
 
         if (auth == null || !auth.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Authorization header is invalid");
+            throw http(203, "Authorization header is invalid");
         }
 
         String token = auth.substring(7);
         String userId = verifyAndGetUserId(token);
 
         if (userId == null) {
-            throw new ResponseStatusException(HttpStatus.NON_AUTHORITATIVE_INFORMATION, "Authorization header is invalid");
+            throw http(203, "Authorization header is invalid");
         }
         return Long.valueOf(userId);
     }

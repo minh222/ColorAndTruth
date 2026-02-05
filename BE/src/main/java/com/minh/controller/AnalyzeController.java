@@ -1,28 +1,27 @@
 package com.minh.controller;
 
 import com.minh.apply.rule.ApplyRule;
-import com.minh.controller.analyze.AnalyzeResponse;
+import com.minh.controller.analyze.response.AnalyzeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.concurrent.Semaphore;
 
+import static com.minh.config.Exception.*;
 
 @RestController
 @RequestMapping("/api/v1")
 public class AnalyzeController {
 
-    @Autowired @Qualifier("spring")
+    @Autowired
+    @Qualifier("spring")
     private Semaphore semaphore;
-
 
     @PostMapping("/analyze")
     public AnalyzeResponse analyze(String original) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -35,7 +34,7 @@ public class AnalyzeController {
     @PostMapping("/exact")
     public AnalyzeResponse exact(String original) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {

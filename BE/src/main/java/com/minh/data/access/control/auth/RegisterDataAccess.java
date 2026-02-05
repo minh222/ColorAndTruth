@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import static com.minh.config.Exception.http;
+import static com.minh.config.Exception.throwEx;
+
 @Service
 public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
@@ -20,7 +23,7 @@ public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổn
             User user = r.userRepository.save(new User(name, password));
             return user.getId().toString();
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "user exists");
+            throw http(409, "user exists");
         }
     }
 }

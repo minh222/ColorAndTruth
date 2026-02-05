@@ -3,19 +3,15 @@ package com.minh.controller;
 import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.comment.*;
-import com.minh.config.SpringConfig;
-
-import com.minh.controller.comment.LoadCommentResponse;
+import com.minh.controller.comment.response.LoadCommentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+
+import static com.minh.config.Exception.http;
 
 
 @RestController
@@ -33,7 +29,7 @@ public class CommentController {
                               Boolean isDebateClaim,
                               HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -51,7 +47,7 @@ public class CommentController {
                                                  Integer dayAgo,
                                                  int limit) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -66,7 +62,7 @@ public class CommentController {
                                  @PathVariable Long id,
                                  HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -83,7 +79,7 @@ public class CommentController {
                                           Long lastId,
                                           int limit) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
@@ -97,7 +93,7 @@ public class CommentController {
     public String removeComment(@DataAccess RemoveCommentDataAccess access,
                                 @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many requests");
+            throw http(429, "Too many requests");
         }
 
         try {
