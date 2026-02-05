@@ -1,16 +1,16 @@
 package com.minh.controller;
 
-import com.minh.auth.Jwt;
-import com.minh.auth.Verifier;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.auth.LoginDataAccess;
 import com.minh.data.access.control.auth.RegisterDataAccess;
+import com.minh.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.concurrent.Semaphore;
 
+import static com.minh.auth.Jwt.issue;
+import static com.minh.auth.Verifier.creteVerify;
 import static com.minh.config.Exception.http;
 
 @RestController
@@ -29,15 +29,13 @@ public class AuthController {
         }
 
         try {
-            Long userId = access.getUserId(name);
-            byte[] stored = access.getStored(userId);
-            boolean ok = Verifier.verify(password.toCharArray(), stored);
+            User user = access.getUser(name);
 
-            if (!ok) {
+            if (!user.isValidPassword(password)) {
                 throw http(401, "Unauthorized");
             }
 
-            return Jwt.issue(userId.toString(), 10000);
+            return user.getToken();
         } finally {
             semaphore.release();
         }
@@ -52,13 +50,9 @@ public class AuthController {
         }
 
         try {
-            byte[] verifier = Verifier.creteVerify(password.toCharArray());
-            String userId = access.save(name, verifier);
-            return Jwt.issue(userId, 10000);
+            return access.register(name, password);
         } finally {
             semaphore.release();
         }
     }
-
-
 }

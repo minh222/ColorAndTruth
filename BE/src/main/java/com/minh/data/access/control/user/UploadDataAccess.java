@@ -4,6 +4,8 @@ import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.User;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class UploadDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
@@ -12,11 +14,9 @@ public class UploadDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
         this.r = repos;
     }
 
-    public User getUser(Long id) {
-        return r.userRepository.findById(id);
-    }
-
-    public void updateUser(User user) {
-        r.userRepository.save(user);
+    @Transactional
+    public void updateAvatar(Long userId, String link) {
+        User user = r.userRepository.findById(userId);
+        user.setAvatar(link);
     }
 }

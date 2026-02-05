@@ -2,14 +2,16 @@ package com.minh.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.minh.auth.Verifier;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
 import java.util.Objects;
 
+import static com.minh.auth.Jwt.issue;
+import static com.minh.auth.Verifier.verify;
 import static com.minh.config.Config.TODAY;
 
 
@@ -61,6 +63,14 @@ public class User {
     public void emptyAvatarAndIncreaseCounter() {
         avatar = null;
         avatarChangeCount++;
+    }
+
+    public boolean isValidPassword(String tryPassword) {
+        return verify(tryPassword.toCharArray(), password);
+    }
+
+    public String getToken() {
+        return issue(id.toString(), 10000);
     }
 }
 

@@ -1,6 +1,5 @@
 package com.minh.controller;
 
-import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.comment.*;
 import com.minh.controller.comment.response.LoadCommentResponse;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import static com.minh.auth.Jwt.getUserId;
 import static com.minh.config.Exception.http;
 
 
@@ -33,7 +33,7 @@ public class CommentController {
         }
 
         try {
-            Long userId = Jwt.getUserId(request);
+            Long userId = getUserId(request);
             access.saveComment(userId, emotion, claim, id, isDebateClaim);
             return "ok";
         } finally {
@@ -66,7 +66,7 @@ public class CommentController {
         }
 
         try {
-            Long userId = Jwt.getUserId(request);
+            Long userId = getUserId(request);
             return access.getEmotionById(id, userId);
         } finally {
             semaphore.release();

@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.Semaphore;
+
+import static com.minh.auth.Jwt.getUserId;
 import static com.minh.config.Exception.http;
 
 
@@ -35,12 +37,9 @@ public class UserController {
         }
 
         try {
-            Long userId = Jwt.getUserId(request);
+            Long userId = getUserId(request);
             String link = cloud.upload(file, userId.toString());
-
-            User user = access.getUser(userId);
-            user.setAvatar(link);
-            access.updateUser(user);
+            access.updateAvatar(userId, link);
             return "ok";
         } finally {
             semaphore.release();
@@ -55,16 +54,8 @@ public class UserController {
         }
 
         try {
-            Long userId = Jwt.getUserId(request);
-            User user = access.getUser(userId);
-            user.resetCountToday();
-
-            if (user.exceed()) {
-                throw http(429, "Mỗi ngày chỉ được xóa avatar 20 lần");
-            }
-
-            user.emptyAvatarAndIncreaseCounter();
-            access.updateUser(user);
+            Long userId = getUserId(request);
+            access.emptyAvatar(userId);
             return "ok";
         } finally {
             semaphore.release();
@@ -79,7 +70,7 @@ public class UserController {
         }
 
         try {
-            Long userId = Jwt.getUserId(request);
+            Long userId = getUserId(request);
             return access.getUser(userId);
         } finally {
             semaphore.release();

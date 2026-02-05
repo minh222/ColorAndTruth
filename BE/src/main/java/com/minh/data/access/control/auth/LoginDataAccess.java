@@ -12,13 +12,8 @@ public class LoginDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
         this.r = repos;
     }
 
-    public byte[] getStored(Long id) {
-        User user = r.userRepository.findById(id);
-        return user.getPassword();
-    }
 
-    public Long getUserId(String name) {
-        User user = r.userRepository.findByName(name);
-        return user.getId();
+    public User getUser(String name) {
+        return r.userRepository.findByName(name);
     }
 }

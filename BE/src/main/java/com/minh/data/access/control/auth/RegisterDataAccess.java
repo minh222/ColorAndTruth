@@ -1,5 +1,6 @@
 package com.minh.data.access.control.auth;
 
+import com.minh.auth.Verifier;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,10 +19,15 @@ public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổn
         this.r = repos;
     }
 
-    public String save(String name, byte[] password) { // unique name
+    public String register(String name, String password) { // unique name
         try {
-            User user = r.userRepository.save(new User(name, password));
-            return user.getId().toString();
+            byte[] hashPassword = Verifier.creteVerify(password.toCharArray());
+
+            User user = r.userRepository.save(
+                new User(name, hashPassword)
+            );
+
+            return user.getToken();
         } catch (DataIntegrityViolationException e) {
             throw http(409, "user exists");
         }

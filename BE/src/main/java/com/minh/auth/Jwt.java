@@ -5,8 +5,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +12,7 @@ import java.util.Date;
 
 import static com.minh.config.Exception.http;
 
-public final  class Jwt {
+public final class Jwt {
     private static SecretKey key;
 
     public static void init(byte[] secret) {
