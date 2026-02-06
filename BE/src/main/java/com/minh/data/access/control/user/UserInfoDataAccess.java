@@ -5,10 +5,10 @@ import com.minh.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GetUserDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
+public class UserInfoDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos repos;
 
-    public GetUserDataAccess(CurrentRepos repos) {
+    public UserInfoDataAccess(CurrentRepos repos) {
         this.repos = repos;
     }
 

@@ -10,9 +10,9 @@ public class CompositeId implements Serializable {
 
     private Long commentId;
 
-    private Long viewerId;
+    private Integer viewerId;
 
-    public CompositeId(Long commentId, Long viewerId) {
+    public CompositeId(Long commentId, Integer viewerId) {
         this.commentId = commentId;
         this.viewerId = viewerId;
     }

@@ -1,6 +1,7 @@
 package com.minh.data.access.control.comment;
 
 import com.minh.data.access.control.CurrentRepos;
+import com.minh.entity.Comment;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,8 +15,9 @@ public class RemoveCommentDataAccess { // gateway :mỗi bussiness truy cập 1 
     }
 
     @Transactional
-    public void removeComment(Long id) {
+    public Integer removeComment(Long id) {
         r.closureRepository.deleteById(id);
         r.commentRepository.deleteById(id);
+        return r.commentRepository.getCountById(id);
     }
 }

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.Semaphore;
 
-import static com.minh.auth.Jwt.issue;
-import static com.minh.auth.Verifier.creteVerify;
 import static com.minh.config.Exception.http;
 
 @RestController
@@ -31,11 +29,11 @@ public class AuthController {
         try {
             User user = access.getUser(name);
 
-            if (!user.isValidPassword(password)) {
+            if (!user.verifying(password)) {
                 throw http(401, "Unauthorized");
             }
 
-            return user.getToken();
+            return user.createToken();
         } finally {
             semaphore.release();
         }

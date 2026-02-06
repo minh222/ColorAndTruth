@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comment")
@@ -38,13 +39,21 @@ public class Comment {
     @Column
     private Integer count;
 
-    public Comment(Long userId, String emotion, String claim,Long parentId, Boolean isDebateClaim, LocalDate date, Integer count) {
+    @Column
+    private LocalDateTime time;
+
+    public Comment(Long userId, String emotion, String claim,Long parentId, Boolean isDebateClaim, Integer count, LocalDate date, LocalDateTime time) {
         this.userId = userId;
         this.emotion = emotion;
         this.claim = claim;
         this.parentId = parentId;
         this.isDebateClaim = isDebateClaim;
-        this.date = date;
         this.count = count;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Boolean getDebateClaim(Long userId) {
+        return isDebateClaim == null || userId == null;
     }
 }

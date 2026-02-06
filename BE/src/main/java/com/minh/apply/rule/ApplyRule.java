@@ -35,7 +35,6 @@ public class ApplyRule {
         Set<String> attitudes = new HashSet<>();
         String claim = STRING_UTIL.normalize(original);
 
-
         return new AnalyzeResponse(
                 original,
                 new ArrayList<>(emotions),

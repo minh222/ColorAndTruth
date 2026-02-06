@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     @Transactional
-    public void saveComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim) {
+    public void postComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim) {
         Comment newComment = r.commentRepository.save(
-                new Comment(userId, emotion, claim, id, isDebateClaim, LocalDate.now(), 0)
+                new Comment(userId, emotion, claim, id, isDebateClaim, 0, LocalDate.now(), LocalDateTime.now())
         );
         Long newCommentId = newComment.getId();
 

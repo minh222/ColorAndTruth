@@ -1,10 +1,9 @@
 package com.minh.controller;
 
-import com.minh.auth.Jwt;
 import com.minh.config.DataAccess;
 
 import com.minh.data.access.control.user.EmptyDataAccess;
-import com.minh.data.access.control.user.GetUserDataAccess;
+import com.minh.data.access.control.user.UserInfoDataAccess;
 import com.minh.data.access.control.user.UploadDataAccess;
 import com.minh.entity.User;
 import com.minh.upload.CloudinaryService;
@@ -63,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public User getUser(@DataAccess GetUserDataAccess access,
+    public User userInfo(@DataAccess UserInfoDataAccess access,
                         HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Too many requests");

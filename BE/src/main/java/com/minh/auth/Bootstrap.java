@@ -9,6 +9,6 @@ public final class Bootstrap {
     public Bootstrap(@Value("${jwt.secret}") String secret) {
         byte[] secretBytes = Base64.getDecoder().decode(secret);
         Jwt.init(secretBytes);
-        Verifier.init(secretBytes);
+        Security.init(secretBytes);
     }
 }

@@ -1,9 +1,8 @@
 package com.minh.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import com.minh.auth.Verifier;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import static com.minh.auth.Jwt.issue;
-import static com.minh.auth.Verifier.verify;
+import static com.minh.auth.Security.verify;
 import static com.minh.config.Config.TODAY;
 
 
@@ -19,6 +18,7 @@ import static com.minh.config.Config.TODAY;
 @Table(name = "user")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,10 +45,6 @@ public class User {
         this.password = password;
     }
 
-    public User() {
-
-    }
-
     public void resetCountToday() {
         if (!Objects.equals(TODAY, avatarChangeDate)) { // today != (null or next day)
             avatarChangeCount = 0;
@@ -65,12 +61,12 @@ public class User {
         avatarChangeCount++;
     }
 
-    public boolean isValidPassword(String tryPassword) {
+    public boolean verifying(String tryPassword) {
         return verify(tryPassword.toCharArray(), password);
     }
 
-    public String getToken() {
-        return issue(id.toString(), 10000);
+    public String createToken() {
+        return issue(id.toString(), 100000);
     }
 }
 

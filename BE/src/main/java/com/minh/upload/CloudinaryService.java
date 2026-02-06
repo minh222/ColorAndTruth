@@ -2,10 +2,8 @@ package com.minh.upload;
 
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +39,7 @@ public class CloudinaryService {
             byte[] fileBytes = file.getBytes();
             return this.cloudinary.uploader().upload(fileBytes, options);
         } catch (Exception e) {
-            throw http(59, "Cloudinary upload failed");
+            throw http(503, "Cloudinary upload failed");
         }
     }
 }
