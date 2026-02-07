@@ -1,6 +1,7 @@
 package com.minh.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import static com.minh.config.Config.TODAY;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ignore proxy
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

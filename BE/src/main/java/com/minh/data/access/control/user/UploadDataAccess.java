@@ -16,7 +16,7 @@ public class UploadDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
 
     @Transactional
     public void updateAvatar(Long userId, String link) {
-        User user = r.userRepository.findById(userId);
+        User user = r.userRepository.getReferenceById(userId);
         user.setAvatar(link);
     }
 }

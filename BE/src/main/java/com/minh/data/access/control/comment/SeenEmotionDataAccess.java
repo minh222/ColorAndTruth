@@ -17,7 +17,7 @@ public class SeenEmotionDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     public GetEmotionResponse seenEmotion(Long id, Long userId) {
-        CompositeId compositeId = new CompositeId(id, Math.toIntExact(userId));
+        CompositeId compositeId = new CompositeId(id, userId);
 
         r.viewEmotionRepository.save(
                 new ViewEmotion(compositeId, LocalDateTime.now())

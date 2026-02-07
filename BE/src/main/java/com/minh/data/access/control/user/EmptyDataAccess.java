@@ -17,7 +17,7 @@ public class EmptyDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
 
     @Transactional
     public void emptyAvatar(Long userId) {
-        User user =  r.userRepository.findById(userId);
+        User user =  r.userRepository.getReferenceById(userId);
         user.resetCountToday();
 
         if (user.exceed()) {

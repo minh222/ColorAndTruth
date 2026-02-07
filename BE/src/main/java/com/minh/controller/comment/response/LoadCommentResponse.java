@@ -20,7 +20,7 @@ public class LoadCommentResponse {
     private Long userId;
     private LocalDateTime time;
     private Boolean isDebateClaim;
-    private Integer viewerId;
+    private Long viewerId;
 
     public Boolean getIsDebateClaim() {
         return viewerId == null || !Objects.equals(isDebateClaim, false);
@@ -33,7 +33,7 @@ public class LoadCommentResponse {
         return null;
     }
 
-    public LoadCommentResponse(Long id, String emotion, String claim, String name, String avatar, Long count, Long userId, LocalDateTime time, Boolean isDebateClaim, Integer viewerId) {
+    public LoadCommentResponse(Long id, String emotion, String claim, String name, String avatar, Long count, Long userId, LocalDateTime time, Boolean isDebateClaim, Long viewerId) {
         this.id = id;
         this.emotion = emotion;
         this.claim = claim;

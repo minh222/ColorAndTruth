@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findById(Long id);
+public interface UserRepository extends JpaRepository<User, Long> {
+
     User findByName(String name);
+
+    User getById(Long id);
 }

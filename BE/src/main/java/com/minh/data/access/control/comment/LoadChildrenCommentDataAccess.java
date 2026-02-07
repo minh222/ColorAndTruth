@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class LoadChildrenCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
@@ -21,19 +22,14 @@ public class LoadChildrenCommentDataAccess { // gateway :mỗi bussiness truy c�
     }
 
     public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId) {
-        if (lastId == null) {
-            Long maxId = r.commentRepository.getMaxChildrenIdById(id);
-            lastId = maxId == null ? null : maxId + 1;
-        }
-        List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(Math.toIntExact(userId));
+        List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
-        List<Long> commentIds = new ArrayList<>();
-        ids.forEach(e -> {
-            if (e.viewerIsNull())
-                commentIds.add(e.getCommentId());
-        });
-
-        Pageable pageLimit = PageRequest.of(0, limit);
-        return r.commentRepository.loadChildrenById(id, lastId, ids, commentIds, pageLimit);
+        return r.commentRepository.loadChildrenById(
+                id,
+                lastId != null ? lastId : ((lastId = r.commentRepository.getMaxChildrenIdById(id)) == null ? null : lastId + 1),
+                ids,
+                ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList()),
+                PageRequest.of(0, limit)
+        );
     }
 }

@@ -19,12 +19,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "left join ViewEmotion v on c.id = v.id.commentId  " +
             "where (:lastId is null or c.id < :lastId) " +
             "and c.parentId is null " +
-            "and c.date = :today " +
+            "and c.date = :date " +
             "and (v.id in :ids or c.id in :commentIds) " + // filter theo ids : đã collapse đúng, hoặc theo :commentIds nếu viewer = null <=> 0 dòng ko collapse
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadComment(Long lastId, List<CompositeId> ids, LocalDate today, List<Long>  commentIds, Pageable pageable);
+    List<LoadCommentResponse> loadComment(Long lastId, List<CompositeId> ids, LocalDate date, List<Long>  commentIds, Pageable pageable);
 
     /*   ViewerId: collapse priority
          Nếu nhiều dòng có userId thì ưu tiên lấy dòng có userId,
@@ -39,7 +39,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "from Comment c " +
             "left join ViewEmotion v on c.id = v.id.commentId " +
             "group by c.id ")
-    List<CompositeId> getCompositeIdsByUserId(Integer userId);
+    List<CompositeId> getCompositeIdsByUserId(Long userId);
 
     @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id, c.time,c.isDebateClaim, v.id.viewerId) " +

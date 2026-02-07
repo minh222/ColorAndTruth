@@ -13,6 +13,6 @@ public class UserInfoDataAccess { // gateway :mỗi bussiness truy cập 1 cổn
     }
 
     public User getUser(Long id) {
-        return repos.userRepository.findById(id);
+        return repos.userRepository.getById(id);
     }
 }
