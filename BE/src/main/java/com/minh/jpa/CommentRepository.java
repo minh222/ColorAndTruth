@@ -20,20 +20,25 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where (:lastId is null or c.id < :lastId) " +
             "and c.parentId is null " +
             "and c.date = :today " +
-            "and v.id in :ids " +
+            "and (v.id in :ids or c.id in :commentIds) " + // filter theo ids : đã collapse đúng, hoặc theo :commentIds nếu viewer = null <=> 0 dòng ko collapse
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadComment(List<CompositeId> ids, Long lastId, LocalDate today, Pageable pageable);
+    List<LoadCommentResponse> loadComment(Long lastId, List<CompositeId> ids, LocalDate today, List<Long>  commentIds, Pageable pageable);
 
+    /*   ViewerId: collapse priority
+         Nếu nhiều dòng có userId thì ưu tiên lấy dòng có userId,
+         Nếu nhiều dòng ko có userId thì lấy dòng max
+         Nếu ko có dòng nào thì viewerId = null */
     @Query( "select new com.minh.entity.id.CompositeId ( " +
-            "  v.id.commentId, " +
+            "  c.id, " +
             "  coalesce( " +
-            "    max(case when v.id.viewerId = :userId then v.id.viewerId else null end), " +
-            "    min(v.id.viewerId) " +
-            "  ) )" +
-            "from ViewEmotion v " +
-            "group by v.id.commentId ")
+            "    max(case when v.id.viewerId = :userId then v.id.viewerId else null end ), " +
+            "    max(v.id.viewerId) " +
+            "  ))" +
+            "from Comment c " +
+            "left join ViewEmotion v on c.id = v.id.commentId " +
+            "group by c.id ")
     List<CompositeId> getCompositeIdsByUserId(Integer userId);
 
     @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
@@ -45,11 +50,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where (:id = c.parentId or (:id is null and c.parentId is null))" +
             "and (:lastId > c.id or :lastId is null) " +
             "and cl.ancestorId <> :id " +
-            "and  v.id in :ids " +
+            "and (v.id in :ids or c.id in :commentIds) " +
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadChildrenById(List<CompositeId> ids, Long id, Long lastId, Pageable pageable);
+    List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, List<CompositeId> ids, List<Long> commentIds, Pageable pageable);
 
     @Query("select max(c.id) from Comment c where c.parentId is null")
     Long findMaxId();

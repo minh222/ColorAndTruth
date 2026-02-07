@@ -26,6 +26,20 @@
 - xóa comment riêng mỗi người done
 - lưu closure done
 - đổi form bình luận đẹp hơn done
+- thiết kế ResponseStatusException done
+- fe trừ ko ổn done
+- ko có true emotion thì ko hiện done
+- xóa fail done
+- xóa emotion ở UI done
+- fix high light fe done
+- fix commentlist height done
+- thêm option cho người ko thích nhập true emotion done
+- mini game draw done
+- màn hình bung done
+- thêm trước sau thời gian done
+- nếu count = 0 chặn call api done
+ 
+
 ---------------------------------------------------------------------
 
 
@@ -43,8 +57,6 @@
 - logout khi token quá hạn
 - tổ chức lại config
 
-- thêm trước sau
-- màn hình bung
 
 - ghi đè file update
 - reply quote lại
@@ -61,7 +73,6 @@
 - sound effect khi nhấn nút
 
 - like - làm dislike ko làm like
-- mini game
 
 - smooth lại nhập comment
 - đổi tên
@@ -78,15 +89,23 @@
 
 - app dành cho những ai muốn thể hiện cảm xúc, niềm tin thật nhất mà ko sợ phán xét, dành cho những ai muốn phản hồi thẳng, thật mà ko sợ đụng chạm đến cảm giác thật của người khác
 - before, after see
-- khóa reply
+- khóa reply - nếu chọn ko 
+
+
+
 - giải thích ngắn lại
 - có thể xem emotion của mình mà ko cảnh báo
 - vietsub
-- fe trừ ko ổn
-
 
 - semaphore max core db
 - click ra ngoài nền ko bị tắt
 - bể layout chỗ ý chính khi nhấn mắt
 - luôn lưu chữ thường
+
+- refactor rule to table và thêm tính năng user tự define emotion
+- lưu ảnh chung vs emotion
+- giảm text login
+
+- cộng dồn emotion
 - trả nợ kĩ thuật tech + update tech + knowlegde be
+- tối ưu thuật toán

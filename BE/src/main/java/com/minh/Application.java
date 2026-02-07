@@ -14,8 +14,8 @@ public class Application {
         );
         byte[] key = new byte[32]; // 256-bit
         new SecureRandom().nextBytes(key);
-        System.out.println(Base64.getEncoder().encodeToString(key));
-        System.out.println("JWT_SECRET=" + System.getenv("JWT_SECRET"));
+
+
     }
 
 }

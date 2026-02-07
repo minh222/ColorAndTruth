@@ -1,24 +1,17 @@
 package com.minh.thread;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 public class ExecutorUtils {
     private ExecutorUtils() {
     }
 
-    public static <T> T runOnSharedExecutor(Callable<T> task) {
+    public static <T> CompletableFuture<T> runOnSharedExecutor(Supplier<T> task) {
         try {
-            Future<T> future = SharedExecutor.executor0.submit(task);
-            return future.get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void runOnSharedExecutor(Runnable task) {
-        try {
-            SharedExecutor.executor0.submit(task).get();
+            return CompletableFuture.supplyAsync(task, SharedExecutor.executor0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

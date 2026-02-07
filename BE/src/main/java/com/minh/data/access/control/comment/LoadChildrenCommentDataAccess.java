@@ -3,11 +3,14 @@ package com.minh.data.access.control.comment;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.controller.comment.response.LoadCommentResponse;
 import com.minh.entity.id.CompositeId;
+import com.minh.thread.ExecutorUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class LoadChildrenCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
@@ -22,8 +25,15 @@ public class LoadChildrenCommentDataAccess { // gateway :mỗi bussiness truy c�
             Long maxId = r.commentRepository.getMaxChildrenIdById(id);
             lastId = maxId == null ? null : maxId + 1;
         }
+        List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(Math.toIntExact(userId));
+
+        List<Long> commentIds = new ArrayList<>();
+        ids.forEach(e -> {
+            if (e.viewerIsNull())
+                commentIds.add(e.getCommentId());
+        });
+
         Pageable pageLimit = PageRequest.of(0, limit);
-        List<CompositeId> ids =  r.commentRepository.getCompositeIdsByUserId(Math.toIntExact(userId));
-        return r.commentRepository.loadChildrenById(ids ,id, lastId, pageLimit);
+        return r.commentRepository.loadChildrenById(id, lastId, ids, commentIds, pageLimit);
     }
 }

@@ -23,10 +23,16 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         if (lastId == null) {
             lastId = r.commentRepository.findMaxId() + 1;
         }
-        LocalDate today = LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo);
-        Pageable pageLimit = PageRequest.of(0, limit);
-
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(Math.toIntExact(userId));
-        return r.commentRepository.loadComment(ids,  lastId, today, pageLimit);
+
+        LocalDate today = LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo);
+        List<Long> commentIds = new ArrayList<>();
+        ids.forEach(id -> {
+            if (id.viewerIsNull())
+                commentIds.add(id.getCommentId());
+        });
+
+        Pageable pageLimit = PageRequest.of(0, limit);
+        return r.commentRepository.loadComment(lastId, ids, today, commentIds, pageLimit);
     }
 }
