@@ -29,8 +29,6 @@
         :src="avatarSrc"
         class="avatar"
         referrerpolicy="no-referrer"
-        loading="lazy"
-        decoding="async"
       />
 
       <!-- ⏳ loading overlay -->
@@ -90,7 +88,7 @@
 
   <!-- COMMENT LIST -->
   <div class="comment-list">
-    <h3>💬 Comments</h3>
+    <h3>💬 Bình luận</h3>
 
     <Node
       v-for="c in comments"
@@ -101,8 +99,6 @@
       @deleted="removeRoot"
     />
 
-
-
     <div class="comment-actions">
       <button
         type="button"
@@ -110,7 +106,7 @@
         @click="loadComments"
         class="load-more"
       >
-        Load more
+        Tải thêm
       </button>
 
       <button
@@ -151,6 +147,26 @@
     />
   </div>
   <Draw />
+  <div
+    v-if="serverError"
+    class="server-error-overlay"
+  >
+    <h2>🚧 Server gặp sự cố</h2>
+    <p>Vui lòng thử lại sau</p>
+    <button @click="reloadPage">🔄 Tải lại</button>
+  </div>
+
+  <!-- POPUP CONFIRM -->
+  <div v-if="popup.show" class="debate-popup">
+    <div class="popup-card">
+      <button class="popup-close" @click="closePopup">✖</button>
+      <p>{{ popup.message }}</p>
+      <div class="popup-actions">
+        <button @click="closePopup">OK</button>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup>
@@ -160,9 +176,30 @@ import Node from "./Node.vue";
 import ClaimEmotionConfirm from "../components/ClaimEmotionConfirm.vue";
 import Draw from "./Draw.vue"
 const dayAgo = ref(0); // 0 = hôm nay, 1 = hôm qua
-const removeRoot = (id) => {
+const removeRoot = ({ id }) => {
   comments.value = comments.value.filter(c => c.id !== id);
 };
+
+const serverError = ref(false);
+const reloadPage = () => window.location.reload();
+onMounted(() => {
+  window.addEventListener("server-error", () => {
+    serverError.value = true;
+  });
+});
+
+const popup = ref({
+  show: false,
+  message: "",
+})
+const showPopup = (msg) => {
+  popup.value.show = true
+  popup.value.message = msg
+}
+
+const closePopup = () => {
+  popup.value.show = false
+}
 
 const avatarUploading = ref(false);
 const avatarErrored = ref(false);
@@ -197,8 +234,6 @@ const loadUser = async () => {
   user.value = data;
   avatarSrc.value = data.avatar || defaultAvatar;
 };
-
-
 
 /* UPDATE AVATAR */
 const updateAvatar = async (e) => {
@@ -236,8 +271,6 @@ const removeAvatar = async () => {
     return;
   }
 
-  // ✅ Thành công
-   
     await loadUser();
 };
 
@@ -277,8 +310,6 @@ const uploadAvatar = async (e) => {
     avatarUploading.value = false;
   }
 };
-
-
 
 /* COMMENT + MODAL (GIỮ NGUYÊN CỦA MÀY) */
 const showModal = ref(false);
@@ -466,6 +497,11 @@ const collapse = () => {
   background: #fff;
   border-radius: 12px;
   text-align: left;   /* ✅ */
+  max-height: calc(64px * 8);
+  overflow-y: auto;
+
+  /* optional cho mượt */
+  scrollbar-gutter: stable;
 }
 
 .logout-btn {
@@ -593,6 +629,19 @@ const collapse = () => {
   gap: 8px;
   align-items: flex-end;
 }
+.server-error-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.97);
+  z-index: 999999;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  pointer-events: all;
+}
 
 </style>

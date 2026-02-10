@@ -10,7 +10,7 @@
             class="original-input"
             placeholder="Nhập nội dung cần phân tích…"
           />
-          <button class="close-btn" @click="$emit('close')">✖</button>
+          <button class="close-btn" @click="onClose">✖</button>
         </div>
         <div class="actions">
           <!-- ✨ NÚT ẨN/HIỆN PANEL -->
@@ -100,7 +100,6 @@
               <p>{{ attitude }}</p>
 
               <button
-                v-if="emotion.length"
                 class="switch-btn"
                 @click="activePanel = 'emotion'"
               >
@@ -113,12 +112,23 @@
               v-if="showAttitude && activePanel === 'emotion'"
               class="box emotion-box"
             >
-              <span class="tag">TRUE EMOTION/BELIVE AND HEART</span>
+              <div class="claim-header">
+                <span class="tag">TRUE EMOTION / BELIEVE AND HEART</span>
+
+                <!-- 🔥 RESET EMOTION -->
+                <button
+                  class="edit-btn"
+                  title="Reset true emotion"
+                  @click="resetEmotion"
+                >
+                  ♻️
+                </button>
+              </div>
               <ul>
                 <li v-for="(e, i) in emotion" :key="i">{{ e }}</li>
               </ul>
               <p class="original-preview">
-                {{ selectedOriginalText || originalText }}
+                {{ selectedOriginalText }}
               </p>
               <button class="switch-btn" @click="activePanel = 'attitude'">
                 ← Xem Attitude
@@ -129,8 +139,8 @@
           <div class="confirm-footer">
             <button
               class="submit-btn"
-              :disabled="loading || !emotion.length"
-              @click="showDebateConfirm = true"
+              :disabled="loading || !claim.trim()"
+              @click="handleSubmitClick"
             >
               📤 Gửi bình luận
             </button>
@@ -146,13 +156,25 @@
       <!-- ❌ NÚT ĐÓNG -->
       <button class="popup-close" @click="cancelDebatePopup"> ✖ </button>
       
-      <p>🗣️ Sau khi có người xem true emotion của bạn, bạn có cho phép họ reply không, nếu không họ không thể reply, nếu có họ chỉ có thể bình luận xung quanh ý chính mà không được phản biện true emotion (họ được phép công nhận true emotion của bạn) ? (nhấn x để suy nghĩ thêm)</p>
+      <p>🗣️ Sau khi có người xem true emotion, họ có được reply không, chọn Không họ không thể reply, chọn Có họ có thể bình luận nhưng không được phản biện true emotion (chỉ đc đồng ý hoặc công nhận true emotion) ? (nhấn x để suy nghĩ thêm)</p>
 
       <div class="popup-actions">
         <button @click="confirmSubmit(true)">Có</button>
         <button @click="confirmSubmit(false)">Không</button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- GENERIC POPUP -->
+  <div v-if="popup.show" class="debate-popup">
+    <div class="popup-card">
+      <button class="popup-close" @click="closePopup">✖</button>
+      <p>{{ popup.message }}</p>
+
+      <div class="popup-actions">
+        <button @click="closePopup">OK</button>
+      </div>
     </div>
   </div>
 
@@ -164,6 +186,28 @@ import { getCurrentInstance } from "vue";
 const emit = defineEmits(["close", "submitted"]);
 const showDebateConfirm = ref(false);
 const mode = ref("comment");  
+
+const popup = ref({
+  show: false,
+  message: "",
+})
+
+const showPopup = (msg) => {
+  popup.value.show = true
+  popup.value.message = msg
+}
+
+const closePopup = () => {
+  popup.value.show = false
+}
+
+const resetEmotion = () => {
+  emotion.value = []
+  selectedOriginalText.value = ""
+  activePanel.value = "emotion"
+}
+
+
 
 /* PROXY */
 const { proxy } = getCurrentInstance();
@@ -215,7 +259,7 @@ const onExact = async () => {
     const data = await res.json();
 
     claim.value = data.claim;
-    emotion.value = data.emotion || [];
+    
     attitude.value = data.attitude || "";
     editedClaim.value = claim.value;
     editingClaim.value = false;
@@ -226,7 +270,7 @@ const onExact = async () => {
     showAttitude.value = true;
     activePanel.value = "attitude";
   } catch (e) {
-    alert("Không gọi được API");
+    showPopup("Không gọi được API");
   } finally {
     loading.value = false;
   }
@@ -240,14 +284,13 @@ const analyzeSelectedText = async () => {
   const end = el.selectionEnd;
 
   if (start === end) {
-    alert("Chưa bôi đen đoạn nào");
+    showPopup("Chưa bôi đen đoạn nào");
     return;
   }
 
   const selectedText = el.value.substring(start, end);
   selectedOriginalText.value = selectedText;
 
-  // 🔥 CALL API BẰNG ĐOẠN ĐƯỢC CHỌN
   const res = await authFetch(
     `/api/v1/exact?original=${encodeURIComponent(selectedText)}`,
     { method: "POST" },
@@ -282,6 +325,7 @@ const confirmSubmit = async (isDebateClaim) => {
   const params = new URLSearchParams({
     claim: claim.value,
     emotion: selectedOriginalText.value,
+    isDebateClaim: String(isDebateClaim),  
   });
 
   if (isDebateClaim) {
@@ -304,7 +348,7 @@ const confirmSubmit = async (isDebateClaim) => {
     emit("close");
   } catch (e) {
     console.error(e);
-    alert("Không gửi được dữ liệu");
+    showPopup("Không gửi được dữ liệu");
   }
 };
 
@@ -344,11 +388,19 @@ const resetState = () => {
 
   hasResult.value = false;
   showConfirmPanel.value = false;
-  showAttitude.value = false;
+  showAttitude.value = true;
   activePanel.value = "attitude";
 
   selectedOriginalText.value = "";
 };
+const handleSubmitClick = () => {
+  if (!selectedOriginalText.value.trim()) {
+    confirmSubmit(true)
+    return
+  }
+  showDebateConfirm.value = true
+}
+
 </script>
 
 <style scoped>

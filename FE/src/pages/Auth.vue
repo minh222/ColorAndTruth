@@ -20,12 +20,13 @@
     <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
-
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router"; // 👈 THÊM
+import { ref, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter(); // 👈 THÊM
+const { proxy } = getCurrentInstance();
+const authFetch = proxy.$authFetch;
+const router = useRouter();
 
 const name = ref("");
 const password = ref("");
@@ -39,6 +40,11 @@ const toggleMode = () => {
 };
 
 const submit = async () => {
+  if (!name.value || !password.value) {
+    error.value = "Thiếu thông tin";
+    return;
+  }
+
   loading.value = true;
   error.value = "";
 
@@ -50,27 +56,29 @@ const submit = async () => {
     const url =
       `${endpoint}?name=${encodeURIComponent(name.value)}&password=${encodeURIComponent(password.value)}`;
 
-    const res = await fetch(url, { method: "POST" });
+    const res = await authFetch(url, { method: "POST" });
 
-    // ❌ FAIL → đọc message backend
+ 
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.message || "Login failed");
+      error.value = err.message; // GIỮ NGUYÊN MESSAGE BE
+      return;
     }
 
-    // ✅ OK → đọc token
+ 
     const token = await res.text();
     localStorage.setItem("token", token);
     router.push("/home");
 
   } catch (e) {
-    error.value = "❌ " + e.message;
+    // ✅ server chết / bảo trì / ECONNREFUSED
+    error.value = "❌ Không thể kết nối server. Vui lòng thử lại sau.";
   } finally {
     loading.value = false;
   }
 };
-
 </script>
+
 
 <style scoped>
 .auth-box {
