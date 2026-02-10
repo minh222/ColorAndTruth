@@ -36,7 +36,7 @@ public class ApplyRule {
         String claim = STRING_UTIL.normalize(original);
 
         return new AnalyzeResponse(
-                original,
+                null,
                 new ArrayList<>(emotions),
                 String.join(", ", attitudes),
                 STRING_UTIL.normalize(claim)

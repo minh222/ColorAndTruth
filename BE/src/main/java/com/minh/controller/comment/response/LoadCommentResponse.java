@@ -1,15 +1,14 @@
 package com.minh.controller.comment.response;
 
-import com.minh.entity.Comment;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
 @Getter
-
+@Setter
 public class LoadCommentResponse {
     private Long id;
     private String emotion;
@@ -48,5 +47,9 @@ public class LoadCommentResponse {
 
     public Long getCount() {
         return count - 1;
+    }
+
+    public void alwaysTrueWhenDifference(Long userId) {
+        isDebateClaim =  !userId.equals(viewerId);
     }
 }

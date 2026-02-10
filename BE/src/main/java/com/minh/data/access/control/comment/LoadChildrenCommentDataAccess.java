@@ -24,12 +24,16 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
     public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId) {
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
-        return r.commentRepository.loadChildrenById(
+        List<LoadCommentResponse> res =  r.commentRepository.loadChildrenById(
                 id,
                 lastId != null ? lastId : ((lastId = r.commentRepository.getMaxChildrenIdById(id)) == null ? null : lastId + 1),
                 ids,
                 ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList()),
                 PageRequest.of(0, limit)
         );
+
+        res.forEach(r -> r.alwaysTrueWhenDifference(userId));
+
+        return res;
     }
 }

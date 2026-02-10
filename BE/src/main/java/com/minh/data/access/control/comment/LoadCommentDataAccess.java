@@ -21,12 +21,16 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer dayAgo) { // load từ lastId -> lastId + limit
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
-        return r.commentRepository.loadComment(
+        List<LoadCommentResponse> res = r.commentRepository.loadComment(
                 lastId == null ? r.commentRepository.findMaxId() + 1 : lastId,
                 ids,
                 LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo),
                 ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList()),
                 PageRequest.of(0, limit)
         );
+
+        res.forEach(r -> r.alwaysTrueWhenDifference(userId));
+
+        return res;
     }
 }
