@@ -5,6 +5,11 @@
       <!-- ORIGINAL INPUT -->
       <div class="card">
         <div class="textarea-wrap">
+          <!-- quote -->
+          <div v-if="replyTo?.isQuote" class="quote-box">
+            <p><b>{{ replyTo.name }}</b> nói:</p>
+            <blockquote>{{ replyTo.claim }}</blockquote>
+          </div>
           <textarea
             v-model="originalText"
             class="original-input"
@@ -875,8 +880,25 @@ textarea {
 .textarea-wrap {
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;   /* 🔥 QUAN TRỌNG */
+  align-items: center;
+  gap: 8px;
 }
+.quote-box {
+  width: 100%;
+  max-width: 480px;
+  padding: 10px 14px;
+  border-left: 4px solid #7b7dff;
+  background: #f1f3ff;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.quote-box blockquote {
+  margin: 6px 0 0;
+  opacity: 0.85;
+}
+
 
 
 </style>

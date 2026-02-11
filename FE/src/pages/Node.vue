@@ -27,11 +27,17 @@
             <div class="reply-wrapper">
               <button
                 class="reply-btn"
-                :disabled="comment.isDebateClaim === false"
-                @click="comment.isDebateClaim !== false && $emit('reply', comment)"
+                @click="$emit('quote', {
+                  id: comment.id,
+                  name: comment.name || 'Ẩn danh',
+                  claim: comment.claim
+                })"
+                
               >
-                ↩ Phản hồi
+                ↩ Trả lời
               </button>
+
+
 
               <!-- overlay tên user -->
               <div
@@ -81,9 +87,15 @@
           :comment="c"
           :currentUserId="currentUserId"
           @reply="$emit('reply', $event)"
+          @quote="$emit('quote', $event)"    
           @deleted="removeChild"
         />
-
+        <div class="children-actions">
+          <div class="children-actions">
+            <button v-if="children.length > CHILD_LIMIT" class="collapse-children" @click="collapseReplies">🔼</button>
+            <button v-if="!noMoreChildren && !loading" class="load-more-children" @click="loadMoreChildren">🔽</button>
+          </div>
+        </div>
         </div>
       </div>
 
@@ -133,13 +145,16 @@
 
   import { ref, getCurrentInstance } from "vue";
 
+  const emit = defineEmits(["quote", "reply", "deleted"]);
+
+
+
   const popup = ref({
     show: false,
     message: "",
     onYes: null,
     onNo: null,
   })
-
 
   const showConfirmPopup = (msg, onYes, onNo = null) => {
     popup.value.message = msg
@@ -166,7 +181,14 @@
     return `${d}/${m}/${y} · ${hhmm}`;
   };
 
-  const emit = defineEmits(["reply", "deleted"]);
+  const handleReply = () => {
+    emit("reply", {
+      id: props.comment.id,
+      name: props.comment.name || "Ẩn danh",
+      claim: props.comment.claim
+    })
+  }
+
   const confirmDelete = () => {
     showConfirmPopup(
       "Xóa comment này nha? Bay là bay luôn đó 😬",
@@ -213,6 +235,8 @@
   const opened = ref(false);
   const loading = ref(false);
   const children = ref([]);
+  const lastChildId = ref(null);
+  const noMoreChildren = ref(false);
 
   /* auth */
   const { proxy } = getCurrentInstance();
@@ -281,14 +305,53 @@
     // đã load rồi thì thôi
     if (children.value.length) return;
 
+    await loadMoreChildren();
+  };
+
+  const CHILD_LIMIT = 2;
+
+  const loadMoreChildren = async () => {
+    if (loading.value || noMoreChildren.value) return;
+
     loading.value = true;
+
     try {
-      const res = await authFetch(
-        `/api/v1/loadChildren?id=${props.comment.id}&limit=5`
-      );
-      children.value = await res.json();
+      const params = new URLSearchParams({
+        id: props.comment.id,
+        limit: String(CHILD_LIMIT),
+      });
+
+      if (lastChildId.value !== null) {
+        params.append("lastId", lastChildId.value);
+      }
+
+      const res = await authFetch(`/api/v1/loadChildren?${params.toString()}`);
+      const data = await res.json();
+
+      if (data.length) {
+        children.value.push(...data);
+        lastChildId.value = data[data.length - 1].id;
+
+        // Nếu số trả về < limit thì hết
+        if (data.length < CHILD_LIMIT) {
+          noMoreChildren.value = true;
+        }
+      } else {
+        noMoreChildren.value = true;
+      }
     } finally {
       loading.value = false;
+    }
+  };
+  const collapseReplies = () => {
+    // Giữ lại đúng CHILD_LIMIT
+    if (children.value.length > CHILD_LIMIT) {
+      children.value.splice(CHILD_LIMIT);
+      noMoreChildren.value = false; // có thể load tiếp
+      lastChildId.value =
+        children.value.length > 0
+          ? children.value[children.value.length - 1].id
+          : null;
     }
   };
 
@@ -296,6 +359,21 @@
 
 
   <style scoped>
+  .collapse-children {
+    margin: 8px auto;
+    display: block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    background: #f3f4f6;
+    color: #374151;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .collapse-children:hover {
+    background: #e5e7eb;
+  }
   .debate-popup {
     position: fixed;
     inset: 0;
@@ -549,6 +627,7 @@
   }
 
   .reply-lock-overlay {
+    
     position: absolute;
     inset: 0;
     background: rgba(255, 255, 255, 0.85);
@@ -560,11 +639,33 @@
     font-size: 12px;
     font-weight: 600;
     color: #b42318;
-
-    pointer-events: none; /* không cho click xuyên */
+    pointer-events: auto;   /* 👈 CHẶN CLICK */
     border-radius: 6px;
     text-align: center;
     padding: 0 6px;
   }
+
+ 
+
+  .load-more-children:hover {
+    background: #cbd5e1;
+  }
+
+  .children-actions {
+    display: flex;
+    justify-content: flex-end;  
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .load-more-children,
+  .collapse-children {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  
 
   </style>

@@ -97,6 +97,7 @@
       :currentUserId="user.id"
       @reply="onReply"
       @deleted="removeRoot"
+      @quote="handleQuote"
     />
 
     <div class="comment-actions">
@@ -263,11 +264,11 @@ const removeAvatar = async () => {
 
     // 🔒 Bị giới hạn theo ngày
     if (res.status === 429) {
-      alert(err.message); // "Mỗi ngày chỉ được xóa avatar 20 lần"
+      showPopup (err.message); // "Mỗi ngày chỉ được xóa avatar 20 lần"
       return;
     }
 
-    alert("Xóa avatar thất bại");
+    showPopup ("Xóa avatar thất bại");
     return;
   }
 
@@ -294,11 +295,11 @@ const uploadAvatar = async (e) => {
       const err = await res.json();
 
       if (res.status === 409) {
-        alert(err.message);
+        showPopup (err.message);
         return;
       }
 
-      alert("Upload thất bại");
+      showPopup ("Upload thất bại");
       return;
     }
 
@@ -311,7 +312,7 @@ const uploadAvatar = async (e) => {
   }
 };
 
-/* COMMENT + MODAL (GIỮ NGUYÊN CỦA MÀY) */
+/* COMMENT + MODAL  */
 const showModal = ref(false);
 const comments = ref([]);
 const lastId = ref(null);
@@ -329,6 +330,17 @@ const openAnalyze = () => {
   replyingTo.value = null;
   showModal.value = true;
 };
+
+const handleQuote = ({ id, name, claim }) => {
+  replyingTo.value = {
+    id,
+    name,
+    claim,
+    isQuote: true
+  };
+  showModal.value = true;
+};
+
 
 const loadComments = async () => {
   if (loading.value || noMore.value) return;
