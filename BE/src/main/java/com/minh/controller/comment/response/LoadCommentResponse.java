@@ -26,10 +26,7 @@ public class LoadCommentResponse {
     }
 
     public String getEmotion() {
-        if (emotion != null) {
-            return "0";
-        }
-        return null;
+        return (emotion != null && !emotion.isEmpty()) ? "0" : null;
     }
 
     public LoadCommentResponse(Long id, String emotion, String claim, String name, String avatar, Long count, Long userId, LocalDateTime time, Boolean isDebateClaim, Long viewerId) {
@@ -50,6 +47,6 @@ public class LoadCommentResponse {
     }
 
     public void alwaysTrueWhenDifference(Long userId) {
-        isDebateClaim =  !userId.equals(viewerId);
+        isDebateClaim = !userId.equals(viewerId) || isDebateClaim;
     }
 }

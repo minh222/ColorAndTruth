@@ -19,18 +19,39 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer dayAgo) { // load từ lastId -> lastId + limit
+        Long maxId = r.commentRepository.findMaxId();
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
         List<LoadCommentResponse> res = r.commentRepository.loadComment(
-                lastId == null ? r.commentRepository.findMaxId() + 1 : lastId,
+                getLastId(maxId, lastId),
                 ids,
-                LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo),
-                ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList()),
-                PageRequest.of(0, limit)
+                getDate(dayAgo),
+                getCommentIds(ids),
+                getPageable(limit)
         );
 
         res.forEach(r -> r.alwaysTrueWhenDifference(userId));
 
         return res;
+    }
+
+    // Helper
+    private LocalDate getDate(Integer dayAgo) {
+        return LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo);
+    }
+
+    private Long getLastId(Long maxId, Long lastId) {
+        return lastId == null ? maxId + 1 : lastId;
+    }
+
+    private List<Long> getCommentIds(List<CompositeId> ids) {
+        return ids.stream()
+                .filter(CompositeId::viewerIsNull)
+                .map(CompositeId::getCommentId)
+                .collect(Collectors.toList());
+    }
+
+    private PageRequest getPageable(int limit) {
+        return PageRequest.of(0, limit);
     }
 }

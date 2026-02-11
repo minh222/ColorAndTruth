@@ -22,18 +22,37 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
     }
 
     public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId) {
+        Long maxId = r.commentRepository.getMaxChildrenIdById(id);
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
-        List<LoadCommentResponse> res =  r.commentRepository.loadChildrenById(
+        List<LoadCommentResponse> res = r.commentRepository.loadChildrenById(
                 id,
-                lastId != null ? lastId : ((lastId = r.commentRepository.getMaxChildrenIdById(id)) == null ? null : lastId + 1),
+                getLastId(maxId, lastId),
                 ids,
-                ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList()),
-                PageRequest.of(0, limit)
+                getCommentIds(ids),
+                getPageable(limit)
         );
 
         res.forEach(r -> r.alwaysTrueWhenDifference(userId));
 
         return res;
     }
+
+    // Helper
+    private Long getLastId(Long maxId, Long lastId) {
+        if (lastId != null) return lastId;
+        return maxId == null ? null : maxId + 1;
+    }
+
+    private List<Long> getCommentIds(List<CompositeId> ids) {
+        return ids.stream()
+                .filter(CompositeId::viewerIsNull)
+                .map(CompositeId::getCommentId)
+                .collect(Collectors.toList());
+    }
+
+    private PageRequest getPageable(int limit) {
+        return PageRequest.of(0, limit);
+    }
+
 }

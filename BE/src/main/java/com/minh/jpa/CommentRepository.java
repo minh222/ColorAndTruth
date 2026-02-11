@@ -63,6 +63,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where :id = c.parentId or (:id is null and c.parentId is null)")
     Long getMaxChildrenIdById(Long id);
 
-    @Query("select count(c.id) from Comment c where c.parentId = (select x.parentId from Comment x where c.id = :id) ")
+    @Query("select count(c.id) from Comment c where c.parentId = (select x.parentId from Comment x where x.id = :id) ")
     Integer getCountById(Long id);
 }

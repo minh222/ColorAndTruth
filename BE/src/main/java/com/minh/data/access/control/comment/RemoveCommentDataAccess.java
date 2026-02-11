@@ -16,8 +16,9 @@ public class RemoveCommentDataAccess { // gateway :mỗi bussiness truy cập 1 
 
     @Transactional
     public Integer removeComment(Long id) {
+        Integer countChild = r.commentRepository.getCountById(id);
         r.closureRepository.deleteById(id);
         r.commentRepository.deleteById(id);
-        return r.commentRepository.getCountById(id);
+        return countChild - 1;
     }
 }
