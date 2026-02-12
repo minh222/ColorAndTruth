@@ -57,7 +57,7 @@ const submit = async () => {
     return;
   }
   
-  if (password.value !== confirmPassword.value) {
+  if (!isLoginMode.value && password.value !== confirmPassword.value) {
     error.value = "Mật khẩu nhập lại không khớp";
     return;
   }

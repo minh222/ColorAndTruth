@@ -7,13 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8080",
+        target: "https://colorandtruth-1.onrender.com",
         changeOrigin: true,
-
-        // 🔥 rất quan trọng với Spring / JWT
-        secure: false,
-
-        // 🔥 GIỮ NGUYÊN PATH /api/...
+        secure: true,
         rewrite: (path) => path,
       },
     },

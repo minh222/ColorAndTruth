@@ -11,7 +11,7 @@ public class SpringConfig {
 
     @Bean("spring")
     public Semaphore getSemaphore() {
-        return new Semaphore( CORE, true);
+        return new Semaphore( CORE*2, true);
     }
 
 }
