@@ -7,14 +7,16 @@ import "./style.css";
 import "./main.css";
 
 const app = createApp(App);
- 
+
+const API_BASE = import.meta.env.VITE_API_URL;
+
 let serverDead = false;
 
 app.config.globalProperties.$authFetch = async (url, options = {}) => {
   const token = localStorage.getItem("token");
 
   try {
-    const res = await fetch(url, {
+    const res = await fetch(`${API_BASE}${url}`, {
       ...options,
       headers: {
         ...(options.headers || {}),
@@ -48,8 +50,5 @@ app.config.globalProperties.$authFetch = async (url, options = {}) => {
   }
 };
 
-
 app.use(router);
 app.mount("#app");
-
- 
