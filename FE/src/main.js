@@ -20,6 +20,7 @@ app.config.globalProperties.$authFetch = async (url, options = {}) => {
       ...options,
       headers: {
         ...(options.headers || {}),
+        "ngrok-skip-browser-warning": "true",
         ...(token ? { Authorization: `Bearer ${token}` } : {})
       }
     });
