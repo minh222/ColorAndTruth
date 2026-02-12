@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
@@ -59,7 +60,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, List<CompositeId> ids, List<Long> commentIds, Pageable pageable);
 
     @Query("select max(c.id) from Comment c where c.parentId is null")
-    Long findMaxId();
+    Optional<Long> findMaxId();
 
     @Query( "select max(c.id) from Comment c " +
             "where :id = c.parentId or (:id is null and c.parentId is null)")

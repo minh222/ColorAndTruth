@@ -28,7 +28,7 @@ app.config.globalProperties.$authFetch = async (url, options = {}) => {
       return res;
     }
 
-    if (res.status >= 500) {
+    if (res.status === 500) {
       window.dispatchEvent(
         new CustomEvent("server-error", {
           detail: { type: "maintenance" }

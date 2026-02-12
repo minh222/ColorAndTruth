@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.minh.config.Exception.http;
+
 @Service
 public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
@@ -19,7 +21,10 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer dayAgo) { // load từ lastId -> lastId + limit
-        Long maxId = r.commentRepository.findMaxId();
+        Long maxId = r.commentRepository.findMaxId().orElseThrow(
+                () -> http(502, "No data available")
+        );
+
         List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
         List<LoadCommentResponse> res = r.commentRepository.loadComment(
