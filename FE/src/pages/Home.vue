@@ -414,8 +414,10 @@ const collapse = () => {
   background: #ffe5e5;
   color: crimson;
 }
+ 
 
 .user-card {
+  width: 95vw;
   max-width: 720px;
   margin: 70px auto 20px;
   padding: 16px;

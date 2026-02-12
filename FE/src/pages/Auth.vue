@@ -8,6 +8,13 @@
       type="password"
       placeholder="Mật khẩu"
     />
+    <!-- ✅ chỉ hiện khi Đăng ký -->
+    <input
+      v-if="!isLoginMode"
+      v-model="confirmPassword"
+      type="password"
+      placeholder="Nhập lại mật khẩu"
+    />
 
     <button @click="submit" :disabled="loading">
       {{ loading ? "Đang xử lý..." : isLoginMode ? "Đăng nhập" : "Đăng ký" }}
@@ -27,7 +34,7 @@ import { useRouter } from "vue-router";
 const { proxy } = getCurrentInstance();
 const authFetch = proxy.$authFetch;
 const router = useRouter();
-
+const confirmPassword = ref("");
 const name = ref("");
 const password = ref("");
 const loading = ref(false);
@@ -45,6 +52,16 @@ const submit = async () => {
     return;
   }
 
+  if (!isLoginMode.value && password.value.length < 5) {
+    error.value = "Mật khẩu phải từ 5 ký tự";
+    return;
+  }
+  
+  if (password.value !== confirmPassword.value) {
+    error.value = "Mật khẩu nhập lại không khớp";
+    return;
+  }
+
   loading.value = true;
   error.value = "";
 
@@ -53,8 +70,9 @@ const submit = async () => {
       ? "/api/v1/login"
       : "/api/v1/register";
 
+    const encodedPassword = btoa(password.value);
     const url =
-      `${endpoint}?name=${encodeURIComponent(name.value)}&password=${encodeURIComponent(password.value)}`;
+      `${endpoint}?name=${encodeURIComponent(name.value)}&password=${encodeURIComponent(encodedPassword)}`;
 
     const res = await authFetch(url, { method: "POST" });
 
