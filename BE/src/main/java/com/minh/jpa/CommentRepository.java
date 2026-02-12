@@ -5,7 +5,9 @@ import com.minh.entity.Comment;
 import com.minh.entity.id.CompositeId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -63,6 +65,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where :id = c.parentId or (:id is null and c.parentId is null)")
     Long getMaxChildrenIdById(Long id);
 
-    @Query("select count(c.id) from Comment c where c.parentId = (select x.parentId from Comment x where x.id = :id) ")
-    Integer getCountById(Long id);
+    @Transactional
+    @Modifying
+    @Query("delete from Comment c where c.id in :descendantIds ")
+    Integer deleteAllByIdIn(List<Long> descendantIds);
 }

@@ -45,10 +45,7 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
     }
 
     private List<Long> getCommentIds(List<CompositeId> ids) {
-        return ids.stream()
-                .filter(CompositeId::viewerIsNull)
-                .map(CompositeId::getCommentId)
-                .collect(Collectors.toList());
+        return ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList());
     }
 
     private PageRequest getPageable(int limit) {
