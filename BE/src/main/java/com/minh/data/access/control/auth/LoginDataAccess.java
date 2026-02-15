@@ -17,7 +17,7 @@ public class LoginDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public User getUser(String name) {
         User user = r.userRepository.findByName(name);
         if (user == null) {
-            throw http(401, "Unauthorized");
+            throw http(401, "Tài khoản không hợp lệ");
         }
         return user;
     }

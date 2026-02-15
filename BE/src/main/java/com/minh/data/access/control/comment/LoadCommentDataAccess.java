@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.minh.config.Config.TODAY;
 import static com.minh.config.Exception.http;
 
 @Service
@@ -20,7 +21,7 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         this.r = repos;
     }
 
-    public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer dayAgo) { // load từ lastId -> lastId + limit
+    public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer days) { // load từ lastId -> lastId + limit
         Long maxId = r.commentRepository.findMaxId().orElseThrow(
                 () -> http(502, "No data available")
         );
@@ -30,7 +31,7 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         List<LoadCommentResponse> res = r.commentRepository.loadComment(
                 getLastId(maxId, lastId),
                 ids,
-                getDate(dayAgo),
+                getDate(days),
                 getCommentIds(ids),
                 getPageable(limit)
         );
@@ -41,8 +42,8 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     // Helper
-    private LocalDate getDate(Integer dayAgo) {
-        return LocalDate.now().minusDays(dayAgo == null ? 0 : dayAgo);
+    private LocalDate getDate(Integer days) {
+        return TODAY().minusDays(days == null ? 0 : days);
     }
 
     private Long getLastId(Long maxId, Long lastId) {

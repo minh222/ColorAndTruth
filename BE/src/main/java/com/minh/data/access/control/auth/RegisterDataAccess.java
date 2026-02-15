@@ -27,7 +27,7 @@ public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổn
 
             return user.createToken();
         } catch (DataIntegrityViolationException e) {
-            throw http(409, "user exists");
+            throw http(409, "Tên người dùng đã tồn tại");
         }
     }
 }

@@ -48,9 +48,9 @@ public class User {
     }
 
     public void resetCountToday() {
-        if (!Objects.equals(TODAY, avatarChangeDate)) { // today != (null or next day)
+        if (!Objects.equals(TODAY(), avatarChangeDate)) { // today != (null or next day)
             avatarChangeCount = 0;
-            avatarChangeDate = TODAY;
+            avatarChangeDate = TODAY();
         }
     }
 

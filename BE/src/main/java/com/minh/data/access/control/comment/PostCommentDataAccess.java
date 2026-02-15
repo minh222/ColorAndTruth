@@ -6,10 +6,11 @@ import com.minh.entity.Comment;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.minh.config.Config.NOW;
+import static com.minh.config.Config.TODAY;
 
 @Service
 public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
@@ -22,7 +23,7 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     @Transactional
     public void postComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim) {
         Comment newComment = r.commentRepository.save(
-                new Comment(userId, emotion, claim, id, isDebateClaim, 0, LocalDate.now(), LocalDateTime.now())
+                new Comment(userId, emotion, claim, id, isDebateClaim, 0, TODAY(), NOW())
         );
         Long newCommentId = newComment.getId();
 

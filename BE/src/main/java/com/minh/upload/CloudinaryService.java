@@ -36,8 +36,7 @@ public class CloudinaryService {
     @SuppressWarnings("unchecked")
     private Map<String, Object> upload(MultipartFile file, Map<String, Object> options) {
         try {
-            byte[] fileBytes = file.getBytes();
-            return this.cloudinary.uploader().upload(fileBytes, options);
+            return this.cloudinary.uploader().upload(file.getBytes(), options);
         } catch (Exception e) {
             throw http(503, "Cloudinary upload failed");
         }
