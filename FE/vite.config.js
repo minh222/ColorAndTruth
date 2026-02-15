@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://colorandtruth-1.onrender.com",
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path,

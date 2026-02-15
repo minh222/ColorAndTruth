@@ -147,7 +147,9 @@
       class="avatar-preview"
     />
   </div>
+  
   <Draw />
+
   <div
     v-if="serverError"
     class="server-error-overlay"
@@ -419,7 +421,7 @@ const collapse = () => {
 .user-card {
   width: 95vw;
   max-width: 720px;
-  margin: 70px auto 20px;
+  margin: 70px auto 20px -200px;
   padding: 16px;
   display: flex;
   align-items: center;
@@ -464,7 +466,7 @@ const collapse = () => {
 }
 
 .open-btn {
-  margin: 20px auto;
+  margin: 20px 75px auto;
   display: block;
   padding: 12px 22px;
   border-radius: 12px;
@@ -506,16 +508,19 @@ const collapse = () => {
 
 .comment-list {
   max-width: 720px;
-  margin: 20px auto;
+  margin: 20px 0 0px -200px;
   padding: 16px;
   background: #fff;
   border-radius: 12px;
   text-align: left;   /* ✅ */
   max-height: calc(64px * 8);
   overflow-y: auto;
-
-  /* optional cho mượt */
   scrollbar-gutter: stable;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  will-change: scroll-position;
 }
 
 .logout-btn {

@@ -13,7 +13,7 @@
           <textarea
             v-model="originalText"
             class="original-input"
-            placeholder="Nhập nội dung cần phân tích…"
+            placeholder="Nhập nội dung …"
           />
           <button class="close-btn" @click="onClose">✖</button>
         </div>

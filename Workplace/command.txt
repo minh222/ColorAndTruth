@@ -1,0 +1,2 @@
+ngrok http 8080
+java -jar color-truth-0.0.1-SNAPSHOT.jar

@@ -392,7 +392,17 @@
 
   /* ---------- MOUNT ---------- */
   onMounted(async () => {
+    const dpr = window.devicePixelRatio || 1
+
+    canvas.value.width = 300 * dpr
+    canvas.value.height = 300 * dpr
+
+    canvas.value.style.width = "300px"
+    canvas.value.style.height = "300px"
+
     ctx = canvas.value.getContext("2d")
+    ctx.scale(dpr, dpr)
+
 
     ctx.lineWidth = 7
     ctx.lineCap = "round"
@@ -404,13 +414,6 @@
     await loadLabels()
     await tf.ready()
     model = await tf.loadLayersModel("/quickdraw/model.json")
-
-    console.log("labels:", labels.length)
-
-  const test = tf.zeros([1, 28, 28, 1])
-  const out = model.predict(test)
-  console.log("test predict:", out.dataSync().slice(0, 5))
-
   })
 
   /* ---------- DRAW ---------- */
@@ -424,13 +427,17 @@
 
   function move(e) {
     if (!drawing) return
+
     const x = e.offsetX
     const y = e.offsetY
-    ctx.quadraticCurveTo(lastX, lastY, (x + lastX) / 2, (y + lastY) / 2)
+
+    ctx.lineTo(x, y)
     ctx.stroke()
+
     lastX = x
     lastY = y
   }
+
 
   function end() {
     if (!drawing) return
@@ -637,8 +644,8 @@
   <style scoped>
   .wrap {
     position: absolute;
-    top: 140px;
-    left: calc(50% + 360px + 224px);
+    top: 70px;
+    left: calc(50% + 360px + 54px);
     width: 320px;
     z-index: 20;
   }
