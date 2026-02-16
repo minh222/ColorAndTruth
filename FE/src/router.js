@@ -4,8 +4,8 @@ import Home from "./pages/Home.vue";
 import Draw from "./pages/Draw.vue";
 
 const routes = [
-  { path: "/", redirect: "/auth" },
-  { path: "/auth", component: Auth },
+  { path: "/", component: Auth },
+
   {
     path: "/home",
     component: Home,
