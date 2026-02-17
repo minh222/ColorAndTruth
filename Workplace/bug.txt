@@ -38,74 +38,110 @@
 - màn hình bung done
 - thêm trước sau thời gian done
 - nếu count = 0 chặn call api done
- 
+- khóa reply - nếu chọn ko done
+- ghi đè file update done
+- gen emotion sai -> binding original done
+- smooth lại nhập comment done
+- mỗi ngày reset bảng 1 lần và lưu toàn bộ chat vào ngày hôm qua done
+- click ra ngoài nền ko bị tắt done
+- chia lại data access done
+- load more, thu nhỏ done
+- click xem lưu user xem -> tạo bảng read done
+- bể layout chỗ ý chính khi nhấn mắt done
+- sửa lại 1 số popup done
+- load user theo commnent done
+- emotion ko có j ko hiện done
+- loadmore cho child done
+- reply con éo đc done
+- xóa child lỗi done
+- reply quote lại done
+- ko remove closure  done, 
+- xóa thiếu child done,
+- thiết kế lưu ý đồ done
+- bug register - token quá hạn done
+- refactor lại analyze giữ vì ý đồ về sau done
+- lộ pass done
+- logout khi token quá hạn done
+- pass > 5 kí tự done
+- secret to che button - mở chiều ngang info done
+- nhập lại pass done
+- tổ chức lại config done
+- deploy db done
+- deploy fe done
+- refactor luồng exact done
+- làm ui nhẹ bớt done
+- link /auth done
+- bỏ bg ngoài auth done
 
 ---------------------------------------------------------------------
 
+- rare limit
 
-- deploy fe
-- thiết kế lưu ý đồ
+
+
 
 - thêm layer attitude
 - thêm case attitude
 - thêm logo app
 
-- bug register - token quá hạn
-- refactor lại analyze
-- pass > 5 kí tự
-- click xem lưu user xem -> tạo bảng read
-- logout khi token quá hạn
-- tổ chức lại config
 
 
-- ghi đè file update
-- reply quote lại
 
-- chia lại data access
-- deploy db
-- load user theo commnent
-- load more, thu nhỏ
-- refactor luồng exact
+
+
+ 
+
+
+
+
 - thêm mode define cảm xúc cho user
-- sửa lại 1 số popup
+
+- load lại sau khi delete
 
 
 - sound effect khi nhấn nút
 
 - like - làm dislike ko làm like
 
-- smooth lại nhập comment
+
 - đổi tên
 - bỏ bớt phần dư thừa trong code để app chạy nhẹ lại
 
 - thêm ai, thêm câu nói cho bloom
 - thêm nút gen câu nói cho npc 
 - npc name : bloom
-- nếu 1 comment tồn tại quá lâu -> mỗi ngày reset bảng 1 lần và lưu toàn bộ chat vào ngày hôm qua
+
 - npc tương tác vs 1 số thành phần
 
-- gen emotion sai -> binding original
+
 - secret true emotion nhảy xuống đáy
-
-- app dành cho những ai muốn thể hiện cảm xúc, niềm tin thật nhất mà ko sợ phán xét, dành cho những ai muốn phản hồi thẳng, thật mà ko sợ đụng chạm đến cảm giác thật của người khác
 - before, after see
-- khóa reply - nếu chọn ko 
-
-
+- popup xóa avatar
 
 - giải thích ngắn lại
 - có thể xem emotion của mình mà ko cảnh báo
 - vietsub
 
 - semaphore max core db
-- click ra ngoài nền ko bị tắt
-- bể layout chỗ ý chính khi nhấn mắt
+
+
 - luôn lưu chữ thường
 
 - refactor rule to table và thêm tính năng user tự define emotion
 - lưu ảnh chung vs emotion
 - giảm text login
 
+
+
 - cộng dồn emotion
 - trả nợ kĩ thuật tech + update tech + knowlegde be
 - tối ưu thuật toán
+- app dành cho những ai muốn thể hiện cảm xúc, niềm tin thật nhất mà ko sợ phán xét, dành cho những ai muốn phản hồi thẳng, thật mà ko sợ đụng chạm đến cảm giác thật của người khác
+- js nặng - mobile nặng - web tốn nhiều gb
+- kéo image qua trái
+- có nên đổi vị trí có không không
+- đổi tên host
+- unit test
+- footer
+
+- dark mode

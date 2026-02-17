@@ -438,22 +438,23 @@
     lastY = y
   }
 
-
   function end() {
     if (!drawing) return
     drawing = false
 
-    if (inkAmount() < 400) {
+    const imgData = ctx.getImageData(0, 0, 300, 300)
+
+    if (inkAmount(imgData) < 400) {
       guess.value = "vẽ thêm tí nữa 👀"
       return
     }
 
-    predict()
+    predict(imgData)
   }
 
   /* ---------- INK CHECK ---------- */
-  function inkAmount() {
-    const img = ctx.getImageData(0, 0, 300, 300).data
+  function inkAmount(imgData) {
+    const img = imgData.data
     let c = 0
     for (let i = 0; i < img.length; i += 4) {
       if (img[i] < 240) c++
@@ -461,9 +462,10 @@
     return c
   }
 
+
   /* ---------- SHAPE JUDGE (MODEL B) ---------- */
-  function shapeScore() {
-    const img = ctx.getImageData(0, 0, 300, 300).data
+  function shapeScore(imgData) {
+    const img = imgData.data
 
     let count = 0
     let rows = new Set()
@@ -483,9 +485,6 @@
     const area = rows.size * cols.size
     return count / area
   }
-
-
-
 
   /* ---------- PREPROCESS (SMART) ---------- */
   function preprocess() {
@@ -580,17 +579,17 @@
 
 
   /* ---------- PREDICT (SMART & CALM) ---------- */
-  function predict() {
+  function predict(imgData) {
     if (!model) return
 
-    const heuristic = strokeHeuristicScore()
+    const heuristic = strokeHeuristicScore(imgData)
 
     if (heuristic < 0.15) {
       guess.value = "nét chưa rõ 🤔"
       return
     }
 
-    const out = model.predict(preprocess())
+    const out = tf.tidy(() => model.predict(preprocess()))
     const probs = Array.from(out.dataSync())
 
     const encodedIndex = encodeDistribution(probs)
@@ -617,21 +616,16 @@
 
 
   }
-
   
-  function strokeHeuristicScore() {
-    const ink = inkAmount()
-    const shape = shapeScore()
+  function strokeHeuristicScore(imgData) {
+    const ink = inkAmount(imgData)
+    const shape = shapeScore(imgData)
 
-    // chuẩn QuickDraw thực tế
-    let strokeFactor = Math.min(1, ink / 2500)   // đủ mực là ok
-    let shapeFactor = Math.min(1, shape * 2.2)  // shape ~0.4–0.6 là đẹp
+    let strokeFactor = Math.min(1, ink / 2500)
+    let shapeFactor = Math.min(1, shape * 2.2)
 
     return strokeFactor * shapeFactor
   }
-
-
-
 
   /* ---------- CLEAR ---------- */
   function clear() {
