@@ -27,7 +27,7 @@ app.config.globalProperties.$authFetch = async (url, options = {}) => {
 
     if (res.status === 401 || res.status === 403 || res.status === 203) {
       localStorage.removeItem("token");
-      router.push("/auth");
+      router.push("/");
       return res;
     }
 

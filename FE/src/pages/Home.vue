@@ -220,7 +220,7 @@ const authFetch = proxy.$authFetch;
 const router = useRouter();
 const logout = () => {
   localStorage.removeItem("token");
-  router.push("/auth");
+  router.push("/");
 };
 
 const user = ref({});

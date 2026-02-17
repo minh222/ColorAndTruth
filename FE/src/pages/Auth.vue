@@ -100,6 +100,8 @@ const submit = async () => {
 
 <style scoped>
 .auth-box {
+ 
+  isolation: isolate;   /* 🔥 mấu chốt */
   width: 340px;
   margin: 80px auto;
   padding: 24px;
@@ -107,10 +109,11 @@ const submit = async () => {
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   text-align: center;
+  z-index: 10;
 }
 
 input {
-  width: 100%;
+  width: 90%;
   padding: 12px;
   margin: 10px 0;
   border-radius: 8px;

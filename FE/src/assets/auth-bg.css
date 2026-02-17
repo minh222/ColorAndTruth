@@ -1,0 +1,67 @@
+.auth-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, #0a0a1a 0%, #000 90%);
+}
+
+/* ===== NEBULA CORE (giảm blur + giảm layer) ===== */
+.auth-bg::before {
+  content: "";
+  position: absolute;
+  inset: -2%;
+
+  background:
+    radial-gradient(circle at 15% 80%, rgba(120, 80, 255, 0.5) 0%, transparent 55%),
+    radial-gradient(circle at 30% 65%, rgba(255, 90, 200, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 45% 55%, rgba(80, 150, 255, 0.4) 0%, transparent 65%);
+
+  /* Giảm blur mạnh */
+  filter: blur(60px);
+
+  animation: swirlSlow 180s linear infinite;
+}
+
+
+/* ===== STARFIELD (giảm density) ===== */
+.auth-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(3px 3px, rgba(255,255,255,0.9) 100%, transparent),
+    radial-gradient(5px 5px, rgba(255,255,255,0.6) 100%, transparent);
+
+  background-size:
+    160px 160px,
+    280px 280px;
+
+  background-position:
+    0 0,
+    80px 60px;
+
+  background-repeat: repeat;
+
+  opacity: 0.8;
+
+  animation: swirlVerySlow 600s linear infinite;
+}
+
+
+/* ===== ROTATION (chậm hơn = nhẹ hơn) ===== */
+@keyframes swirlSlow  { from { transform: scale(0.85) rotate(0deg); } to { transform: scale(0.9) rotate(360deg); } }
+
+@keyframes swirlVerySlow  { from { transform: scale(0.85) rotate(0deg); } to { transform: scale(0.9) rotate(360deg); } }
+
+ 
+@media (max-width: 768px) {
+  .auth-bg::before {
+    animation: none;
+  }
+  .auth-bg::after {
+    animation: none;
+  }
+}
