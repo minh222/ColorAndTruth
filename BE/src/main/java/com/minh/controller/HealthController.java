@@ -1,24 +1,33 @@
 package com.minh.controller;
 
-import com.minh.apply.rule.ApplyRule;
-import com.minh.controller.analyze.response.AnalyzeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.Semaphore;
-
-import static com.minh.config.Exception.http;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
 public class HealthController {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @GetMapping("/health/db")
-    public String heath() {
-        return "ok";
+    public ResponseEntity<Map<String, Object>> healthDb() {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            result.put("status", "UP");
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            result.put("status", "DOWN");
+            result.put("error", e.getMessage());
+            return ResponseEntity.ok(result); // vẫn 200
+        }
     }
+
 }
