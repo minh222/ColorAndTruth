@@ -96,14 +96,15 @@ public class CommentController {
     }
 
     @PostMapping("/remove/{id}")
-    public Integer removeComment(@DataAccess RemoveCommentDataAccess access,
-                                 @PathVariable Long id) {
+    public String removeComment(@DataAccess RemoveCommentDataAccess access,
+                                @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Too many requests");
         }
 
         try {
-            return access.removeComment(id);
+            access.removeComment(id);
+            return "ok";
         } finally {
             semaphore.release();
         }

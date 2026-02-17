@@ -190,31 +190,29 @@
     showConfirmPopup(
       "Xóa comment này nha? Bay là bay luôn đó 😬",
       async () => {
-        const res = await authFetch(
+        await authFetch(
           `/api/v1/remove/${props.comment.id}`,
           { method: "POST" }
-        )
+        );
 
-        const newCount = Number(await res.text())
+        const delta = 1 + (props.comment.count || 0);
 
         emit("deleted", {
           id: props.comment.id,
-          count: newCount
-        })
+          delta
+        });
       }
-    )
-  }
-
-  const removeChild = ({ id, count }) => {
-    children.value = children.value.filter(c => c.id !== id);
-
-    if (typeof count === "number") {
-      props.comment.count = count;
-    }
-
-    emit("deleted", { id, count });
+    );
   };
 
+  const removeChild = ({ id, delta }) => {
+    children.value = children.value.filter(c => c.id !== id);
+
+    if (typeof delta === "number") {
+      props.comment.count -= delta;
+      emit("deleted", { id, delta });
+    }
+  };
 
   defineOptions({
     name: "Node"
