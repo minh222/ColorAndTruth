@@ -1,29 +1,15 @@
 # ===== BUILD STAGE =====
-FROM eclipse-temurin:17-jdk AS build
-
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy wrapper + pom trước
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
+RUN mvn -B dependency:go-offline
 
-RUN chmod +x mvnw
-RUN ./mvnw -B dependency:go-offline
-
-# Copy source sau cùng
 COPY src src
-
-RUN ./mvnw clean package -DskipTests
-
+RUN mvn -B clean package -DskipTests
 
 # ===== RUN STAGE =====
 FROM eclipse-temurin:17-jre
-
 WORKDIR /app
-
 COPY --from=build /app/target/*.war app.war
-
-EXPOSE 8080
-
-ENTRYPOINT ["java","-jar","app.war"]
+ENTRYPOINT ["java","-Xms128m","-Xmx256m","-jar","app.war"]
