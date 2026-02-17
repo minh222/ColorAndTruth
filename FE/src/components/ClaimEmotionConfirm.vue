@@ -399,13 +399,16 @@ const resetState = () => {
   selectedOriginalText.value = "";
 };
 const handleSubmitClick = () => {
+  if (loading.value) return
+  loading.value = true
+
   if (!selectedOriginalText.value.trim()) {
     confirmSubmit(true)
     return
   }
+
   showDebateConfirm.value = true
 }
-
 </script>
 
 <style scoped>
