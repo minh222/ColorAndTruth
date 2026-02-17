@@ -116,38 +116,35 @@
       </div>
     </div>
 
-    <div v-if="popup.show" class="debate-popup">
-      <div class="popup-card">
-        <button class="popup-close" @click="closePopup">✖</button>
+    <Teleport to="body">
+      <div v-if="popup.show" class="debate-popup">
+        <div class="popup-card">
+          <button class="popup-close" @click="closePopup">✖</button>
 
-        <p>{{ popup.message }}</p>
+          <p>{{ popup.message }}</p>
 
-        <div class="popup-actions">
-          <button
-            @click="() => { popup.onYes?.(); closePopup() }"
-          >
-            Có
-          </button>
+          <div class="popup-actions">
+            <button
+              @click="() => { popup.onYes?.(); closePopup() }"
+            >
+              Có
+            </button>
 
-          <button
-            @click="() => { popup.onNo?.(); closePopup() }"
-          >
-            Không
-          </button>
+            <button
+              @click="() => { popup.onNo?.(); closePopup() }"
+            >
+              Không
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-
-
+    </Teleport>
   </template>
 
   <script setup>
-
   import { ref, getCurrentInstance } from "vue";
 
   const emit = defineEmits(["quote", "reply", "deleted"]);
-
-
 
   const popup = ref({
     show: false,
@@ -207,7 +204,6 @@
       }
     )
   }
-
 
   const removeChild = ({ id, count }) => {
     children.value = children.value.filter(c => c.id !== id);
