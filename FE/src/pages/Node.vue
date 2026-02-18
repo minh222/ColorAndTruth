@@ -102,21 +102,22 @@
       <!-- children -->
 
     </div>
+    
     <!-- POPUP CONFIRM -->
-    <div v-if="showDebateConfirm" class="debate-popup">
-      <div class="popup-card">
-        <p>
-          🗣️  Không đc phản biện phần secret true emotion nếu muốn xem 
-        </p>
+    <Teleport to="body">
+      <div v-if="showDebateConfirm" class="debate-popup">
+        <div class="popup-card">
+          <p>
+            🗣️  Không đc phản biện phần secret true emotion nếu muốn xem 
+          </p>
 
-        <div class="popup-actions">
-          <button @click="confirmSubmit(true)">Oke</button>
-          <button @click="confirmSubmit(false)">Không xem nữa</button>
+          <div class="popup-actions">
+            <button @click="confirmSubmit(true)">Oke</button>
+            <button @click="confirmSubmit(false)">Không xem nữa</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <Teleport to="body">
       <div v-if="popup.show" class="debate-popup">
         <div class="popup-card">
           <button class="popup-close" @click="closePopup">✖</button>

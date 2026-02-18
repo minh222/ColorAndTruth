@@ -164,8 +164,8 @@
       <p>🗣️ Sau khi có người xem true emotion, họ có được reply không, chọn Không họ không thể reply, chọn Có họ có thể bình luận nhưng không được phản biện true emotion (chỉ đc đồng ý hoặc công nhận true emotion) ? (nhấn x để suy nghĩ thêm)</p>
 
       <div class="popup-actions">
-        <button @click="confirmSubmit(true)">Có</button>
-        <button @click="confirmSubmit(false)">Không</button>
+        <button @click="confirmSubmit(false)">Không Cho Phản Hồi</button>
+        <button @click="confirmSubmit(true)">Được Phản Hồi</button>
       </div>
 
     </div>
