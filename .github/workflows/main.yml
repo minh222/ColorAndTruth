@@ -21,5 +21,8 @@ jobs:
           context: ./BE
           push: true
           tags: minh123333/colorandtruth:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       - name: Trigger Render Deploy
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
