@@ -9,7 +9,9 @@ COPY src src
 RUN mvn -B clean package -DskipTests
 
 # ===== RUN STAGE =====
-FROM eclipse-temurin:17-jre
+FROM gcr.io/distroless/java17-debian12
 WORKDIR /app
-COPY --from=build /app/target/*.war app.war
-ENTRYPOINT ["java","-Xms128m","-Xmx256m","-jar","app.war"]
+
+COPY --from=build /app/target/*.jar /app/app.jar
+
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=75.0","-jar","/app/app.jar"]
