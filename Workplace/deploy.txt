@@ -40,3 +40,5 @@ docker run -d -p 8080:8080 --name color-truth-app color-truth
 8. Build = github render
 
 * run test p99 : k6 run test.js
+run vu, time : k6 run --vus 200 --duration 30s test.js
+docker buildx build --push -t minh123333/colorandtruth:latest .
