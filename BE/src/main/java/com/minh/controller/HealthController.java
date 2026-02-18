@@ -20,7 +20,7 @@ public class HealthController {
         Map<String, Object> result = new HashMap<>();
         try {
             jdbcTemplate.queryForObject("SELECT 1", Integer.class);
-            result.put("status", "UPPP");
+            result.put("status", "UP");
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
