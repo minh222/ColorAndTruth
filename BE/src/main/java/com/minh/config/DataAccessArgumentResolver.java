@@ -19,7 +19,7 @@ public class DataAccessArgumentResolver implements HandlerMethodArgumentResolver
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(DataAccess.class);
+        return parameter.hasParameterAnnotation(Data.class);
     }
 
     @Override
@@ -30,6 +30,9 @@ public class DataAccessArgumentResolver implements HandlerMethodArgumentResolver
             WebDataBinderFactory binderFactory
     ) {
         Class<?> type = parameter.getParameterType();
+        if (!type.isAnnotationPresent(DataAccess.class)) {
+            throw new IllegalArgumentException("Bean " + type.getName() + " không có @InjectableBean");
+        }
         return context.getBean(type);
     }
 }

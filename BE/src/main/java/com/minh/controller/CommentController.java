@@ -1,7 +1,7 @@
 package com.minh.controller;
 
 import com.minh.auth.Jwt;
-import com.minh.config.DataAccess;
+import com.minh.config.Data;
 import com.minh.controller.comment.response.GetEmotionResponse;
 import com.minh.data.access.control.comment.*;
 import com.minh.controller.comment.response.LoadCommentResponse;
@@ -24,7 +24,7 @@ public class CommentController {
     private Semaphore semaphore;
 
     @PostMapping("/postComment")
-    public String postComment(@DataAccess PostCommentDataAccess access,
+    public String postComment(@Data PostCommentDataAccess access,
                               Long id,
                               String claim,
                               String emotion,
@@ -44,7 +44,7 @@ public class CommentController {
     }
 
     @GetMapping("/loadComment")
-    public List<LoadCommentResponse> loadComment(@DataAccess LoadCommentDataAccess access,
+    public List<LoadCommentResponse> loadComment(@Data LoadCommentDataAccess access,
                                                  Long lastId,
                                                  Integer dayAgo,
                                                  int limit,
@@ -62,7 +62,7 @@ public class CommentController {
     }
 
     @GetMapping("/loadChildren")
-    public List<LoadCommentResponse> loadChildrenComment(@DataAccess LoadChildrenCommentDataAccess access,
+    public List<LoadCommentResponse> loadChildrenComment(@Data LoadChildrenCommentDataAccess access,
                                                          Long id,
                                                          Long lastId,
                                                          int limit,
@@ -80,7 +80,7 @@ public class CommentController {
     }
 
     @GetMapping("/loadComment/{id}")
-    public GetEmotionResponse seenEmotion(@DataAccess SeenEmotionDataAccess access,
+    public GetEmotionResponse seenEmotion(@Data SeenEmotionDataAccess access,
                                           @PathVariable Long id,
                                           HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
@@ -96,7 +96,7 @@ public class CommentController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeComment(@DataAccess RemoveCommentDataAccess access,
+    public String removeComment(@Data RemoveCommentDataAccess access,
                                 @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Too many requests");

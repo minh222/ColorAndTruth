@@ -1,6 +1,6 @@
 package com.minh.controller;
 
-import com.minh.config.DataAccess;
+import com.minh.config.Data;
 
 import com.minh.data.access.control.user.EmptyDataAccess;
 import com.minh.data.access.control.user.UserInfoDataAccess;
@@ -23,12 +23,15 @@ import static com.minh.config.Exception.http;
 @RequestMapping("/api/v1")
 public class UserController {
 
-    @Autowired @Qualifier("spring")
+    @Autowired
+    @Qualifier("spring")
     private Semaphore semaphore;
 
+    @Autowired
+    private CloudinaryService cloud;
+
     @PostMapping("/upload")
-    public String upload(@DataAccess CloudinaryService cloud,
-                         @DataAccess UploadDataAccess access,
+    public String upload(@Data UploadDataAccess access,
                          @RequestParam MultipartFile file,
                          HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
@@ -46,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/empty-avatar")
-    public String emptyAvatar(@DataAccess EmptyDataAccess access,
+    public String emptyAvatar(@Data EmptyDataAccess access,
                               HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Too many requests");
@@ -62,8 +65,8 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public User userInfo(@DataAccess UserInfoDataAccess access,
-                        HttpServletRequest request) {
+    public User userInfo(@Data UserInfoDataAccess access,
+                         HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Too many requests");
         }

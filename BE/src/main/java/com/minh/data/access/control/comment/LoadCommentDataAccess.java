@@ -1,5 +1,6 @@
 package com.minh.data.access.control.comment;
 
+import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.controller.comment.response.LoadCommentResponse;
 import com.minh.entity.id.CompositeId;
@@ -14,6 +15,7 @@ import static com.minh.config.Config.TODAY;
 import static com.minh.config.Exception.http;
 
 @Service
+@DataAccess
 public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
 

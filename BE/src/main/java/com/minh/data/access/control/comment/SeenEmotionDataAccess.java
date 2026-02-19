@@ -1,5 +1,6 @@
 package com.minh.data.access.control.comment;
 
+import com.minh.config.DataAccess;
 import com.minh.controller.comment.response.GetEmotionResponse;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Comment;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@DataAccess
 public class SeenEmotionDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
 

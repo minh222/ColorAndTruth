@@ -1,5 +1,6 @@
 package com.minh.data.access.control.comment;
 
+import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Closure;
 import com.minh.entity.Comment;
@@ -13,6 +14,7 @@ import static com.minh.config.Config.NOW;
 import static com.minh.config.Config.TODAY;
 
 @Service
+@DataAccess
 public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
 

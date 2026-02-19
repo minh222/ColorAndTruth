@@ -1,6 +1,7 @@
 package com.minh.data.access.control.auth;
 
 
+import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.User;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +11,7 @@ import static com.minh.auth.Security.creteVerify;
 import static com.minh.config.Exception.http;
 
 @Service
+@DataAccess
 public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
     public final CurrentRepos r;
 

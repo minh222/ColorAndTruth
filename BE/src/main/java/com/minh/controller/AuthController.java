@@ -1,6 +1,6 @@
 package com.minh.controller;
 
-import com.minh.config.DataAccess;
+import com.minh.config.Data;
 import com.minh.data.access.control.auth.LoginDataAccess;
 import com.minh.data.access.control.auth.RegisterDataAccess;
 import com.minh.entity.User;
@@ -19,7 +19,7 @@ public class AuthController {
     private Semaphore semaphore;
 
     @PostMapping("/login")
-    public String login(@DataAccess LoginDataAccess access,
+    public String login(@Data LoginDataAccess access,
                         String password,
                         String name) {
         if (!semaphore.tryAcquire()) {
@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@DataAccess RegisterDataAccess access,
+    public String register(@Data RegisterDataAccess access,
                            String password,
                            String name) {
         if (!semaphore.tryAcquire()) {
