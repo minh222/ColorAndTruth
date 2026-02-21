@@ -1,6 +1,7 @@
 package com.minh.jpa;
 
 import com.minh.controller.comment.response.LoadCommentResponse;
+import com.minh.controller.notify.response.NotifyResponse;
 import com.minh.entity.Comment;
 import com.minh.entity.id.CompositeId;
 import org.springframework.data.domain.Pageable;
@@ -72,10 +73,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Integer deleteAllByIdIn(List<Long> descendantIds);
 
 
-    @Query( "  select z from Comment z where z.parentId in " +
+    @Query( " select new com.minh.controller.notify.response.NotifyResponse(y.claim,z.claim,u.name,u.avatar)" +
+            " from Comment z join User u on z.userId = u.id " +
+            " join Comment y on z.parentId = y.id  " +
+            " where z.parentId in " +
             " ( select c.id " +
             " from Comment c  " +
             " join Comment x ON c.id = x.parentId  " +
             " where c.userId = :userId) ")
-    List<Comment> getUserIdByUserId(Long userId);
+    List<NotifyResponse> getUserIdByUserId(Long userId);
 }
