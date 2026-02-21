@@ -20,7 +20,7 @@ public class AnalyzeController {
     @PostMapping("/analyze")
     public AnalyzeResponse analyze(String original) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -33,7 +33,7 @@ public class AnalyzeController {
     @PostMapping("/exact")
     public AnalyzeResponse exact(String original) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {

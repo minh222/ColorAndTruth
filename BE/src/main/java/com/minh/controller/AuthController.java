@@ -23,7 +23,7 @@ public class AuthController {
                         String password,
                         String name) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {

@@ -31,7 +31,7 @@ public class CommentController {
                               Boolean isDebateClaim,
                               HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -50,7 +50,7 @@ public class CommentController {
                                                  int limit,
                                                  HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -68,7 +68,7 @@ public class CommentController {
                                                          int limit,
                                                          HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -84,7 +84,7 @@ public class CommentController {
                                           @PathVariable Long id,
                                           HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -99,7 +99,7 @@ public class CommentController {
     public String removeComment(@Data RemoveCommentDataAccess access,
                                 @PathVariable Long id) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {

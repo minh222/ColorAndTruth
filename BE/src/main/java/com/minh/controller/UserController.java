@@ -52,7 +52,7 @@ public class UserController {
     public String emptyAvatar(@Data EmptyDataAccess access,
                               HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
@@ -68,7 +68,7 @@ public class UserController {
     public User userInfo(@Data UserInfoDataAccess access,
                          HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
-            throw http(429, "Too many requests");
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
         }
 
         try {
