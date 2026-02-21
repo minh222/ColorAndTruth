@@ -4,10 +4,13 @@ import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Closure;
 import com.minh.entity.Comment;
+import com.minh.entity.Notify;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.minh.config.Config.NOW;
@@ -29,16 +32,16 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         );
         Long newCommentId = newComment.getId();
 
+        List<Closure> closures = new ArrayList<>(
+                Collections.singletonList(new Closure(newCommentId, newCommentId))
+        );
+
         if (id != null) {
-            List<Closure> copies = new ArrayList<>();
-
             r.closureRepository.findAllByDescendantId(id).forEach(
-        c -> copies.add(new Closure(c.getAncestorId(), newCommentId))
+            c -> closures.add(new Closure(c.getAncestorId(), newCommentId))
             );
-
-            r.closureRepository.saveAll(copies);
+            r.notifyRepository.save(new Notify(userId, id));
         }
-
-        r.closureRepository.save(new Closure(newCommentId, newCommentId));
+        r.closureRepository.saveAll(closures);
     }
 }

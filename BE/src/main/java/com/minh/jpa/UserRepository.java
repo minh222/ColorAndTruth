@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByName(String name);
 
-    User getById(Long id);
+    @Query("select u.id from User u where u.id in :userIds  ")
+    List<User> getByIdIn(List<Long> userIds);
 }

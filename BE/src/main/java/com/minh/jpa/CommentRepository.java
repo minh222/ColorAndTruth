@@ -70,4 +70,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("delete from Comment c where c.id in :descendantIds ")
     Integer deleteAllByIdIn(List<Long> descendantIds);
+
+
+    @Query( "  select z from Comment z where z.parentId in " +
+            " ( select c.id " +
+            " from Comment c  " +
+            " join Comment x ON c.id = x.parentId  " +
+            " where c.userId = :userId) ")
+    List<Comment> getUserIdByUserId(Long userId);
 }

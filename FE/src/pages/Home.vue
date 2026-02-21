@@ -19,6 +19,39 @@
 
   <!-- USER INFO -->
   <div class="user-card">
+    <div v-if="showNotifyPanel" class="notify-panel">
+      <h4>🔔 Thông báo</h4>
+
+      <div
+        v-for="(n, i) in notifications"
+        :key="i"
+        class="notify-item"
+      >
+        <img :src="n.avatar" class="notify-avatar"/>
+
+        <div class="notify-text">
+          <b>{{ n.fromUser }}</b>
+
+          <!-- comment gốc -->
+          <p class="notify-main">
+            {{ n.comment }}
+          </p>
+
+          <!-- reply -->
+          <p
+            v-if="n.commentReply"
+            class="notify-reply"
+          >
+            ↳ {{ n.commentReply.trim() }}
+          </p>
+        </div>
+      </div>
+
+      <p v-if="notifications.length === 0">
+        Không có thông báo
+      </p>
+    </div>
+
     <div class="user-info">
       <h4>{{ user.name }}</h4>
       <p>{{ user.email }}</p>
@@ -65,6 +98,16 @@
       Bạn còn {{ 20 - user.avatarChangeCount }} lần xóa avatar trong hôm nay
     </p>
     <div class="user-actions">
+      <button class="notify-btn" @click="toggleNotify">
+        🔔
+        <span
+          v-if="notifications.length"
+          class="notify-badge"
+        >
+          {{ notifications.length }}
+        </span>
+      </button>
+
       <button class="logout-inline" @click="logout">
         🚪 Logout
       </button>
@@ -178,6 +221,27 @@ import { useRouter } from "vue-router";
 import Node from "./Node.vue";
 import ClaimEmotionConfirm from "../components/ClaimEmotionConfirm.vue";
 import Draw from "./Draw.vue"
+
+const notifications = ref([]);
+const showNotifyPanel = ref(false);
+
+const toggleNotify = async () => {
+  showNotifyPanel.value = !showNotifyPanel.value;
+
+  // mở panel mới load (tránh spam request)
+  if (showNotifyPanel.value) {
+    await loadNotify();
+  }
+};
+
+const loadNotify = async () => {
+  const res = await authFetch("/api/v1/notify");
+  if (!res.ok) return;
+
+  notifications.value = await res.json();
+};
+
+
 const dayAgo = ref(0); // 0 = hôm nay, 1 = hôm qua
 const removeRoot = ({ id }) => {
   comments.value = comments.value.filter(c => c.id !== id);
@@ -388,6 +452,8 @@ const onReload = async () => {
 onMounted(() => {
   loadUser();
   loadComments();
+  loadNotify();   
+  setInterval(loadNotify, 5000); // 5 giây cập nhật 1 lần
 });
 const collapse = () => {
   comments.value.splice(LIMIT); // giữ lại LIMIT comment đầu
@@ -662,5 +728,95 @@ const collapse = () => {
   text-align: center;
   pointer-events: all;
 }
+.notify-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 13px;
+}
 
+.notify-btn:hover {
+  background: #e0e7ff;
+}
+
+.notify-panel {
+  right: calc(40px + 200px); /* bù lại margin âm */
+  width: 320px;
+  position: absolute;
+  top: 110px; 
+
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+
+  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+  z-index: 9999;
+}
+
+.notify-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.notify-item:hover {
+  background: #f6f7fb;
+}
+
+.notify-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notify-item p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #555;
+}
+.notify-text{
+  display:flex;
+  flex-direction:column;
+}
+
+.notify-main{
+  margin:2px 0;
+  font-size:13px;
+}
+
+.notify-reply{
+  margin:0;
+  font-size:12px;
+  color:#6b7280;
+  padding-left:6px;
+  border-left:2px solid #e5e7eb;
+}
+.notify-btn{
+  position: relative;
+}
+
+.notify-badge{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  background: #ef4444;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  padding: 2px 6px;
+  border-radius: 999px;
+
+  min-width: 18px;
+  text-align: center;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
 </style>
