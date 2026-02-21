@@ -3,7 +3,7 @@ package com.minh.config;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public final class Exception {
+public final class Exception extends Throwable {
     public static ResponseStatusException http(int code, String message) {
         return new ResponseStatusException(
                 HttpStatus.valueOf(code),

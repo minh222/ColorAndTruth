@@ -2,6 +2,7 @@ package com.minh.controller;
 
 import com.minh.auth.Jwt;
 import com.minh.config.Data;
+import com.minh.config.Emitter;
 import com.minh.controller.comment.response.GetEmotionResponse;
 import com.minh.data.access.control.comment.*;
 import com.minh.controller.comment.response.LoadCommentResponse;
@@ -23,6 +24,9 @@ public class CommentController {
     @Autowired @Qualifier("spring")
     private Semaphore semaphore;
 
+    @Autowired
+    Emitter emitter;
+
     @PostMapping("/postComment")
     public String postComment(@Data PostCommentDataAccess access,
                               Long id,
@@ -36,7 +40,7 @@ public class CommentController {
 
         try {
             Long userId = getUserId(request);
-            access.postComment(userId, emotion, claim, id, isDebateClaim);
+            access.postComment(userId, emotion, claim, id, isDebateClaim, emitter);
             return "ok";
         } finally {
             semaphore.release();

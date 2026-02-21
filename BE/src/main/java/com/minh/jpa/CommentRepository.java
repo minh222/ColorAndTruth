@@ -79,4 +79,17 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             " join User u on c.userId = u.id " +
             " where y.userId = :userId")
     List<NotifyResponse> getNotify(Long userId);
+
+    @Query( " select count(c.id)" +
+            " from Comment c " +
+            " join Comment y on c.parentId = y.id  " +
+            " join User u on c.userId = u.id " +
+            " where y.userId = :userId")
+    Integer getBadge(Long userId);
+
+    @Query( "select count(c.id) from Comment c where c.parentId = :id ")
+    Integer count(Long id);
+
+    @Query( "select  c.userId from Comment c where c.id = :commentId ")
+    Long getUserId(Long commentId);
 }
