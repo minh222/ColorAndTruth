@@ -226,12 +226,15 @@ const showNotifyPanel = ref(false);
 let es = null;
 
 const connectSSE = () => {
+  if (es) return;
 
-  if (es) return; // tránh mở nhiều lần
-  
   const token = localStorage.getItem("token");
-  localStorage.getItem("token")
-  es = new EventSource(`/api/v1/notify/stream?token=${token}`);
+
+  const API = import.meta.env.VITE_API_URL || "";  
+
+  es = new EventSource(
+    `${API}/api/v1/notify/stream?token=${token}`
+  );
 
   es.addEventListener("notify-count", (event) => {
     notifyCount.value = Number(event.data);
@@ -240,7 +243,6 @@ const connectSSE = () => {
   es.onerror = () => {
     es.close();
     es = null;
-
     setTimeout(connectSSE, 3000);
   };
 };
