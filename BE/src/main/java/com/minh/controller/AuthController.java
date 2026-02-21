@@ -30,7 +30,7 @@ public class AuthController {
             User user = access.getUser(name);
 
             if (!user.verifying(password)) {
-                throw http(401, "Unauthorized");
+                throw http(401, "Tài khoản không hợp lệ");
             }
 
             return user.createToken();
