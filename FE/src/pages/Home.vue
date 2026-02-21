@@ -237,6 +237,7 @@ const connectSSE = () => {
   );
 
   es.addEventListener("notify-count", (event) => {
+    if (showNotifyPanel.value) return; 
     notifyCount.value = Number(event.data);
   });
 
@@ -249,9 +250,9 @@ const connectSSE = () => {
 
 const toggleNotify = async () => {
   showNotifyPanel.value = !showNotifyPanel.value;
-
-  // mở panel mới load (tránh spam request)
+ 
   if (showNotifyPanel.value) {
+    notifyCount.value = 0;
     await loadNotify();
   }
 };
