@@ -99,12 +99,9 @@
     </p>
     <div class="user-actions">
       <button class="notify-btn" @click="toggleNotify">
-        🔔
-        <span
-          v-if="notifications.length"
-          class="notify-badge"
-        >
-          {{ notifications.length }}
+        Thông báo đê 🔔
+        <span v-if="notifyCount" class="notify-badge">
+          {{ notifyCount }}
         </span>
       </button>
 
@@ -222,8 +219,31 @@ import Node from "./Node.vue";
 import ClaimEmotionConfirm from "../components/ClaimEmotionConfirm.vue";
 import Draw from "./Draw.vue"
 
+const notifyCount = ref(0);
 const notifications = ref([]);
 const showNotifyPanel = ref(false);
+
+let es = null;
+
+const connectSSE = () => {
+
+  if (es) return; // tránh mở nhiều lần
+  
+  const token = localStorage.getItem("token");
+  localStorage.getItem("token")
+  es = new EventSource(`/api/v1/notify/stream?token=${token}`);
+
+  es.addEventListener("notify-count", (event) => {
+    notifyCount.value = Number(event.data);
+  });
+
+  es.onerror = () => {
+    es.close();
+    es = null;
+
+    setTimeout(connectSSE, 3000);
+  };
+};
 
 const toggleNotify = async () => {
   showNotifyPanel.value = !showNotifyPanel.value;
@@ -449,12 +469,25 @@ const onReload = async () => {
   await loadComments();
 };
 
-onMounted(() => {
+onMounted(async () => {
   loadUser();
   loadComments();
-  loadNotify();   
-  setInterval(loadNotify, 5000); // 5 giây cập nhật 1 lần
+  loadNotifyCount();
+  connectSSE();
 });
+
+const loadNotifyCount = async () => {
+  try {
+    const res = await authFetch("/api/v1/notify/count");
+    if (!res.ok) return;
+
+    const data = await res.json();
+    notifyCount.value = Number(data);
+  } catch (e) {
+    console.error("load notify count error", e);
+  }
+};
+
 const collapse = () => {
   comments.value.splice(LIMIT); // giữ lại LIMIT comment đầu
   lastId.value = comments.value.at(-1)?.id ?? null;
@@ -485,6 +518,7 @@ const collapse = () => {
  
 
 .user-card {
+  position: relative;   
   width: 95vw;
   max-width: 720px;
   margin: 70px auto 20px -200px;
@@ -741,18 +775,20 @@ const collapse = () => {
   background: #e0e7ff;
 }
 
-.notify-panel {
-  right: calc(40px + 200px); /* bù lại margin âm */
-  width: 320px;
+.notify-panel{
   position: absolute;
-  top: 110px; 
 
+  top: 20px;      /* chỉnh theo chiều cao user-card */
+    right: calc(40px - 380px); /* bù lại margin âm */
+
+  width: 320px;
   background: #fff;
   border-radius: 14px;
   padding: 12px;
-
   box-shadow: 0 12px 40px rgba(0,0,0,.18);
   z-index: 9999;
+
+  transform: translateY(6px);
 }
 
 .notify-item {
