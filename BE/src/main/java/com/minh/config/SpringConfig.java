@@ -23,7 +23,7 @@ public class SpringConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "https://colorandtruth1.onrender.com","https://www.color.io.vn")
+                        .allowedOrigins("http://localhost:5173", "https://colorandtruth1.onrender.com", "https://www.color.io.vn", "https://color.io.vn/")
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }
