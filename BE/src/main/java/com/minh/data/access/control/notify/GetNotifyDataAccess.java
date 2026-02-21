@@ -2,7 +2,7 @@ package com.minh.data.access.control.notify;
 
 import com.minh.config.DataAccess;
 import com.minh.controller.notify.response.NotifyResponse;
-import com.minh.data.access.control.CurrentRepos; 
+import com.minh.data.access.control.CurrentRepos;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class GetNotifyDataAccess { // gateway :mỗi bussiness truy cập 1 cổ
     }
 
     public List<NotifyResponse> getNotify(Long id) {
-        return r.commentRepository.getUserIdByUserId(id);
+        return r.commentRepository.getNotify(id);
     }
 
 }

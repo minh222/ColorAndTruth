@@ -73,13 +73,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Integer deleteAllByIdIn(List<Long> descendantIds);
 
 
-    @Query( " select new com.minh.controller.notify.response.NotifyResponse(y.claim,z.claim,u.name,u.avatar)" +
-            " from Comment z join User u on z.userId = u.id " +
-            " join Comment y on z.parentId = y.id  " +
-            " where z.parentId in " +
-            " ( select c.id " +
-            " from Comment c  " +
-            " join Comment x ON c.id = x.parentId  " +
-            " where c.userId = :userId) ")
-    List<NotifyResponse> getUserIdByUserId(Long userId);
+    @Query( " select new com.minh.controller.notify.response.NotifyResponse(y.claim, c.claim, u.name, u.avatar)" +
+            " from Comment c " +
+            " join Comment y on c.parentId = y.id  " +
+            " join User u on c.userId = u.id " +
+            " where y.userId = :userId")
+    List<NotifyResponse> getNotify(Long userId);
 }
