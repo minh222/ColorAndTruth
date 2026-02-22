@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 @Service
 @DataAccess
 public class LoadChildrenCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public LoadChildrenCommentDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId) {
-        Long maxId = r.commentRepository.getMaxChildrenIdById(id);
-        List<ViewEmotionId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
+        Long maxId = rp.commentRp.getMaxChildrenIdById(id);
+        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId);
 
-        List<LoadCommentResponse> res = r.commentRepository.loadChildrenById(
+        List<LoadCommentResponse> res = rp.commentRp.loadChildrenById(
                 id,
                 getLastId(maxId, lastId),
                 ids,

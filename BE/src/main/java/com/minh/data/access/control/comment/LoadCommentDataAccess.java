@@ -17,20 +17,20 @@ import static com.minh.config.Exception.http;
 @Service
 @DataAccess
 public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public LoadCommentDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     public List<LoadCommentResponse> loadComment(Long userId, Long lastId, int limit, Integer days) { // load từ lastId -> lastId + limit
-        Long maxId = r.commentRepository.findMaxId().orElseThrow(
+        Long maxId = rp.commentRp.findMaxId().orElseThrow(
                 () -> http(502, "No data available")
         );
 
-        List<ViewEmotionId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
+        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId);
 
-        List<LoadCommentResponse> res = r.commentRepository.loadComment(
+        List<LoadCommentResponse> res = rp.commentRp.loadComment(
                 getLastId(maxId, lastId),
                 ids,
                 getDate(days),

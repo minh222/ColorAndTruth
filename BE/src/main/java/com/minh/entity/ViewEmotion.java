@@ -20,8 +20,8 @@ public class ViewEmotion {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    public ViewEmotion(ViewEmotionId id, LocalDateTime updateAt) {
-        this.id = id;
+    public ViewEmotion(Long id, Long userId, LocalDateTime updateAt) {
+        this.id = new ViewEmotionId(id, userId);
         this.updateAt = updateAt;
     }
 }

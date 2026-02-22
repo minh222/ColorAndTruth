@@ -10,16 +10,16 @@ import java.util.List;
 @Service
 @DataAccess
 public class RemoveCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public RemoveCommentDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     @Transactional
     public void removeComment(Long id) {
-        List<Long> descendantIds = r.closureRepository.getDescendantId(id);
-        r.commentRepository.deleteAllByIdIn(descendantIds);
-        r.closureRepository.deleteByIdIn(descendantIds);
+        List<Long> descendantIds = rp.closureRp.getDescendantId(id);
+        rp.commentRp.deleteAllByIdIn(descendantIds);
+        rp.closureRp.deleteByIdIn(descendantIds);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
+    @Query("select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count(cl.ancestorId), u.id, c.time, c.isDebateClaim, v.id.viewerId) " +
             "from Comment c " +
             "join User u on c.userId = u.id " +
@@ -28,13 +28,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadComment(Long lastId, List<ViewEmotionId> ids, LocalDate date, List<Long>  commentIds, Pageable pageable);
+    List<LoadCommentResponse> loadComment(Long lastId, List<ViewEmotionId> ids, LocalDate date, List<Long> commentIds, Pageable pageable);
 
     /*   ViewerId: collapse priority
          Nếu nhiều dòng có userId thì ưu tiên lấy dòng có userId,
          Nếu nhiều dòng ko có userId thì lấy dòng max
          Nếu ko có dòng nào thì viewerId = null */
-    @Query( "select new com.minh.entity.id.ViewEmotionId ( " +
+    @Query("select new com.minh.entity.composite.id.ViewEmotionId ( " +
             "  c.id, " +
             "  coalesce( " +
             "    max(case when v.id.viewerId = :userId then v.id.viewerId else null end ), " +
@@ -45,7 +45,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "group by c.id ")
     List<ViewEmotionId> getCompositeIdsByUserId(Long userId);
 
-    @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
+    @Query("select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id, c.time,c.isDebateClaim, v.id.viewerId) " +
             "from Comment c " +
             "join User u on c.userId = u.id " +
@@ -63,7 +63,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select max(c.id) from Comment c where c.parentId is null")
     Optional<Long> findMaxId();
 
-    @Query( "select max(c.id) from Comment c " +
+    @Query("select max(c.id) from Comment c " +
             "where :id = c.parentId or (:id is null and c.parentId is null)")
     Long getMaxChildrenIdById(Long id);
 
@@ -72,20 +72,31 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("delete from Comment c where c.id in :descendantIds ")
     void deleteAllByIdIn(List<Long> descendantIds);
 
-    @Query( " select new com.minh.controller.notify.response.NotifyResponse(c.id ,c.claim, y.claim, u.name, u.avatar, c.time)" +
+    @Query( " select c.id " +
             " from Comment c " +
             " join Comment y on c.parentId = y.id  " +
             " join User u on c.userId = u.id " +
             " where y.userId = :userId")
-    List<NotifyResponse> getNotify(Long userId);
+    List<Long> getReplyIds(Long userId);
+
+    @Query( " select new com.minh.controller.notify.response.NotifyResponse(c.id ,c.claim, y.claim, u.name, u.avatar, c.time)" +
+            " from Comment c " +
+            " join Comment y on c.parentId = y.id  " +
+            " join User u on c.userId = u.id " +
+            " where y.userId = :userId " +
+            " and (coalesce(:replyIds, null) is null or c.id not in :replyIds) "
+    )
+    List<NotifyResponse> getNotify(Long userId, List<Long> replyIds);
 
     @Query( " select count(c.id)" +
             " from Comment c " +
             " join Comment y on c.parentId = y.id  " +
             " join User u on c.userId = u.id " +
-            " where y.userId = :userId")
-    Integer getBadge(Long userId);
+            " where y.userId = :userId" +
+            " and (coalesce(:replyIds, null) is null or c.id not in :replyIds) "
+    )
+    Integer getBadge(Long userId, List<Long> replyIds);
 
-    @Query( "select  c.userId from Comment c where c.id = :commentId ")
+    @Query("select  c.userId from Comment c where c.id = :commentId ")
     Long getUserId(Long commentId);
 }

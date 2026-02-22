@@ -12,20 +12,18 @@ import java.time.LocalDateTime;
 @Service
 @DataAccess
 public class SeenEmotionDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public SeenEmotionDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     public GetEmotionResponse seenEmotion(Long id, Long userId) {
-        ViewEmotionId compositeId = new ViewEmotionId(id, userId);
-
-        r.viewEmotionRepository.save(
-                new ViewEmotion(compositeId, LocalDateTime.now())
+        rp.viewEmotionRp.save(
+                new ViewEmotion(id, userId, LocalDateTime.now())
         );  // upsert
 
-        Comment comment = r.commentRepository.getReferenceById(id);
+        Comment comment = rp.commentRp.getReferenceById(id);
 
         return new GetEmotionResponse(comment.getEmotion(), comment.getIsDebateClaim());
     }

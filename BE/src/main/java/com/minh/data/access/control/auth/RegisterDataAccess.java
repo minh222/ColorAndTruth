@@ -13,17 +13,17 @@ import static com.minh.config.Exception.http;
 @Service
 @DataAccess
 public class RegisterDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public RegisterDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     public String register(String name, String password) { // unique name
         try {
             byte[] hashPassword = creteVerify(password.toCharArray());
 
-            User user = r.userRepository.save(
+            User user = rp.userRp.save(
                 new User(name, hashPassword)
             );
 

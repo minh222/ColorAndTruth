@@ -6,12 +6,10 @@ import com.minh.config.Emitter;
 import com.minh.controller.notify.response.NotifyResponse;
 import com.minh.data.access.control.notify.CountNotifyDataAccess;
 import com.minh.data.access.control.notify.GetNotifyDataAccess;
+import com.minh.data.access.control.notify.ReadNotifyDataAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +29,18 @@ public class NotifyController {
     @Autowired
     private Emitter emitter;
 
+    @GetMapping("/notify/stream")
+    public SseEmitter stream(@RequestParam String token) {
+        String userId = Jwt.verifyAndGetUserId(token);
+        return emitter.connect(Long.valueOf(userId));
+    }
+
+    @GetMapping("/notify/count")
+    public Integer countNotify(@Data CountNotifyDataAccess access,
+                               HttpServletRequest request) {
+        return access.getBadge(getUserId(request));
+    }
+
     @GetMapping("/notify")
     public List<NotifyResponse> getNotify(@Data GetNotifyDataAccess access,
                                           HttpServletRequest request) {
@@ -47,15 +57,11 @@ public class NotifyController {
         }
     }
 
-    @GetMapping("/notify/count")
-    public Integer countNotify(@Data CountNotifyDataAccess access,
-                               HttpServletRequest request) {
-        return access.getBadge(getUserId(request));
-    }
-
-    @GetMapping("/notify/stream")
-    public SseEmitter stream(@RequestParam String token) {
-        String userId = Jwt.verifyAndGetUserId(token);
-        return emitter.connect(Long.valueOf(userId));
+    @PostMapping("/notify/read")
+    public String readNotify(@Data ReadNotifyDataAccess access,
+                             HttpServletRequest request) {
+        Long userId = getUserId(request);
+        access.readNotify(userId);
+        return "ok";
     }
 }

@@ -11,15 +11,15 @@ import static com.minh.config.Exception.http;
 @Service
 @DataAccess
 public class EmptyDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public EmptyDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     @Transactional
     public void emptyAvatar(Long userId) {
-        User user =  r.userRepository.getReferenceById(userId);
+        User user =  rp.userRp.getReferenceById(userId);
         user.resetCountToday();
 
         if (user.exceed()) {

@@ -14,8 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class ReadNotify {
 
-
-    @Id
+    @EmbeddedId
     private ReadNotifyId id;
-    
+
+    public ReadNotify(Long userId, Long id) {
+        this.id = new ReadNotifyId(userId, id);
+    }
 }

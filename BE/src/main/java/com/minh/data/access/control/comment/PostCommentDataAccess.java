@@ -18,15 +18,15 @@ import static com.minh.config.Config.TODAY;
 @Service
 @DataAccess
 public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public PostCommentDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     @Transactional
     public void postComment(Long userId, String emotion, String claim, Long id, Boolean isDebateClaim, Emitter emitter) {
-        Comment newComment = r.commentRepository.save(
+        Comment newComment = rp.commentRp.save(
                 new Comment(userId, emotion, claim, id, isDebateClaim, 0, TODAY(), NOW())
         );
         Long newCommentId = newComment.getId();
@@ -36,13 +36,19 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         );
 
         if (id != null) {
-            r.closureRepository.findAllByDescendantId(id).forEach(
+            rp.closureRp.findAllByDescendantId(id).forEach(
             c -> closures.add(new Closure(c.getAncestorId(), newCommentId))
             );
 
-            Long receiveUserId = r.commentRepository.getUserId(id);
-            emitter.pushCount(receiveUserId, r.commentRepository.getBadge(receiveUserId));
+            Long receiveUserId = rp.commentRp.getUserId(id);
+            List<Long> replyIds = rp.readNotifyRp.getReplyIds(receiveUserId);
+            emitter.pushCount(receiveUserId, rp.commentRp.getBadge(receiveUserId, nullIfEmpty(replyIds)));
         }
-        r.closureRepository.saveAll(closures);
+        rp.closureRp.saveAll(closures);
+    }
+
+
+    private List<Long> nullIfEmpty(List<Long> list) {
+        return list.isEmpty() ? null : list;
     }
 }

@@ -10,15 +10,15 @@ import javax.transaction.Transactional;
 @Service
 @DataAccess
 public class UploadDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos r;
+    public final CurrentRepos rp;
 
     public UploadDataAccess(CurrentRepos repos) {
-        this.r = repos;
+        this.rp = repos;
     }
 
     @Transactional
     public void updateAvatar(Long userId, String link) {
-        User user = r.userRepository.getReferenceById(userId);
+        User user = rp.userRp.getReferenceById(userId);
         user.setAvatar(link);
     }
 }
