@@ -1,6 +1,6 @@
 package com.minh.entity;
 
-import com.minh.entity.id.CompositeId;
+import com.minh.entity.composite.id.ViewEmotionId;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ViewEmotion {
     @EmbeddedId
-    CompositeId id;
+    ViewEmotionId id;
 
     @Column
     @LastModifiedDate
     private LocalDateTime updateAt;
 
-    public ViewEmotion(CompositeId id, LocalDateTime updateAt) {
+    public ViewEmotion(ViewEmotionId id, LocalDateTime updateAt) {
         this.id = id;
         this.updateAt = updateAt;
     }

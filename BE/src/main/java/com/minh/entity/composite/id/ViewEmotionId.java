@@ -1,4 +1,4 @@
-package com.minh.entity.id;
+package com.minh.entity.composite.id;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,23 +10,23 @@ import java.util.List;
 @Embeddable
 @EqualsAndHashCode
 @Getter
-public class CompositeId implements Serializable {
+public class ViewEmotionId implements Serializable {
 
     private Long commentId;
 
     private Long viewerId;
 
-    public CompositeId(Long commentId, Integer viewerId) {
+    public ViewEmotionId(Long commentId, Integer viewerId) {
         this.commentId = commentId;
         this.viewerId = Long.valueOf(viewerId);
     }
 
-    public CompositeId(Long commentId, Long viewerId) {
+    public ViewEmotionId(Long commentId, Long viewerId) {
         this.commentId = commentId;
         this.viewerId = viewerId;
     }
 
-    public CompositeId() {
+    public ViewEmotionId() {
 
     }
 

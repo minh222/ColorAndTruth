@@ -3,7 +3,7 @@ package com.minh.data.access.control.comment;
 import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.controller.comment.response.LoadCommentResponse;
-import com.minh.entity.id.CompositeId;
+import com.minh.entity.composite.id.ViewEmotionId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
                 () -> http(502, "No data available")
         );
 
-        List<CompositeId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
+        List<ViewEmotionId> ids = r.commentRepository.getCompositeIdsByUserId(userId);
 
         List<LoadCommentResponse> res = r.commentRepository.loadComment(
                 getLastId(maxId, lastId),
@@ -52,8 +52,8 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         return lastId == null ? maxId + 1 : lastId;
     }
 
-    private List<Long> getCommentIds(List<CompositeId> ids) {
-        return ids.stream().filter(CompositeId::viewerIsNull).map(CompositeId::getCommentId).collect(Collectors.toList());
+    private List<Long> getCommentIds(List<ViewEmotionId> ids) {
+        return ids.stream().filter(ViewEmotionId::viewerIsNull).map(ViewEmotionId::getCommentId).collect(Collectors.toList());
     }
 
     private PageRequest getPageable(int limit) {

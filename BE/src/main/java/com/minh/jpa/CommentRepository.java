@@ -3,7 +3,7 @@ package com.minh.jpa;
 import com.minh.controller.comment.response.LoadCommentResponse;
 import com.minh.controller.notify.response.NotifyResponse;
 import com.minh.entity.Comment;
-import com.minh.entity.id.CompositeId;
+import com.minh.entity.composite.id.ViewEmotionId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,13 +28,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadComment(Long lastId, List<CompositeId> ids, LocalDate date, List<Long>  commentIds, Pageable pageable);
+    List<LoadCommentResponse> loadComment(Long lastId, List<ViewEmotionId> ids, LocalDate date, List<Long>  commentIds, Pageable pageable);
 
     /*   ViewerId: collapse priority
          Nếu nhiều dòng có userId thì ưu tiên lấy dòng có userId,
          Nếu nhiều dòng ko có userId thì lấy dòng max
          Nếu ko có dòng nào thì viewerId = null */
-    @Query( "select new com.minh.entity.id.CompositeId ( " +
+    @Query( "select new com.minh.entity.id.ViewEmotionId ( " +
             "  c.id, " +
             "  coalesce( " +
             "    max(case when v.id.viewerId = :userId then v.id.viewerId else null end ), " +
@@ -43,7 +43,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "from Comment c " +
             "left join ViewEmotion v on c.id = v.id.commentId " +
             "group by c.id ")
-    List<CompositeId> getCompositeIdsByUserId(Long userId);
+    List<ViewEmotionId> getCompositeIdsByUserId(Long userId);
 
     @Query( "select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id, c.time,c.isDebateClaim, v.id.viewerId) " +
@@ -58,7 +58,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "group by c.id, c.emotion, c.claim, u.name, u.avatar, u.id,  v.id " +
             "order by c.id desc"
     )
-    List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, List<CompositeId> ids, List<Long> commentIds, Pageable pageable);
+    List<LoadCommentResponse> loadChildrenById(Long id, Long lastId, List<ViewEmotionId> ids, List<Long> commentIds, Pageable pageable);
 
     @Query("select max(c.id) from Comment c where c.parentId is null")
     Optional<Long> findMaxId();
@@ -72,8 +72,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("delete from Comment c where c.id in :descendantIds ")
     void deleteAllByIdIn(List<Long> descendantIds);
 
-
-    @Query( " select new com.minh.controller.notify.response.NotifyResponse(y.claim, c.claim, u.name, u.avatar)" +
+    @Query( " select new com.minh.controller.notify.response.NotifyResponse(c.id ,c.claim, y.claim, u.name, u.avatar, c.time)" +
             " from Comment c " +
             " join Comment y on c.parentId = y.id  " +
             " join User u on c.userId = u.id " +

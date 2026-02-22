@@ -4,8 +4,8 @@ import com.minh.config.DataAccess;
 import com.minh.controller.comment.response.GetEmotionResponse;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Comment;
-import com.minh.entity.id.CompositeId;
 import com.minh.entity.ViewEmotion;
+import com.minh.entity.composite.id.ViewEmotionId;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
@@ -19,7 +19,7 @@ public class SeenEmotionDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     public GetEmotionResponse seenEmotion(Long id, Long userId) {
-        CompositeId compositeId = new CompositeId(id, userId);
+        ViewEmotionId compositeId = new ViewEmotionId(id, userId);
 
         r.viewEmotionRepository.save(
                 new ViewEmotion(compositeId, LocalDateTime.now())
