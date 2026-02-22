@@ -21,6 +21,24 @@
   <div class="user-card">
     <div v-if="showNotifyPanel" class="notify-panel">
       <h4>🔔 Thông báo</h4>
+      <div class="notify-tabs">
+        <button
+          class="notify-tab-btn"
+          :class="{ active: notifyTab==='unread' }"
+          @click="notifyTab='unread'"
+        >
+          Chưa đọc
+        </button>
+
+        <button
+          class="notify-tab-btn"
+          :class="{ active: notifyTab==='read' }"
+          @click="notifyTab='read'"
+        >
+          Đã đọc
+        </button>
+      </div>
+
       <button
         v-if="notifications.length"
         class="mark-read-btn"
@@ -28,28 +46,56 @@
       >
         ✔ Đánh dấu đã đọc
       </button>
-      <div
-        v-for="(n, i) in notifications"
-        :key="i"
-        class="notify-item"
-      >
-        <img :src="n.avatar" class="notify-avatar"/>
 
-        <div class="notify-text">
-          <b>{{ n.fromUser }}</b>
+      <div v-if="notifyTab==='unread' && notifications.length">
+        <div
+          v-for="(n, i) in notifications"
+          :key="i"
+          class="notify-item"
+          :class="{ read: n.isRead }"
+        >
+          <img :src="n.avatar" class="notify-avatar"/>
 
-          <!-- comment gốc -->
-          <p class="notify-main">
-            {{ n.comment }}
-          </p>
+          <div class="notify-text">
+            <b>{{ n.fromUser }}</b>
 
-          <!-- reply -->
-          <p
-            v-if="n.commentReply"
-            class="notify-reply"
-          >
-            ↳ {{ n.commentReply.trim() }}
-          </p>
+            <!-- comment gốc -->
+            <p class="notify-main">
+              {{ n.comment }}
+            </p>
+
+            <!-- reply -->
+            <p
+              v-if="n.commentReply"
+              class="notify-reply"
+            >
+              ↳ {{ n.commentReply.trim() }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ===== ĐÃ ĐỌC ===== -->
+      <div v-if="notifyTab==='read' && readNotifications.length">
+        <h5 style="margin:12px 0 6px; color:#6b7280;">Đã đọc</h5>
+
+        <div
+          v-for="(n, i) in readNotifications"
+          :key="'read-' + i"
+          class="notify-item"
+          style="opacity:0.6;"
+        >
+          <img :src="n.avatar" class="notify-avatar"/>
+
+          <div class="notify-text">
+            <b>{{ n.fromUser }}</b>
+            <p class="notify-main">{{ n.comment }}</p>
+
+            <p v-if="n.commentReply" class="notify-reply">
+              ↳ {{ n.commentReply.trim() }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -228,11 +274,20 @@ import Draw from "./Draw.vue"
 const notifyCount = ref(0);
 const notifications = ref([]);
 const showNotifyPanel = ref(false);
-
+const readNotifications = ref([]);
+const notifyTab = ref("unread");  
+const loadReadNotify = async () => {
+  try {
+    const res = await authFetch("/api/v1/notify/read");
+    readNotifications.value = res.ok ? await res.json() : [];
+  } catch (e) {
+    console.error("load read notify error", e);
+  }
+};
 
 const markAllRead = async () => {
   try {
-    const res = await authFetch("/api/v1/notify/read", {
+    const res = await authFetch("/api/v1/notify/mark", {
       method: "POST"
     });
 
@@ -246,6 +301,7 @@ const markAllRead = async () => {
 
     // reload lại list nếu muốn
     await loadNotify();
+    await loadReadNotify();
 
   } catch (e) {
     console.error("mark read error", e);
@@ -282,7 +338,8 @@ const toggleNotify = async () => {
 
   // mở panel mới load (tránh spam request)
   if (showNotifyPanel.value) {
-    await loadNotify();
+    await loadNotify();       // giữ nguyên
+    await loadReadNotify();   // thêm dòng này
   }
 };
 
@@ -886,5 +943,30 @@ const collapse = () => {
   text-align: center;
 
   box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.notify-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.notify-tab-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #e5e7eb;
+  color: #374151;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.notify-tab-btn.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.notify-tab-btn:hover {
+  background: #dbeafe;
 }
 </style>
