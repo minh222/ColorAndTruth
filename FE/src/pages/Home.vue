@@ -46,59 +46,66 @@
       >
         ✔ Đánh dấu đã đọc
       </button>
+      <div class="notify-list-scroll">
+        <div v-if="notifyTab==='unread' && notifications.length">
+          <div
+            v-for="(n, i) in notifications"
+            :key="i"
+            class="notify-item"
+            :class="{ read: n.isRead }"
+          >
+            <img :src="n.avatar" class="notify-avatar"/>
 
-      <div v-if="notifyTab==='unread' && notifications.length">
-        <div
-          v-for="(n, i) in notifications"
-          :key="i"
-          class="notify-item"
-          :class="{ read: n.isRead }"
-        >
-          <img :src="n.avatar" class="notify-avatar"/>
+            <div class="notify-text">
+              <b>{{ n.fromUser }}</b>
 
-          <div class="notify-text">
-            <b>{{ n.fromUser }}</b>
+              <small class="notify-time">
+                {{ formatTime(n.time) }}
+              </small>
 
-            <!-- comment gốc -->
-            <p class="notify-main">
-              {{ n.comment }}
-            </p>
+              <!-- comment gốc -->
+              <p class="notify-main">
+                {{ n.comment }}
+              </p>
 
-            <!-- reply -->
-            <p
-              v-if="n.commentReply"
-              class="notify-reply"
-            >
-              ↳ {{ n.commentReply.trim() }}
-            </p>
+              <!-- reply -->
+              <p
+                v-if="n.commentReply"
+                class="notify-reply"
+              >
+                ↳ {{ n.commentReply.trim() }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ===== ĐÃ ĐỌC ===== -->
+        <div v-if="notifyTab==='read' && readNotifications.length">
+          <h5 style="margin:12px 0 6px; color:#6b7280;">Đã đọc</h5>
+
+          <div
+            v-for="(n, i) in readNotifications"
+            :key="'read-' + i"
+            class="notify-item"
+            style="opacity:0.6;"
+          >
+            <img :src="n.avatar" class="notify-avatar"/>
+
+            <div class="notify-text">
+              <b>{{ n.fromUser }}</b>
+              <small class="notify-time">
+                {{ formatTime(n.time) }}
+              </small>
+              <p class="notify-main">{{ n.comment }}</p>
+
+              <p v-if="n.commentReply" class="notify-reply">
+                ↳ {{ n.commentReply.trim() }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-
-
-      <!-- ===== ĐÃ ĐỌC ===== -->
-      <div v-if="notifyTab==='read' && readNotifications.length">
-        <h5 style="margin:12px 0 6px; color:#6b7280;">Đã đọc</h5>
-
-        <div
-          v-for="(n, i) in readNotifications"
-          :key="'read-' + i"
-          class="notify-item"
-          style="opacity:0.6;"
-        >
-          <img :src="n.avatar" class="notify-avatar"/>
-
-          <div class="notify-text">
-            <b>{{ n.fromUser }}</b>
-            <p class="notify-main">{{ n.comment }}</p>
-
-            <p v-if="n.commentReply" class="notify-reply">
-              ↳ {{ n.commentReply.trim() }}
-            </p>
-          </div>
-        </div>
-      </div>
-
       <p v-if="notifications.length === 0">
         Không có thông báo
       </p>
@@ -270,6 +277,20 @@ import { useRouter } from "vue-router";
 import Node from "./Node.vue";
 import ClaimEmotionConfirm from "../components/ClaimEmotionConfirm.vue";
 import Draw from "./Draw.vue"
+
+const formatTime = (iso) => {
+  if (!iso) return "";
+
+  const date = new Date(iso);
+
+  return date.toLocaleString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+};
 
 const notifyCount = ref(0);
 const notifications = ref([]);
@@ -867,8 +888,8 @@ const collapse = () => {
 .notify-panel{
   position: absolute;
 
-  top: 20px;      /* chỉnh theo chiều cao user-card */
-    right: calc(40px - 380px); /* bù lại margin âm */
+  top: -80px;     
+  right: calc(40px - 380px); 
 
   width: 320px;
   background: #fff;
@@ -968,5 +989,34 @@ const collapse = () => {
 
 .notify-tab-btn:hover {
   background: #dbeafe;
+}
+.notify-time {
+  font-size: 11px;
+  color: #9ca3af;
+  display: block;
+  margin-top: 2px;
+}
+.notify-list-scroll {
+  max-height: 260px;   /* chiều cao bạn muốn */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  padding-right: 4px;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+ 
+.notify-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notify-list-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+
+.notify-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 </style>
