@@ -27,5 +27,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # - name: Trigger Render Deploy
-      #   run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+
+      - name: Trigger Railway Redeploy
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"query": "mutation { serviceInstanceDeploy(environmentId: \"e8c2e4b1-7ab8-4c24-be12-69dbbc2c1cde\", serviceId: \"3652f8d8-8f78-4007-a968-771bcd630d32\") }"}' \
+            https://backboard.railway.app/graphql/v2
