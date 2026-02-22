@@ -19,7 +19,7 @@ public class EmptyDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
 
     @Transactional
     public void emptyAvatar(Long userId) {
-        User user =  rp.userRp.getReferenceById(userId);
+        User user =  rp.userRp.getUserById(userId);
         user.resetCountToday();
 
         if (user.exceed()) {

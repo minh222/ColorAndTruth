@@ -47,7 +47,6 @@ public class PostCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         rp.closureRp.saveAll(closures);
     }
 
-
     private List<Long> nullIfEmpty(List<Long> list) {
         return list.isEmpty() ? null : list;
     }

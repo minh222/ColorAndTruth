@@ -5,16 +5,18 @@ import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.User;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @DataAccess
 public class UserInfoDataAccess { // gateway :mỗi bussiness truy cập 1 cổng.
-    public final CurrentRepos repos;
+    public final CurrentRepos rp;
 
     public UserInfoDataAccess(CurrentRepos repos) {
-        this.repos = repos;
+        this.rp = repos;
     }
 
     public User getUser(Long id) {
-        return repos.userRp.getById(id);
+        return rp.userRp.getUserById(id);
     }
 }

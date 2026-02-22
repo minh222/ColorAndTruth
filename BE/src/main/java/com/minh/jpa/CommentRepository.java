@@ -108,4 +108,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("select  c.userId from Comment c where c.id = :commentId ")
     Long getUserId(Long commentId);
+
+    Comment getCommentById(Long id);
 }

@@ -5,7 +5,6 @@ import com.minh.controller.comment.response.GetEmotionResponse;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.entity.Comment;
 import com.minh.entity.ViewEmotion;
-import com.minh.entity.composite.id.ViewEmotionId;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
@@ -23,7 +22,7 @@ public class SeenEmotionDataAccess { // gateway :mỗi bussiness truy cập 1 c�
                 new ViewEmotion(id, userId, LocalDateTime.now())
         );  // upsert
 
-        Comment comment = rp.commentRp.getReferenceById(id);
+        Comment comment = rp.commentRp.getCommentById(id);
 
         return new GetEmotionResponse(comment.getEmotion(), comment.getIsDebateClaim());
     }
