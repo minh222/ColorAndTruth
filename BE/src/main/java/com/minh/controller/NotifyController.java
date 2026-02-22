@@ -1,12 +1,10 @@
 package com.minh.controller;
 
-import com.minh.apply.rule.ApplyRule;
 import com.minh.auth.Jwt;
 import com.minh.config.Data;
 import com.minh.config.Emitter;
-import com.minh.controller.analyze.response.AnalyzeResponse;
 import com.minh.controller.notify.response.NotifyResponse;
-import com.minh.data.access.control.comment.CountNotifyDataAccess;
+import com.minh.data.access.control.notify.CountNotifyDataAccess;
 import com.minh.data.access.control.notify.GetNotifyDataAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

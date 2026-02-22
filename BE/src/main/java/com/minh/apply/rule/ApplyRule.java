@@ -4,7 +4,7 @@ package com.minh.apply.rule;
 import com.minh.controller.analyze.response.AnalyzeResponse;
 
 import static com.minh.config.Config.STRING_UTIL;
-import static com.minh.apply.rule.Rule.textRules;
+import static com.minh.apply.rule.Rule2.textRules;
 
 import java.util.*;
 
@@ -29,19 +29,4 @@ public class ApplyRule {
                 STRING_UTIL.normalize(claim)
         );
     }
-
-    public static AnalyzeResponse exact(String original) {
-        Set<String> emotions = new HashSet<>();
-        Set<String> attitudes = new HashSet<>();
-        String claim = STRING_UTIL.normalize(original);
-
-        return new AnalyzeResponse(
-                null,
-                new ArrayList<>(emotions),
-                String.join(", ", attitudes),
-                STRING_UTIL.normalize(claim)
-        );
-    }
-
-
 }

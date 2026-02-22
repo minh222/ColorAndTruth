@@ -14,7 +14,4 @@ public class CurrentRepos { // danh bạ chứa tất cả repo app
     public ViewEmotionRepository viewEmotionRepository;
     @Autowired
     public ClosureRepository closureRepository;
-    @Autowired
-    public NotifyRepository notifyRepository;
-
 }

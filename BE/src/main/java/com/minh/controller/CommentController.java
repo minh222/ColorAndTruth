@@ -25,7 +25,7 @@ public class CommentController {
     private Semaphore semaphore;
 
     @Autowired
-    Emitter emitter;
+    private Emitter emitter;
 
     @PostMapping("/postComment")
     public String postComment(@Data PostCommentDataAccess access,

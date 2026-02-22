@@ -33,7 +33,7 @@ public class CloudinaryService {
         return (String) result.get("secure_url");
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // uncheck response of service
     private Map<String, Object> upload(MultipartFile file, Map<String, Object> options) {
         try {
             return this.cloudinary.uploader().upload(file.getBytes(), options);

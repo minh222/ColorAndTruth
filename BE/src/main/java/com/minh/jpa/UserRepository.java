@@ -9,9 +9,5 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
     User findByName(String name);
-
-    @Query("select u from User u where u.id in :userIds  ")
-    List<User> findByIdIn(List<Long> userIds);
 }

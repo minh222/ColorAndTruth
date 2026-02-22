@@ -18,5 +18,4 @@ public class GetNotifyDataAccess { // gateway :mỗi bussiness truy cập 1 cổ
     public List<NotifyResponse> getNotify(Long id) {
         return r.commentRepository.getNotify(id);
     }
-
 }

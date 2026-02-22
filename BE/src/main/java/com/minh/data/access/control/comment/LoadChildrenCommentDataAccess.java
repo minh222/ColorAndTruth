@@ -4,14 +4,10 @@ import com.minh.config.DataAccess;
 import com.minh.data.access.control.CurrentRepos;
 import com.minh.controller.comment.response.LoadCommentResponse;
 import com.minh.entity.id.CompositeId;
-import com.minh.thread.ExecutorUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service

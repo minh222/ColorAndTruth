@@ -5,6 +5,8 @@ import com.minh.controller.analyze.response.AnalyzeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import static com.minh.config.Exception.*;
@@ -24,7 +26,7 @@ public class AnalyzeController {
         }
 
         try {
-            return ApplyRule.exact(original);
+            return new AnalyzeResponse(null, new ArrayList<>(), null, original);
         } finally {
             semaphore.release();
         }

@@ -70,7 +70,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Transactional
     @Modifying
     @Query("delete from Comment c where c.id in :descendantIds ")
-    Integer deleteAllByIdIn(List<Long> descendantIds);
+    void deleteAllByIdIn(List<Long> descendantIds);
 
 
     @Query( " select new com.minh.controller.notify.response.NotifyResponse(y.claim, c.claim, u.name, u.avatar)" +
@@ -86,9 +86,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             " join User u on c.userId = u.id " +
             " where y.userId = :userId")
     Integer getBadge(Long userId);
-
-    @Query( "select count(c.id) from Comment c where c.parentId = :id ")
-    Integer count(Long id);
 
     @Query( "select  c.userId from Comment c where c.id = :commentId ")
     Long getUserId(Long commentId);
