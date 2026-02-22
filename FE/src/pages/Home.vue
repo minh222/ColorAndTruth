@@ -21,7 +21,13 @@
   <div class="user-card">
     <div v-if="showNotifyPanel" class="notify-panel">
       <h4>🔔 Thông báo</h4>
-
+      <button
+        v-if="notifications.length"
+        class="mark-read-btn"
+        @click="markAllRead"
+      >
+        ✔ Đánh dấu đã đọc
+      </button>
       <div
         v-for="(n, i) in notifications"
         :key="i"
@@ -223,6 +229,30 @@ const notifyCount = ref(0);
 const notifications = ref([]);
 const showNotifyPanel = ref(false);
 
+
+const markAllRead = async () => {
+  try {
+    const res = await authFetch("/api/v1/notify/read", {
+      method: "POST"
+    });
+
+    if (!res.ok) {
+      showPopup("Đánh dấu đã đọc thất bại");
+      return;
+    }
+
+    // reset badge
+    notifyCount.value = 0;
+
+    // reload lại list nếu muốn
+    await loadNotify();
+
+  } catch (e) {
+    console.error("mark read error", e);
+    showPopup("Có lỗi xảy ra");
+  }
+};
+
 let es = null;
 
 const connectSSE = () => {
@@ -237,7 +267,6 @@ const connectSSE = () => {
   );
 
   es.addEventListener("notify-count", (event) => {
-    if (showNotifyPanel.value) return; 
     notifyCount.value = Number(event.data);
   });
 
@@ -250,9 +279,9 @@ const connectSSE = () => {
 
 const toggleNotify = async () => {
   showNotifyPanel.value = !showNotifyPanel.value;
- 
+
+  // mở panel mới load (tránh spam request)
   if (showNotifyPanel.value) {
-    notifyCount.value = 0;
     await loadNotify();
   }
 };
