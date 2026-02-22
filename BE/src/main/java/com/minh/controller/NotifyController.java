@@ -6,6 +6,7 @@ import com.minh.config.Emitter;
 import com.minh.controller.notify.response.NotifyResponse;
 import com.minh.data.access.control.notify.CountNotifyDataAccess;
 import com.minh.data.access.control.notify.GetNotifyDataAccess;
+import com.minh.data.access.control.notify.MarkNotifyDataAccess;
 import com.minh.data.access.control.notify.ReadNotifyDataAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,11 +58,28 @@ public class NotifyController {
         }
     }
 
-    @PostMapping("/notify/read")
-    public String readNotify(@Data ReadNotifyDataAccess access,
+    @GetMapping("/notify/read")
+    public List<NotifyResponse> readNotify(@Data ReadNotifyDataAccess access,
+                                           HttpServletRequest request) {
+        if (!semaphore.tryAcquire()) {
+            throw http(429, "Quá nhiều request, vui lòng thử lại sau");
+        }
+
+        try {
+            Long userId = getUserId(request);
+            return access.getReadNotify(userId);
+
+        } finally {
+            semaphore.release();
+        }
+    }
+
+
+    @PostMapping("/notify/mark")
+    public String markNotify(@Data MarkNotifyDataAccess access,
                              HttpServletRequest request) {
         Long userId = getUserId(request);
-        access.readNotify(userId);
+        access.markNotify(userId);
         return "ok";
     }
 }

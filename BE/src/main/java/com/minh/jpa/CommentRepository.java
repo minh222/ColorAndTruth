@@ -88,6 +88,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     )
     List<NotifyResponse> getNotify(Long userId, List<Long> replyIds);
 
+    @Query( " select new com.minh.controller.notify.response.NotifyResponse(c.id ,c.claim, y.claim, u.name, u.avatar, c.time)" +
+            " from Comment c " +
+            " join Comment y on c.parentId = y.id  " +
+            " join User u on c.userId = u.id " +
+            " where y.userId = :userId " +
+            " and c.id in :replyIds "
+    )
+    List<NotifyResponse> getReadNotify(Long userId, List<Long> replyIds);
+
     @Query( " select count(c.id)" +
             " from Comment c " +
             " join Comment y on c.parentId = y.id  " +
