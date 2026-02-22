@@ -49,7 +49,7 @@ public class NotifyController {
 
     @GetMapping("/notify/count")
     public Integer countNotify(@Data CountNotifyDataAccess access,
-                         HttpServletRequest request) {
+                               HttpServletRequest request) {
         return access.getBadge(getUserId(request));
     }
 

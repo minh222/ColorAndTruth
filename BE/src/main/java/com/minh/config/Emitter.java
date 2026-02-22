@@ -1,9 +1,5 @@
 package com.minh.config;
 
-
-import com.minh.data.access.control.comment.PostCommentDataAccess;
-import com.minh.data.access.control.notify.GetNotifyDataAccess;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -13,10 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class Emitter {
-
-    @Autowired
-    PostCommentDataAccess access;
-
     private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     public SseEmitter connect(Long userId) {
@@ -27,7 +19,15 @@ public class Emitter {
         emitter.onTimeout(() -> emitters.remove(userId));
         emitter.onError(e -> emitters.remove(userId));
 
-        pushCount(userId, 0);
+        try {
+            emitter.send(
+                    SseEmitter.event()
+                            .name("connected")
+                            .data("ok")
+            );
+        } catch (IOException e) {
+            emitters.remove(userId);
+        }
 
         return emitter;
     }
