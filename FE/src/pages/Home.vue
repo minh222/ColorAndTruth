@@ -268,7 +268,17 @@
       </div>
     </div>
   </div>
-
+  <section class="about-section">
+    <a 
+      href="https://poforlio-vrbj.vercel.app/"
+      target="_blank"
+      rel="noopener"
+      class="about-card"
+    >
+      <h2>About Me</h2>
+      <p class="link-text">Visit my portfolio</p>
+    </a>
+  </section>
 </template>
 
 <script setup>
@@ -1018,5 +1028,36 @@ const collapse = () => {
 
 .notify-list-scroll::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
+}
+.about-section {
+  margin-top: 60px;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-card {
+  width: 320px;
+  padding: 40px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  color: white;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-6px);
+}
+
+.about-card h2 {
+  margin-bottom: 16px;
+  font-size: 26px;
+}
+
+.email {
+  opacity: 0.8;
 }
 </style>
