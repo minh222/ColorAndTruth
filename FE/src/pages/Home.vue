@@ -270,13 +270,13 @@
   </div>
   <section class="about-section">
     <a 
-      href="https://poforlio-vrbj.vercel.app/"
+      href="https://minhdev.io.vn/"
       target="_blank"
       rel="noopener"
       class="about-card"
     >
-      <h2>About Me</h2>
-      <p class="link-text">Visit my portfolio</p>
+     
+      <p class="link-text">About Me</p>
     </a>
   </section>
 </template>
@@ -1030,10 +1030,16 @@ const collapse = () => {
   background: #9ca3af;
 }
 .about-section {
-  margin-top: 60px;
-  padding: 80px 20px;
-  display: flex;
-  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+   
+  max-width: 140px;
+  font-size: 11px;
+  line-height: 0.1;
+
+  display: inline-flex;
   align-items: center;
 }
 
