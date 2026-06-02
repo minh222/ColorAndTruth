@@ -6,7 +6,7 @@
           <div class="user-row">
             <img
               class="avatar"
-              :src="comment.avatar || '/default-avatar.png'"
+              :src="comment.avatar || '/default-avatar.jpg'"
               alt="avatar"
             />
             <span class="username">
@@ -144,7 +144,7 @@
   import { ref, getCurrentInstance, watch } from "vue";
 
   const emit = defineEmits(["quote", "reply", "deleted"]);
-
+  const defaultAvatar = '/default-avatar.jpg'
   const popup = ref({
     show: false,
     message: "",

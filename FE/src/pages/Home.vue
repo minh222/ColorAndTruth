@@ -121,6 +121,7 @@
         :src="avatarSrc"
         class="avatar"
         referrerpolicy="no-referrer"
+        @error="onAvatarError"
       />
 
       <!-- ⏳ loading overlay -->
@@ -419,7 +420,7 @@ const logout = () => {
 };
 
 const user = ref({});
-const defaultAvatar = "/default-avatar.png";
+const defaultAvatar = "/default-avatar.jpg";
 
 /* LOAD USER */
 const avatarSrc = ref(defaultAvatar);
