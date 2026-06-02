@@ -32,7 +32,7 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
 
         List<LoadCommentResponse> res = rp.commentRp.loadComment(
                 getLastId(maxId, lastId),
-                ids,
+                getIds(ids),
                 getDate(days),
                 getCommentIds(ids),
                 getPageable(limit)
@@ -43,6 +43,10 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
     }
 
     // Helper
+    private List<ViewEmotionId> getIds(List<ViewEmotionId> ids) {
+        return  ids.isEmpty() ? null : ids;
+    }
+
     private LocalDate getDate(Integer days) {
         return TODAY().minusDays(days == null ? 0 : days);
     }

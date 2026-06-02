@@ -29,7 +29,7 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
         List<LoadCommentResponse> res = rp.commentRp.loadChildrenById(
                 id,
                 getLastId(maxId, lastId),
-                ids,
+                getIds(ids),
                 getCommentIds(ids),
                 getPageable(limit)
         );
@@ -40,6 +40,10 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
     }
 
     // Helper
+    private List<ViewEmotionId> getIds(List<ViewEmotionId> ids) {
+        return  ids.isEmpty() ? null : ids;
+    }
+
     private Long getLastId(Long maxId, Long lastId) {
         if (lastId != null) return lastId;
         return maxId == null ? null : maxId + 1;
