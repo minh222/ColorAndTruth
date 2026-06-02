@@ -42,8 +42,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "  ))" +
             "from Comment c " +
             "left join ViewEmotion v on c.id = v.id.commentId " +
+            "where c.date = :date " +
             "group by c.id ")
-    List<ViewEmotionId> getCompositeIdsByUserId(Long userId);
+    List<ViewEmotionId> getCompositeIdsByUserId(Long userId, LocalDate date);
 
     @Query("select new com.minh.controller.comment.response.LoadCommentResponse" +
             "(c.id, c.emotion, c.claim, u.name, u.avatar, count (cl.ancestorId), u.id, c.time,c.isDebateClaim, v.id.viewerId) " +

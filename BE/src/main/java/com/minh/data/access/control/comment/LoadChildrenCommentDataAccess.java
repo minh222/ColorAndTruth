@@ -7,8 +7,11 @@ import com.minh.entity.composite.id.ViewEmotionId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.minh.config.Config.TODAY;
 
 @Service
 @DataAccess
@@ -19,9 +22,9 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
         this.rp = repos;
     }
 
-    public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId) {
+    public List<LoadCommentResponse> loadChildrenComment(Long id, Long lastId, int limit, Long userId, Integer dayAgo) {
         Long maxId = rp.commentRp.getMaxChildrenIdById(id);
-        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId);
+        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId, getDate(dayAgo));
 
         List<LoadCommentResponse> res = rp.commentRp.loadChildrenById(
                 id,
@@ -48,6 +51,10 @@ public class LoadChildrenCommentDataAccess { // gateway :má»—i bussiness truy cá
 
     private PageRequest getPageable(int limit) {
         return PageRequest.of(0, limit);
+    }
+
+    private LocalDate getDate(Integer days) {
+        return TODAY().minusDays(days == null ? 0 : days);
     }
 
 }

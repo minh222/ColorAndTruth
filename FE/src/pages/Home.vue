@@ -194,6 +194,7 @@
       :key="c.id"
       :comment="c"
       :currentUserId="user.id"
+      :dayAgo="dayAgo"
       @reply="onReply"
       @deleted="removeRoot"
       @quote="handleQuote"

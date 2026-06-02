@@ -1,4 +1,4 @@
-  <template>
+<template>
     <div class="comment-node">
       <div class="comment-box">
         <div class="content">
@@ -37,8 +37,6 @@
                 ↩ Trả lời
               </button>
 
-
-
               <!-- overlay tên user -->
               <div
                 v-if="comment.isDebateClaim === false"
@@ -48,7 +46,6 @@
               </div>
             </div>
 
-
             <button
               v-if="comment.emotion"
               @click="toggleEmotion"
@@ -57,7 +54,7 @@
                 class="emotion-toggle"
                 :class="{ open: showEmotion }"
               >
-                {{ showEmotion ? "👁️" : "🕶️ (secret true emotion)" }}
+                {{ showEmotion ? "👁" : "🕶 (secret true emotion)" }}
               </span>
             </button>
 
@@ -66,7 +63,7 @@
               class="delete-btn"
               @click="confirmDelete"
             >
-              🗑️
+              🗑
             </button>
 
           </div>
@@ -86,6 +83,7 @@
           :key="c.id"
           :comment="c"
           :currentUserId="currentUserId"
+          :dayAgo="dayAgo"
           @reply="$emit('reply', $event)"
           @quote="$emit('quote', $event)"    
           @deleted="removeChild"
@@ -108,7 +106,7 @@
       <div v-if="showDebateConfirm" class="debate-popup">
         <div class="popup-card">
           <p>
-            🗣️  Không đc phản biện phần secret true emotion nếu muốn xem 
+            🗣  Không đc phản biện phần secret true emotion nếu muốn xem 
           </p>
 
           <div class="popup-actions">
@@ -143,7 +141,7 @@
   </template>
 
   <script setup>
-  import { ref, getCurrentInstance } from "vue";
+  import { ref, getCurrentInstance, watch } from "vue";
 
   const emit = defineEmits(["quote", "reply", "deleted"]);
 
@@ -166,7 +164,6 @@
     popup.value.onYes = null
     popup.value.onNo = null
   }
-
 
   const formatTime = (time) => {
     if (!time) return "";
@@ -246,6 +243,10 @@
     currentUserId: {
       type: Number,
       default: null
+    },
+    dayAgo: {
+      type: Number,
+      default: 0
     }
   });
 
@@ -270,8 +271,6 @@
     // 🔒 lock / unlock reply
     props.comment.isDebateClaim = data.isDebateClaim;
   };
-
-
 
   const toggleEmotion = async () => {
     if (showEmotion.value) {
@@ -316,6 +315,8 @@
         limit: String(CHILD_LIMIT),
       });
 
+      params.append("dayAgo", String(props.dayAgo ?? 0));
+
       if (lastChildId.value !== null) {
         params.append("lastId", lastChildId.value);
       }
@@ -338,6 +339,7 @@
       loading.value = false;
     }
   };
+
   const collapseReplies = () => {
     // Giữ lại đúng CHILD_LIMIT
     if (children.value.length > CHILD_LIMIT) {
@@ -349,6 +351,15 @@
           : null;
     }
   };
+
+  watch(() => props.dayAgo, () => {
+    children.value = []
+    lastChildId.value = null
+    noMoreChildren.value = false
+    if (opened.value) {
+      loadMoreChildren()
+    }
+  });
 
   </script>
 
@@ -388,7 +399,6 @@
     text-align: center;
     min-width: 320px;
   }
-
 
   .popup-close {
     position: absolute;
@@ -464,7 +474,6 @@
     font-style: italic;
   }
 
-
   .emotion-panel.show {
     transform: translateX(0);
   }
@@ -495,7 +504,6 @@
   .comment-box.with-emotion {
     padding-right: 260px;
   }
-
 
   .actions {
     display: flex;
@@ -639,8 +647,6 @@
     text-align: center;
     padding: 0 6px;
   }
-
- 
 
   .load-more-children:hover {
     background: #cbd5e1;

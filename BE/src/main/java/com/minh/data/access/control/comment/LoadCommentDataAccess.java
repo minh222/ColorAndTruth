@@ -28,7 +28,7 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
                 () -> http(502, "No data available")
         );
 
-        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId);
+        List<ViewEmotionId> ids = rp.commentRp.getCompositeIdsByUserId(userId, getDate(days));
 
         List<LoadCommentResponse> res = rp.commentRp.loadComment(
                 getLastId(maxId, lastId),
@@ -39,7 +39,6 @@ public class LoadCommentDataAccess { // gateway :mỗi bussiness truy cập 1 c�
         );
 
         res.forEach(r -> r.alwaysTrueWhenDifference(userId));
-
         return res;
     }
 

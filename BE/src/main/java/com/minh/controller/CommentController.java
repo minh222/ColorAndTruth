@@ -70,6 +70,7 @@ public class CommentController {
                                                          Long id,
                                                          Long lastId,
                                                          int limit,
+                                                         Integer dayAgo,
                                                          HttpServletRequest request) {
         if (!semaphore.tryAcquire()) {
             throw http(429, "Quá nhiều request, vui lòng thử lại sau");
@@ -77,7 +78,7 @@ public class CommentController {
 
         try {
             Long userId = Jwt.getUserId(request);
-            return access.loadChildrenComment(id, lastId, limit,userId);
+            return access.loadChildrenComment(id, lastId, limit,userId, dayAgo);
         } finally {
             semaphore.release();
         }
